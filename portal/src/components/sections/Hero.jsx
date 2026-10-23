@@ -1,13 +1,13 @@
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
 import PinakaBow from '@/components/ui/PinakaBow';
-import { ArrowUpRight, ShieldCheck, Terminal, Cpu, Database } from 'lucide-react';
+import { ArrowUpRight, Terminal } from 'lucide-react';
 
 export default function Hero() {
   return (
     <section
-      className="relative w-full border-b border-pinaka-hairline bg-pinaka-kailash overflow-hidden"
-      aria-label="Studio Manifesto"
+      className="relative w-full border-b border-pinaka-hairline bg-transparent overflow-hidden"
+      aria-label="Studio Overview"
     >
       {/* Structural architectural background grid lines */}
       <div
@@ -20,24 +20,21 @@ export default function Hero() {
         aria-hidden="true"
       />
 
-      {/* Decorative vertical guide border */}
-      <div className="pointer-events-none absolute left-1/2 top-0 bottom-0 w-[1px] bg-pinaka-hairline/60 hidden xl:block" />
-
       <div className="relative mx-auto max-w-[1440px] px-6 sm:px-10 lg:px-16 py-16 lg:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           
           {/* Left Column: Studio Proclamation & Thesis (7 cols) */}
           <div className="lg:col-span-7 flex flex-col justify-between">
             <div>
-              {/* Sovereign Eyebrow */}
+              {/* Eyebrow */}
               <div className="mb-6 inline-flex items-center gap-3">
                 <span className="h-2 w-2 rounded-full bg-pinaka-saffron animate-pulse" />
                 <span className="font-mono text-xs font-semibold uppercase tracking-widest text-pinaka-saffron">
-                  Foundry Specification &middot; 2026
+                  Product Studio &middot; 2026
                 </span>
                 <span className="text-pinaka-hairline font-mono">|</span>
                 <span className="font-serif text-xs tracking-wider text-pinaka-ash">
-                  The Bow of Precision
+                  Precision in Engineering
                 </span>
               </div>
 
@@ -52,11 +49,10 @@ export default function Hero() {
 
               {/* Thesis Statement */}
               <p className="text-base sm:text-lg text-pinaka-slate leading-relaxed mb-8 max-w-2xl font-sans">
-                Named after the celestial, unwavering bow of Lord Shiva,{' '}
                 <strong className="font-semibold text-pinaka-stone">Pinaka</strong> is an independent 
-                venture studio and builder collective. We take ambitious prototypes—from campus operating 
-                systems to deep municipal reinforcement learning—and forge them into hardened, production-grade 
-                institutions.
+                product studio and builder collective. We back ambitious builders and transform 
+                early-stage software, from campus infrastructure to applied intelligent systems, 
+                into production-grade, reliable ventures with shared institutional credibility.
               </p>
 
               {/* Core Archetypes */}
@@ -66,7 +62,7 @@ export default function Hero() {
                     01. Zero-Hype
                   </div>
                   <p className="text-xs text-pinaka-slate leading-relaxed">
-                    No vanity pitch decks. Code speaks through live traffic, verification, and uptime.
+                    No vanity pitch decks. Code proves itself through verified execution, uptime, and user traction.
                   </p>
                 </div>
                 <div>
@@ -74,7 +70,7 @@ export default function Hero() {
                     02. Sovereign IP
                   </div>
                   <p className="text-xs text-pinaka-slate leading-relaxed">
-                    Builders retain 100% intellectual property. Pinaka provides the engineering spine.
+                    Builders retain full intellectual property. Pinaka provides the engineering spine and distribution.
                   </p>
                 </div>
                 <div>
@@ -82,7 +78,7 @@ export default function Hero() {
                     03. Production Rigor
                   </div>
                   <p className="text-xs text-pinaka-slate leading-relaxed">
-                    Strict lifecycle gates from discovery, through MVP, to university & municipal pilots.
+                    Disciplined lifecycle gates from discovery, through MVP, to live production deployments.
                   </p>
                 </div>
               </div>
@@ -97,7 +93,7 @@ export default function Hero() {
                 </a>
                 <a href="#foundry">
                   <Button variant="outline" size="lg">
-                    Incubate SIH / Hackathon Project
+                    Submit Candidate Project
                   </Button>
                 </a>
               </div>
@@ -105,7 +101,7 @@ export default function Hero() {
           </div>
 
           {/* Right Column: Studio Dossier & Ledger Matrix (5 cols) */}
-          <div className="lg:col-span-5 bg-pinaka-chalk border border-pinaka-hairline p-8 shadow-editorial">
+          <div className="lg:col-span-5 bg-white/90 backdrop-blur-sm border border-pinaka-hairline p-8 shadow-editorial">
             {/* Dossier Header */}
             <div className="flex items-center justify-between border-b border-pinaka-hairline pb-4 mb-6">
               <div className="flex items-center gap-3">
@@ -126,15 +122,15 @@ export default function Hero() {
                   Classification
                 </span>
                 <span className="text-xs font-semibold text-pinaka-stone text-right">
-                  Independent Venture Foundry
+                  Independent Product Studio &middot; Collective
                 </span>
               </div>
               <div className="flex items-start justify-between border-b border-pinaka-hairline/60 pb-3">
                 <span className="text-xs font-mono uppercase tracking-wider text-pinaka-ash">
                   Active Ventures
                 </span>
-                <span className="text-xs font-semibold text-pinaka-stone text-right">
-                  03 Systems (Opendoor, SkillSphere, Intelli-Light)
+                <span className="text-xs font-semibold text-pinaka-stone text-right font-mono">
+                  03 Systems
                 </span>
               </div>
               <div className="flex items-start justify-between border-b border-pinaka-hairline/60 pb-3">
@@ -142,7 +138,7 @@ export default function Hero() {
                   Domain Vectors
                 </span>
                 <span className="text-xs font-semibold text-pinaka-stone text-right">
-                  Campus PropTech &middot; GovTech &middot; MARL
+                  Multi-Disciplinary Applied Software
                 </span>
               </div>
               <div className="flex items-start justify-between border-b border-pinaka-hairline/60 pb-3">
@@ -150,7 +146,7 @@ export default function Hero() {
                   Engineering Standard
                 </span>
                 <span className="text-xs font-semibold text-pinaka-stone text-right font-mono">
-                  PostgreSQL 15+ &middot; Argon2id &middot; NTCIP 1202
+                  Production Baseline &middot; Strict Verification
                 </span>
               </div>
             </div>
@@ -159,20 +155,20 @@ export default function Hero() {
             <div className="bg-pinaka-ice border border-pinaka-hairline/80 p-4">
               <div className="text-[11px] font-mono uppercase tracking-wider text-pinaka-slate font-semibold mb-2.5 flex items-center gap-2">
                 <Terminal className="h-3.5 w-3.5 text-pinaka-saffron" />
-                Foundational Technical Disciplines
+                Core Technical Disciplines
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {[
-                  'Concurrency Locks',
-                  'QR-JWT Cryptography',
-                  'Spatio-Temporal GNN',
-                  'Fail-Safe Watchdogs',
-                  'Feature-Sliced Design',
-                  'HMAC Webhook Ingestion',
+                  'Distributed Systems',
+                  'High-Throughput Databases',
+                  'Applied Machine Learning',
+                  'Event-Driven Architecture',
+                  'Cryptographic Security',
+                  'Edge Computing',
                 ].map((spec) => (
                   <span
                     key={spec}
-                    className="text-[11px] font-mono bg-pinaka-chalk text-pinaka-stone border border-pinaka-hairline px-2 py-0.5 rounded-sm"
+                    className="text-[11px] font-mono bg-white text-pinaka-stone border border-pinaka-hairline px-2 py-0.5 rounded-sm"
                   >
                     {spec}
                   </span>

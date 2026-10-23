@@ -2,32 +2,31 @@ import { getAllProjects } from '@/lib/projects';
 
 function deriveStats(projects) {
   const tracks = new Set(projects.map((p) => p.track)).size;
-  const categories = new Set(projects.map((p) => p.category)).size;
 
   return [
     {
-      devanagari: '०१',
+      index: '01',
       value: `0${projects.length}`,
       title: 'Active Ventures',
       subtitle: 'Engineered & Deployed Systems',
-      highlight: 'Opendoor &middot; SkillSphere &middot; Intelli-Light',
+      highlight: 'Commercial Flagships & Labs',
     },
     {
-      devanagari: '०२',
+      index: '02',
       value: `0${tracks}`,
       title: 'Studio Tracks',
-      subtitle: 'Commercial Flagship & Research Labs',
-      highlight: 'Campus PropTech & Municipal DeepTech',
+      subtitle: 'Commercial & Applied Research',
+      highlight: 'Multi-Disciplinary Product Portfolio',
     },
     {
-      devanagari: '०३',
+      index: '03',
       value: '100%',
       title: 'Sovereign IP',
       subtitle: 'Builder Ownership Protected',
       highlight: 'Founders own source & data rights',
     },
     {
-      devanagari: '०४',
+      index: '04',
       value: 'Gate 4',
       title: 'Deployment Maturity',
       subtitle: 'Pre-Pilot Production Validation',
@@ -42,12 +41,12 @@ export default function StatsBar() {
 
   return (
     <section
-      className="w-full border-b border-pinaka-hairline bg-pinaka-chalk"
+      className="w-full border-b border-pinaka-hairline bg-white/80 backdrop-blur-sm"
       aria-label="Studio Statistics & Performance Matrix"
     >
       <div className="mx-auto max-w-[1440px] px-6 sm:px-10 lg:px-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-pinaka-hairline">
-          {stats.map(({ devanagari, value, title, subtitle, highlight }) => (
+          {stats.map(({ index, value, title, subtitle, highlight }) => (
             <div
               key={title}
               className="py-6 sm:py-8 px-4 sm:first:pl-0 sm:last:pr-0 flex flex-col justify-between"
@@ -55,7 +54,7 @@ export default function StatsBar() {
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-mono text-xs text-pinaka-ash tracking-widest uppercase">
-                    Vector {devanagari}
+                    Metric {index}
                   </span>
                   <span className="h-1.5 w-1.5 rounded-full bg-pinaka-saffron" />
                 </div>

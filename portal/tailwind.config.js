@@ -10,20 +10,20 @@ module.exports = {
     extend: {
       colors: {
         pinaka: {
-          // Saffron spectrum (Lord Shiva's sacred fire, bhagwa, ochre)
+          // Saffron spectrum
           saffron: '#D85A20',
           'saffron-glow': '#E67E22',
           'saffron-wash': '#FDF6EE',
           'saffron-subtle': '#FAECE0',
           'saffron-deep': '#9C3D10',
           
-          // Kailash / Neelkanth blue-white spectrum (Pristine stone, ice, transcendent clarity)
+          // Blue-white & Kailash spectrum
           kailash: '#F8FAFC',
           ice: '#EDF3F8',
           'ice-blue': '#E0EAF3',
           chalk: '#FFFFFF',
           
-          // Bhasma & Granite Slate spectrum (Ash, charcoal stone, architectural rules)
+          // Slate stone spectrum
           charcoal: '#0F1722',
           stone: '#1E293B',
           slate: '#475569',
@@ -35,7 +35,7 @@ module.exports = {
           // Accents & Indicators
           gold: '#B47806',
           jade: '#0F766E',
-          rudra: '#B91C1C',
+          crimson: '#B91C1C',
         },
       },
       fontFamily: {

@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    color-scheme: light dark;
+    color-scheme: light;
   }
 
   html {
@@ -17,7 +17,11 @@
   }
 
   body {
-    @apply bg-pinaka-kailash text-pinaka-stone font-sans selection:bg-pinaka-saffron/20 selection:text-pinaka-saffron-deep;
+    background: linear-gradient(135deg, #7fafe6 0%, #b3d7f9 22%, #e5f1fb 38%, #ffffff 50%, #e2f8ec 62%, #a3e8c1 78%, #4dc983 100%);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    @apply text-pinaka-stone font-sans selection:bg-pinaka-saffron/20 selection:text-pinaka-saffron-deep;
   }
 
   /* Architectural rules */
@@ -30,11 +34,6 @@
   .font-serif-title {
     font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
     letter-spacing: 0.05em;
-  }
-
-  .font-devanagari {
-    font-family: 'Cinzel', serif;
-    letter-spacing: 0.1em;
   }
 
   .hairline-b {

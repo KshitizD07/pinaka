@@ -1,11 +1,10 @@
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
-import { ExternalLink, Terminal, Shield, ArrowUpRight, Check } from 'lucide-react';
-import clsx from 'clsx';
+import { Terminal, ArrowUpRight } from 'lucide-react';
 
 /**
  * Editorial Project Ledger Row component.
- * Replaces the cookie-cutter AI card grid with an expansive, architectural dossier.
+ * Expansive, architectural dossier format.
  */
 export default function ProjectLedgerRow({ project, index }) {
   const {
@@ -22,19 +21,11 @@ export default function ProjectLedgerRow({ project, index }) {
     description,
   } = project;
 
-  // Format index into Roman and Devanagari numerals
-  const numerals = [
-    { roman: 'I', devanagari: '०१' },
-    { roman: 'II', devanagari: '०२' },
-    { roman: 'III', devanagari: '०३' },
-    { roman: 'IV', devanagari: '०४' },
-    { roman: 'V', devanagari: '०५' },
-  ];
-  const currentNumeral = numerals[index] || { roman: `0${index + 1}`, devanagari: `०${index + 1}` };
+  const displayIndex = index < 9 ? `0${index + 1}` : `${index + 1}`;
 
   return (
     <article
-      className="group relative border-b border-pinaka-hairline bg-pinaka-chalk hover:bg-pinaka-kailash/60 transition-colors duration-200"
+      className="group relative border-b border-pinaka-hairline bg-white/95 hover:bg-white transition-colors duration-200"
       aria-label={`${name} project dossier`}
     >
       {/* Saffron left border indicator on hover */}
@@ -46,10 +37,10 @@ export default function ProjectLedgerRow({ project, index }) {
           {/* Column 1: Nomenclature & Classification (4 cols) */}
           <div className="lg:col-span-4 flex flex-col justify-between h-full">
             <div>
-              {/* Indices & Track Badge */}
+              {/* Index & Badges */}
               <div className="flex items-center gap-3 mb-3">
                 <span className="font-mono text-xs font-bold text-pinaka-saffron tracking-wider">
-                  [{currentNumeral.devanagari} / {currentNumeral.roman}]
+                  [{displayIndex}]
                 </span>
                 <Badge variant="track" value={track} />
                 <span className="text-[11px] font-mono text-pinaka-ash uppercase tracking-wider">

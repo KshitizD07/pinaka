@@ -5,7 +5,7 @@ export default function ManifestoStrip() {
   return (
     <section
       id="codex"
-      className="w-full border-t border-pinaka-hairline bg-pinaka-chalk py-16 sm:py-24"
+      className="w-full border-t border-pinaka-hairline bg-white/80 backdrop-blur-sm py-16 sm:py-24"
       aria-labelledby="codex-heading"
     >
       <div className="mx-auto max-w-[1440px] px-6 sm:px-10 lg:px-16">
@@ -33,7 +33,7 @@ export default function ManifestoStrip() {
 
         {/* 4 Architectural Columns */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-pinaka-hairline border-b border-pinaka-hairline pb-12">
-          {MANIFESTO_RULES.map(({ num, devanagari, rule, description }) => (
+          {MANIFESTO_RULES.map(({ num, code, rule, description }) => (
             <div
               key={num}
               className="py-8 md:py-0 md:px-8 first:pl-0 last:pr-0 flex flex-col justify-between"
@@ -41,7 +41,7 @@ export default function ManifestoStrip() {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <span className="font-mono text-xs font-bold text-pinaka-saffron tracking-widest">
-                    LAW {devanagari} / {num}
+                    LAW {code} / {num}
                   </span>
                   <span className="text-[10px] font-mono text-pinaka-ash uppercase tracking-wider">
                     Institutional Standard

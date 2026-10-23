@@ -6,14 +6,14 @@ import Button from '@/components/ui/Button';
 
 const NAV_LINKS = [
   { href: '#portfolio', label: 'Portfolio Ledger' },
-  { href: '#foundry', label: 'Incubator & SIH' },
+  { href: '#foundry', label: 'Foundry & Incubation' },
   { href: '#codex', label: 'Engineering Codex' },
   { href: '#charter', label: 'Builder Charter' },
 ];
 
 export default function Navbar() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-pinaka-hairline bg-pinaka-chalk/90 backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full border-b border-pinaka-hairline bg-white/85 backdrop-blur-md">
       <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 sm:px-10 lg:px-16 py-4">
         {/* Brand identity */}
         <Link
@@ -29,12 +29,9 @@ export default function Navbar() {
               <span className="font-serif text-lg font-bold tracking-widest text-pinaka-stone">
                 PINAKA
               </span>
-              <span className="text-xs font-semibold tracking-wider text-pinaka-saffron">
-                ॥ पिनाक ॥
-              </span>
             </div>
             <span className="text-[10px] tracking-widest uppercase text-pinaka-ash font-mono -mt-0.5">
-              Venture Studio &middot; Labs
+              Product Studio &middot; Labs
             </span>
           </div>
         </Link>
