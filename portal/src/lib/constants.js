@@ -25,85 +25,127 @@ export const CATEGORIES = [
 
 /** Human-readable track labels */
 export const TRACK_LABELS = {
-  flagship: 'Flagship',
-  research: 'Research',
-  incubating: 'Incubating',
-  community: 'Community',
+  flagship: 'Primary Flagship',
+  research: 'DeepTech Research',
+  incubating: 'Incubation (SIH)',
+  community: 'Community Collective',
 };
 
 /** Human-readable status labels */
 export const STATUS_LABELS = {
-  concept: 'Concept',
-  prototype: 'Prototype',
-  mvp: 'MVP',
-  pilot: 'Pilot',
-  live: 'Live',
+  concept: 'Concept Stage',
+  prototype: 'Lab Prototype',
+  mvp: 'Functional MVP',
+  pilot: 'Active Pilot',
+  live: 'Production Live',
   paused: 'Paused',
   archived: 'Archived',
 };
 
 /**
- * Tailwind color classes for status badges.
- * bg / text combos that work on pinaka-surface backgrounds.
+ * Editorial status styles with refined saffron, jade, stone, and gold tokens.
  */
 export const STATUS_COLORS = {
   concept: {
-    bg: 'bg-pinaka-ink-faint/30',
-    text: 'text-pinaka-ink-muted',
-    border: 'border-pinaka-ink-faint',
+    bg: 'bg-pinaka-ice',
+    text: 'text-pinaka-slate',
+    border: 'border-pinaka-hairline',
+    dot: 'bg-pinaka-ash',
   },
   prototype: {
-    bg: 'bg-pinaka-gold/10',
-    text: 'text-pinaka-gold',
-    border: 'border-pinaka-gold/30',
+    bg: 'bg-amber-50',
+    text: 'text-amber-800',
+    border: 'border-amber-200',
+    dot: 'bg-amber-500',
   },
   mvp: {
-    bg: 'bg-pinaka-accent/10',
-    text: 'text-pinaka-accent',
-    border: 'border-pinaka-accent/30',
+    bg: 'bg-pinaka-saffron-wash',
+    text: 'text-pinaka-saffron-deep',
+    border: 'border-pinaka-saffron/30',
+    dot: 'bg-pinaka-saffron',
   },
   pilot: {
-    bg: 'bg-pinaka-jade/10',
-    text: 'text-pinaka-jade',
-    border: 'border-pinaka-jade/30',
+    bg: 'bg-teal-50',
+    text: 'text-teal-900',
+    border: 'border-teal-200',
+    dot: 'bg-teal-600',
   },
   live: {
-    bg: 'bg-pinaka-jade/20',
-    text: 'text-pinaka-jade',
-    border: 'border-pinaka-jade/50',
+    bg: 'bg-emerald-50',
+    text: 'text-emerald-900',
+    border: 'border-emerald-300',
+    dot: 'bg-emerald-600',
   },
   paused: {
-    bg: 'bg-pinaka-ember/10',
-    text: 'text-pinaka-ember',
-    border: 'border-pinaka-ember/30',
+    bg: 'bg-stone-100',
+    text: 'text-stone-700',
+    border: 'border-stone-300',
+    dot: 'bg-stone-500',
   },
   archived: {
-    bg: 'bg-pinaka-ember/5',
-    text: 'text-pinaka-ink-faint',
-    border: 'border-pinaka-ember/20',
+    bg: 'bg-slate-100',
+    text: 'text-slate-500',
+    border: 'border-slate-200',
+    dot: 'bg-slate-400',
   },
 };
 
-/** Pinaka manifesto rules */
+/**
+ * Track badge colors
+ */
+export const TRACK_COLORS = {
+  flagship: {
+    bg: 'bg-pinaka-saffron-wash',
+    text: 'text-pinaka-saffron-deep',
+    border: 'border-pinaka-saffron/40',
+  },
+  research: {
+    bg: 'bg-blue-50',
+    text: 'text-blue-900',
+    border: 'border-blue-200',
+  },
+  incubating: {
+    bg: 'bg-purple-50',
+    text: 'text-purple-900',
+    border: 'border-purple-200',
+  },
+  community: {
+    bg: 'bg-stone-50',
+    text: 'text-stone-800',
+    border: 'border-stone-300',
+  },
+};
+
+/**
+ * The 4 Pinaka Golden Laws from documentation.
+ */
 export const MANIFESTO_RULES = [
   {
-    id: 'execution',
-    rule: 'Execution over ideas',
-    detail: 'An average idea executed brilliantly beats a brilliant idea executed averagely.',
+    num: 'I',
+    devanagari: '०१',
+    rule: 'Execution and Evidence Over Ideas',
+    description:
+      'Ideas carry zero sovereign weight until backed by working code, real user interaction, and verifiable audit trials.',
   },
   {
-    id: 'problem',
-    rule: 'Start from the problem',
-    detail: 'Every product begins with a real, observed problem — not a feature wish list.',
+    num: 'II',
+    devanagari: '०२',
+    rule: 'Start from the Problem, Not Technology',
+    description:
+      'We never deploy distributed consensus or neural nets where a plain Postgres table and a single clean index will suffice.',
   },
   {
-    id: 'simplicity',
-    rule: 'Simplest architecture that works',
-    detail: 'We do not add complexity until the simplest solution has been genuinely exhausted.',
+    num: 'III',
+    devanagari: '०३',
+    rule: 'The Simplest Architecture That Works Wins',
+    description:
+      'Every line of unnecessary complexity is technical liability. We build modular, resilient systems with crisp boundaries.',
   },
   {
-    id: 'traction',
-    rule: 'Never fake traction',
-    detail: 'Vanity metrics are noise. We measure real usage, real retention, real revenue.',
+    num: 'IV',
+    devanagari: '०४',
+    rule: 'Never Fake Traction or Misrepresent Maturity',
+    description:
+      'Never present a prototype as a deployed product, or a deployed product as a business. Total transparency with builders and partners.',
   },
 ];

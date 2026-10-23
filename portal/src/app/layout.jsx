@@ -1,38 +1,37 @@
-import { Inter } from 'next/font/google';
 import './globals.css';
-import { ThemeProvider } from '@/context/ThemeContext';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-});
-
 export const metadata = {
-  title: 'Pinaka — Venture Studio',
+  title: 'Pinaka Studios — Venture Studio & Builder Collective',
   description:
-    'Pinaka is a venture studio and builder collective. We build bold products that solve real problems.',
-  keywords: ['pinaka', 'venture studio', 'startup', 'builder collective'],
+    'Named after the divine bow of Shiva, Pinaka is an independent product studio and builder collective engineering production systems in campus infrastructure, deeptech, and civic technology.',
+  keywords: [
+    'Pinaka',
+    'Pinaka Studios',
+    'Venture Studio',
+    'Builder Collective',
+    'Opendoor',
+    'SkillSphere',
+    'Intelli-Light',
+    'Smart India Hackathon',
+  ],
   openGraph: {
-    title: 'Pinaka — Venture Studio',
-    description: 'Build Bold. Ship Real.',
+    title: 'Pinaka Studios — Venture Studio & Builder Collective',
+    description: 'Precision in Engineering. Sovereign in Vision.',
     type: 'website',
   },
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} dark`} suppressHydrationWarning>
-      <body>
-        <ThemeProvider>
-          <div className="flex min-h-screen flex-col">
-            <Navbar />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
-        </ThemeProvider>
+    <html lang="en" className="scroll-smooth">
+      <body className="min-h-screen bg-pinaka-kailash text-pinaka-stone font-sans antialiased">
+        <div className="flex min-h-screen flex-col">
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </div>
       </body>
     </html>
   );

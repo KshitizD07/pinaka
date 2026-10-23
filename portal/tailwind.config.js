@@ -10,31 +10,47 @@ module.exports = {
     extend: {
       colors: {
         pinaka: {
-          void: '#0A0A0F',
-          surface: '#12121A',
-          panel: '#1A1A28',
-          border: '#2A2A40',
-          accent: '#6C63FF',
-          'accent-dim': '#4A45B0',
-          gold: '#F5A623',
-          ember: '#FF6B6B',
-          jade: '#4ECDC4',
-          ink: '#E8E8F0',
-          'ink-muted': '#8888AA',
-          'ink-faint': '#44445A',
+          // Saffron spectrum (Lord Shiva's sacred fire, bhagwa, ochre)
+          saffron: '#D85A20',
+          'saffron-glow': '#E67E22',
+          'saffron-wash': '#FDF6EE',
+          'saffron-subtle': '#FAECE0',
+          'saffron-deep': '#9C3D10',
+          
+          // Kailash / Neelkanth blue-white spectrum (Pristine stone, ice, transcendent clarity)
+          kailash: '#F8FAFC',
+          ice: '#EDF3F8',
+          'ice-blue': '#E0EAF3',
+          chalk: '#FFFFFF',
+          
+          // Bhasma & Granite Slate spectrum (Ash, charcoal stone, architectural rules)
+          charcoal: '#0F1722',
+          stone: '#1E293B',
+          slate: '#475569',
+          ash: '#64748B',
+          mist: '#94A3B8',
+          hairline: '#E2E8F0',
+          'hairline-dark': '#1E2B3D',
+          
+          // Accents & Indicators
+          gold: '#B47806',
+          jade: '#0F766E',
+          rudra: '#B91C1C',
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        serif: ['Cinzel', 'Playfair Display', 'Georgia', 'Cambria', 'serif'],
+        sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
       },
-      animation: {
-        'fade-up': 'fadeUp 0.5s ease-out forwards',
+      letterSpacing: {
+        widest: '0.2em',
+        mega: '0.3em',
       },
-      keyframes: {
-        fadeUp: {
-          '0%': { opacity: '0', transform: 'translateY(16px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
+      boxShadow: {
+        'saffron-sm': '0 2px 10px -2px rgba(216, 90, 32, 0.15)',
+        'saffron-glow': '0 8px 30px -4px rgba(216, 90, 32, 0.25)',
+        'editorial': '0 10px 40px -10px rgba(15, 23, 34, 0.08)',
       },
     },
   },

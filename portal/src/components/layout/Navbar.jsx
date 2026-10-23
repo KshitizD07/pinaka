@@ -1,61 +1,66 @@
 'use client';
 
 import Link from 'next/link';
-import { useTheme } from '@/context/ThemeContext';
-import { Moon, Sun, Zap } from 'lucide-react';
+import PinakaBow from '@/components/ui/PinakaBow';
+import Button from '@/components/ui/Button';
 
 const NAV_LINKS = [
-  { href: '#portfolio', label: 'Portfolio' },
-  { href: '#labs', label: 'Labs' },
-  { href: '/join', label: 'Join' },
+  { href: '#portfolio', label: 'Portfolio Ledger' },
+  { href: '#foundry', label: 'Incubator & SIH' },
+  { href: '#codex', label: 'Engineering Codex' },
+  { href: '#charter', label: 'Builder Charter' },
 ];
 
 export default function Navbar() {
-  const { theme, toggleTheme } = useTheme();
-
   return (
-    <header className="sticky top-0 z-50 border-b border-pinaka-border bg-pinaka-void/80 backdrop-blur-md">
-      <nav
-        className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4"
-        aria-label="Main navigation"
-      >
-        {/* Wordmark */}
+    <header className="sticky top-0 z-50 w-full border-b border-pinaka-hairline bg-pinaka-chalk/90 backdrop-blur-md">
+      <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 sm:px-10 lg:px-16 py-4">
+        {/* Brand identity */}
         <Link
           href="/"
-          className="flex items-center gap-2 text-pinaka-ink hover:text-pinaka-accent transition-colors"
-          aria-label="Pinaka home"
+          className="group flex items-center gap-3.5"
+          aria-label="Pinaka Studios Home"
         >
-          <Zap className="h-5 w-5 text-pinaka-accent" aria-hidden="true" />
-          <span className="text-lg font-bold tracking-tight">PINAKA</span>
+          <div className="flex items-center justify-center p-1.5 transition-transform duration-200 group-hover:scale-105">
+            <PinakaBow className="h-5 w-auto text-pinaka-saffron" />
+          </div>
+          <div className="flex flex-col">
+            <div className="flex items-baseline gap-2">
+              <span className="font-serif text-lg font-bold tracking-widest text-pinaka-stone">
+                PINAKA
+              </span>
+              <span className="text-xs font-semibold tracking-wider text-pinaka-saffron">
+                ॥ पिनाक ॥
+              </span>
+            </div>
+            <span className="text-[10px] tracking-widest uppercase text-pinaka-ash font-mono -mt-0.5">
+              Venture Studio &middot; Labs
+            </span>
+          </div>
         </Link>
 
-        {/* Nav links */}
-        <ul className="hidden items-center gap-8 md:flex" role="list">
+        {/* Navigation links */}
+        <nav aria-label="Main navigation" className="hidden lg:flex items-center gap-8">
           {NAV_LINKS.map(({ href, label }) => (
-            <li key={href}>
-              <Link
-                href={href}
-                className="text-sm font-medium text-pinaka-ink-muted transition-colors hover:text-pinaka-ink"
-              >
-                {label}
-              </Link>
-            </li>
+            <Link
+              key={href}
+              href={href}
+              className="text-xs font-semibold uppercase tracking-wider text-pinaka-slate hover:text-pinaka-saffron transition-colors"
+            >
+              {label}
+            </Link>
           ))}
-        </ul>
+        </nav>
 
-        {/* Theme toggle */}
-        <button
-          onClick={toggleTheme}
-          aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-          className="rounded-lg p-2 text-pinaka-ink-muted transition-colors hover:bg-pinaka-panel hover:text-pinaka-ink"
-        >
-          {theme === 'dark' ? (
-            <Sun className="h-4 w-4" aria-hidden="true" />
-          ) : (
-            <Moon className="h-4 w-4" aria-hidden="true" />
-          )}
-        </button>
-      </nav>
+        {/* Action button */}
+        <div className="flex items-center gap-4">
+          <a href="#foundry">
+            <Button variant="primary" size="sm">
+              Submit Prototype
+            </Button>
+          </a>
+        </div>
+      </div>
     </header>
   );
 }
