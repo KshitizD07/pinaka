@@ -62,7 +62,7 @@ export default function ProjectLedgerRow({ project, index }) {
             {/* Attribution & Status */}
             <div className="pt-3 border-t border-pinaka-hairline flex items-center justify-between">
               <span className="text-[11px] font-mono text-pinaka-ash">
-                Architect: <strong className="text-pinaka-stone font-semibold">{leadBuilder}</strong>
+                Architect: <strong className="text-pinaka-stone font-semibold">{leadBuilder ? leadBuilder.toUpperCase() : 'KSHITIZ'}</strong>
               </span>
               <Badge variant="status" value={status} />
             </div>

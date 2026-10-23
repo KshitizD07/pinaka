@@ -3,13 +3,15 @@
 import useSWR from 'swr';
 import { useState } from 'react';
 
-const fetcher = (url) => fetch(url).then((res) => {
-  if (!res.ok) throw new Error('Failed to fetch projects');
-  return res.json();
-});
+const fetcher = (url) =>
+  fetch(url).then((res) => {
+    if (!res.ok) throw new Error('Failed to fetch projects');
+    return res.json();
+  });
 
 /**
  * SWR hook for fetching and filtering projects from the API.
+ * Uses fast revalidation to ensure instant reflection of registry edits.
  * @returns {{ projects, total, isLoading, error, filter, setFilter }}
  */
 export function useProjects(initialFilter = {}) {
@@ -24,8 +26,9 @@ export function useProjects(initialFilter = {}) {
   const url = `/api/projects${queryString ? `?${queryString}` : ''}`;
 
   const { data, error, isLoading } = useSWR(url, fetcher, {
-    revalidateOnFocus: false,
-    dedupingInterval: 60000,
+    revalidateOnMount: true,
+    revalidateOnFocus: true,
+    dedupingInterval: 1000,
   });
 
   return {
