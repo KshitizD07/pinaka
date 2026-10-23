@@ -1,0 +1,54 @@
+================================================================================
+SESSION LOG: Architect Name Enforcement and SWR Cache Invalidation
+================================================================================
+Date       : 2026-10-23
+Domain     : frontend
+Feature    : refactor
+Status     : Completed
+--------------------------------------------------------------------------------
+
+1. OBJECTIVE
+   - Ensure the Architect block in the Project Ledger strictly and universally
+     displays the name 'KSHITIZ'.
+   - Fix client-side SWR deduping/caching behavior in portal/src/hooks/useProjects.js
+     which previously retained the pre-update memory state for 60 seconds without
+     revalidating on mount/focus.
+
+2. WORK PERFORMED & ARCHITECTURE DETAILS
+   - In portal/src/components/sections/ProjectLedgerRow.jsx:
+     * Updated the architect name binding to explicitly enforce uppercase transformation
+       with safety fallback: `{leadBuilder ? leadBuilder.toUpperCase() : 'KSHITIZ'}`.
+   - In portal/src/hooks/useProjects.js:
+     * Adjusted SWR configuration options:
+       - `revalidateOnMount: true` (ensures fresh API fetch on every view render)
+       - `revalidateOnFocus: true` (re-syncs immediately when window/tab is focused)
+       - `dedupingInterval: 1000` (reduced from 60000ms to 1s to prevent stale registry data)
+   - Verified that data/projects.json contains `leadBuilder: "KSHITIZ"` across all entries.
+   - Verified live API endpoint `/api/projects` returns `leadBuilder: "KSHITIZ"`.
+
+3. WHY BEHIND THE CHANGE
+   - The user noted that the browser was displaying the stale name because SWR's in-memory
+     cache had not expired after the underlying JSON file was edited during the session.
+   - Enforcing both client-side sanitization and active SWR revalidation guarantees that
+     local changes to the projects registry are reflected without delay.
+
+4. WHY NOT THE ALTERNATIVE(S)
+   - Alternative 1: Relying purely on manual hard-refresh in browser.
+     * Why Rejected: Fragile DX. Reducing SWR's deduping window ensures seamless live-sync.
+
+5. FILES MODIFIED / CREATED
+   - [MODIFY] portal/src/components/sections/ProjectLedgerRow.jsx
+   - [MODIFY] portal/src/hooks/useProjects.js
+   - [CREATE] logs/frontend/refactor/architect_name_enforcement_2026-10-23.txt
+
+6. API ENDPOINTS / DB / EVENT CHANGES (if applicable)
+   - GET /api/projects returns updated leadBuilder: "KSHITIZ".
+
+7. TESTING & VERIFICATION
+   - Queried live dev server endpoint via Invoke-RestMethod: verified `KSHITIZ`.
+   - Executed `npm run build` in portal/: confirmed Exit Code 0.
+
+8. NEXT STEPS / OPEN ITEMS
+   - Commit session log on feat/fix-architect-name-and-swr-cache.
+   - Merge branch into main with --no-ff and clean up branch.
+================================================================================
