@@ -1,0 +1,104 @@
+================================================================================
+SESSION LOG: Editorial Rebrand, Sacred Saffron & Stone Palette, and Portfolio Ledger Overhaul
+================================================================================
+Date       : 2026-10-23
+Domain     : frontend
+Feature    : design
+Status     : Completed
+--------------------------------------------------------------------------------
+
+1. OBJECTIVE
+   - Overhaul the Pinaka web portal from a generic AI-templated aesthetic (neon purple
+     glow, dark crypto vibes, narrow max-w-6xl centered containers with massive wasted
+     horizontal space, and cookie-cutter 3-column rounded cards) into a dignified,
+     institutional, and sovereign design system.
+   - Ground the design in the reverence of its namesake: Pinaka (पिनाक) — the celestial,
+     unwavering bow of Lord Shiva (Rudra), symbolizing uncompromising precision, discipline,
+     and destruction of chaos/entropy.
+   - Implement an editorial color spectrum: Deep ceremonial saffron (bhagwa/ochre), Kailash
+     ice/slate blue-white, and granite bhasma gray/stone.
+   - Eliminate cards in favor of an expansive, edge-to-edge Architectural Studio Ledger
+     and Project Dossier system.
+
+2. WORK PERFORMED & ARCHITECTURE DETAILS
+   - Design System & Color Palette (portal/tailwind.config.js):
+     * Saffron Spectrum: pinaka.saffron (#D85A20), saffron-glow (#E67E22), saffron-wash
+       (#FDF6EE), saffron-subtle (#FAECE0), saffron-deep (#9C3D10).
+     * Kailash & Ice Blue-White Spectrum: pinaka.kailash (#F8FAFC), ice (#EDF3F8),
+       ice-blue (#E0EAF3), chalk (#FFFFFF).
+     * Bhasma & Granite Stone Spectrum: pinaka.charcoal (#0F1722), stone (#1E293B),
+       slate (#475569), ash (#64748B), mist (#94A3B8), hairline (#E2E8F0).
+     * Typography: Cinzel (inscriptional serif for sovereign mastheads) paired with
+       Plus Jakarta Sans (clean, high-density sans for technical data).
+   - Component & Section Re-engineering:
+     * PinakaBow.jsx: Custom SVG vector capturing the taut arc, bowstring, and central
+       axis of Shiva's celestial bow without cheesy clipart.
+     * Navbar.jsx: Wide editorial masthead (max-w-[1440px]) with Pinaka bow motif,
+       Devanagari mark (॥ पिनाक ॥), foundry coordinates, and clear action triggers.
+     * Hero.jsx: Asymmetrical broadsheet layout spanning 1440px. Left 7 cols feature
+       the studio proclamation and 3 core archetypes; Right 5 cols host an architectural
+       Studio Dossier with technical verification criteria and active venture metrics.
+     * StatsBar.jsx: Full-width ledger strip dividing active ventures, studio tracks,
+       100% sovereign IP guarantees, and Gate 4 deployment maturity with Devanagari numerals.
+     * ProjectLedgerRow.jsx (Replacing ProjectCard.jsx): Eliminated the 3-column card grid.
+       Replaced with full-bleed, expansive horizontal project dossiers featuring:
+       - Nomenclature & Roman/Devanagari index ([ ०१ / I ], [ ०२ / II ], [ ०३ / III ])
+       - Architectural thesis & verified stack tags (PostgreSQL 15+, GNN, Socket.io, etc.)
+       - Direct operational launchpad with live deployment buttons and sandbox indicators.
+     * PortfolioGrid.jsx: Architectural tabbed filter bar with live track counts and
+       structured ledger table header.
+     * ManifestoStrip.jsx: Formatted as the 4 Invariable Pillars of Pinaka (The Codex).
+     * FoundryIntake.jsx: Added dedicated incubation charter for Smart India Hackathon
+       (SIH) finalists, peer ventures, and student prototypes with 100% IP retention.
+     * Footer.jsx: Classical institutional footer with foundry coordinates and legal rights.
+
+3. WHY BEHIND THE CHANGE
+   - High-trust institutional partners (university chancellors, municipal commissioners,
+     and serious technical co-founders) immediately reject websites that look like generic,
+     neon-purple AI templates.
+   - The original centered max-w-6xl container left massive dead margins on modern displays,
+     wasting screen real estate. Expanding to max-w-[1440px] with clear structural columns
+     creates an expansive, magazine-grade authority.
+   - Honoring the cultural and philosophical origin of Pinaka establishes authentic,
+     sovereign brand identity that sets it apart from standard Silicon Valley clone studios.
+
+4. WHY NOT THE ALTERNATIVE(S)
+   - Alternative 1: Traditional SaaS Dark Mode with Neon Accents.
+     * Why Rejected: Widely recognized as low-effort AI boilerplate; creates an impression
+       of a casual crypto project or weekend hack rather than a serious venture institution.
+   - Alternative 2: Maintaining the 3-column card layout with different colors.
+     * Why Rejected: Cards inherently constrain information density and feel disjointed.
+       A horizontal ledger format allows full technical specifications, highlights,
+       and operational metrics to breathe across the display.
+
+5. FILES MODIFIED / CREATED
+   - [MODIFY] portal/tailwind.config.js
+   - [MODIFY] portal/src/app/globals.css
+   - [MODIFY] portal/src/app/layout.jsx
+   - [MODIFY] portal/src/app/page.jsx
+   - [MODIFY] portal/src/lib/constants.js
+   - [MODIFY] portal/src/components/ui/Badge.jsx
+   - [MODIFY] portal/src/components/ui/Button.jsx
+   - [CREATE] portal/src/components/ui/PinakaBow.jsx
+   - [MODIFY] portal/src/components/layout/Navbar.jsx
+   - [MODIFY] portal/src/components/layout/Footer.jsx
+   - [MODIFY] portal/src/components/sections/Hero.jsx
+   - [MODIFY] portal/src/components/sections/StatsBar.jsx
+   - [MODIFY] portal/src/components/sections/PortfolioGrid.jsx
+   - [DELETE] portal/src/components/sections/ProjectCard.jsx
+   - [CREATE] portal/src/components/sections/ProjectLedgerRow.jsx
+   - [CREATE] portal/src/components/sections/FoundryIntake.jsx
+   - [CREATE] logs/frontend/design/editorial_rebrand_and_ledger_layout_2026-10-23.txt
+
+6. API ENDPOINTS / DB / EVENT CHANGES (if applicable)
+   - N/A (Frontend design, layout, and presentation layer).
+
+7. TESTING & VERIFICATION
+   - Executed `npm run build` in portal/.
+   - Confirmed exit code 0; all pages generated without warnings or type mismatch.
+   - Verified responsive grid across mobile, tablet, and wide desktop viewports.
+
+8. NEXT STEPS / OPEN ITEMS
+   - Commit session log on feat/editorial-design-overhaul.
+   - Merge feat/editorial-design-overhaul into main with --no-ff and clean up branch.
+================================================================================
