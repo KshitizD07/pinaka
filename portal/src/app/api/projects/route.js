@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
+// This route reads query params at request time — must be dynamic
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/projects
  * Query params: track, status, category

@@ -1,0 +1,70 @@
+================================================================================
+SESSION LOG: Portal UI Verification & Next.js Production Build
+================================================================================
+Date       : 2026-10-23
+Domain     : frontend
+Feature    : portal
+Status     : Completed
+--------------------------------------------------------------------------------
+
+1. OBJECTIVE
+   - Install production and development dependencies in portal/ using npm.
+   - Run a full Next.js production build (`next build`) to test type checks,
+     route generation, server-rendered components, and client-side chunks.
+   - Address and resolve any build errors, including Route Handler dynamic export
+     configuration required when reading query parameters in App Router routes.
+
+2. WORK PERFORMED & ARCHITECTURE DETAILS
+   - Installed all required packages in portal/:
+     * next 14.2.5
+     * react 18.3.1 / react-dom 18.3.1
+     * swr 2.2.5
+     * lucide-react 0.400.0
+     * clsx 2.1.1
+     * tailwindcss 3.4.4, autoprefixer, postcss
+   - Identified and resolved dynamic route generation constraint:
+     * File: portal/src/app/api/projects/route.js
+     * Resolution: Added `export const dynamic = 'force-dynamic'` so Next.js treats
+       the Route Handler as dynamic on-demand rather than attempting static analysis
+       during pre-rendering when `request.url` searchParams are parsed.
+   - Executed `npm run build`:
+     * Build completed with exit code 0.
+     * Prerendered static pages: `/` (8.88 kB), `/_not-found` (871 B).
+     * Server-rendered dynamic route: `/api/projects` (Route Handler).
+     * Generated client bundle size: 87.1 kB shared JS chunks.
+
+3. WHY BEHIND THE CHANGE
+   - Pre-merge build verification ensures that `main` branch never contains broken
+     syntax, unresolvable imports, invalid Next.js Route configurations, or
+     missing CSS dependencies.
+   - Adding `export const dynamic = 'force-dynamic'` aligns strictly with Next.js 14
+     App Router specifications for routes that inspect runtime URL query strings.
+
+4. WHY NOT THE ALTERNATIVE(S)
+   - Alternative 1: Skipping `next build` and only running in dev mode (`next dev`).
+     * Why Rejected: Dev mode suppresses static/dynamic route mismatch errors and
+       fails to validate tree shaking, bundle compilation, and server route guards.
+   - Alternative 2: Disabling static pre-rendering across the entire application.
+     * Why Rejected: Prerendering `/` statically gives instant First Contentful Paint
+       (FCP) and optimal SEO performance while `/api/projects` remains dynamically queryable.
+
+5. FILES MODIFIED / CREATED
+   - [MODIFY] portal/src/app/api/projects/route.js (added `export const dynamic = 'force-dynamic'`)
+   - [CREATE] portal/package-lock.json
+   - [CREATE] logs/frontend/portal/portal_ui_verification_2026-10-23.txt
+
+6. API ENDPOINTS / DB / EVENT CHANGES (if applicable)
+   - Endpoint: GET /api/projects
+     * Verified with query params: `?track=flagship`, `?status=mvp`, `?category=Campus Tech`
+     * Confirmed proper JSON payload structure with `{ projects: [...], total: N }`
+
+7. TESTING & VERIFICATION
+   - Executed `npm run build` in `C:\Users\kshit\cs\project\pinaka\portal`.
+   - Verified console output: "✓ Compiled successfully", "✓ Generating static pages (4/4)".
+   - Verified process exit code: 0.
+
+8. NEXT STEPS / OPEN ITEMS
+   - Commit log entry and merge `feat/portal-ui` branch into `main` with `--no-ff`.
+   - Clean up merged feature branch.
+   - Prepare standard templates/ directory for onboarding future child projects.
+================================================================================
