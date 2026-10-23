@@ -1,52 +1,100 @@
 import Link from 'next/link';
-import { Zap } from 'lucide-react';
+import PinakaBow from '@/components/ui/PinakaBow';
 
-const FOOTER_LINKS = [
-  { href: '#portfolio', label: 'Portfolio' },
-  { href: '#labs', label: 'Labs' },
-  { href: '/join', label: 'Join Pinaka' },
+const VENTURE_LINKS = [
+  { href: '#portfolio', label: 'Opendoor &middot; Campus PropTech' },
+  { href: '#portfolio', label: 'SkillSphere &middot; Verified EdTech' },
+  { href: '#portfolio', label: 'Intelli-Light &middot; ST-MARL Traffic' },
+];
+
+const GOVERNANCE_LINKS = [
+  { href: '#codex', label: 'The Engineering Codex' },
+  { href: '#foundry', label: 'SIH & Hackathon Incubation' },
+  { href: '#charter', label: 'Contributor IP Agreement' },
 ];
 
 export default function Footer() {
   return (
-    <footer className="border-t border-pinaka-border bg-pinaka-void">
-      <div className="mx-auto max-w-6xl px-6 py-12">
-        <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
-          {/* Brand */}
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2 text-pinaka-ink">
-              <Zap className="h-4 w-4 text-pinaka-accent" aria-hidden="true" />
-              <span className="font-bold tracking-tight">PINAKA</span>
+    <footer className="w-full border-t border-pinaka-hairline bg-pinaka-chalk text-pinaka-stone">
+      <div className="mx-auto max-w-[1440px] px-6 sm:px-10 lg:px-16 py-16 sm:py-20">
+        
+        {/* Main Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 border-b border-pinaka-hairline pb-12">
+          
+          {/* Brand & Namesake (5 cols) */}
+          <div className="md:col-span-5 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <PinakaBow className="h-6 w-auto text-pinaka-saffron" />
+                <span className="font-serif text-xl font-bold tracking-widest text-pinaka-charcoal">
+                  PINAKA
+                </span>
+                <span className="text-xs font-semibold text-pinaka-saffron tracking-wider">
+                  ॥ पिनाक ॥
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-pinaka-slate leading-relaxed max-w-sm mb-4 font-sans">
+                Named after the celestial, unwavering bow of Lord Shiva (Rudra). An independent 
+                venture studio and builder collective engineering production-grade software 
+                across enterprise campus systems, deeptech, and civic technology.
+              </p>
             </div>
-            <p className="max-w-xs text-sm text-pinaka-ink-muted">
-              A venture studio for builders who ship. We build bold products that solve real
-              problems.
-            </p>
+            <div className="font-mono text-xs text-pinaka-ash">
+              Foundry Coordinates &middot; 28&deg;36&apos;N 77&deg;12&apos;E
+            </div>
           </div>
 
-          {/* Links */}
-          <nav aria-label="Footer navigation">
-            <ul className="flex flex-wrap gap-6" role="list">
-              {FOOTER_LINKS.map(({ href, label }) => (
-                <li key={href}>
+          {/* Active Ventures (4 cols) */}
+          <div className="md:col-span-4">
+            <h4 className="font-serif text-xs font-bold uppercase tracking-widest text-pinaka-charcoal mb-4">
+              Active Studio Ventures
+            </h4>
+            <ul className="space-y-3 font-sans text-xs">
+              {VENTURE_LINKS.map(({ href, label }) => (
+                <li key={label}>
                   <Link
                     href={href}
-                    className="text-sm text-pinaka-ink-muted transition-colors hover:text-pinaka-ink"
+                    className="text-pinaka-slate hover:text-pinaka-saffron transition-colors block"
+                    dangerouslySetInnerHTML={{ __html: label }}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Governance & Collective (3 cols) */}
+          <div className="md:col-span-3">
+            <h4 className="font-serif text-xs font-bold uppercase tracking-widest text-pinaka-charcoal mb-4">
+              Studio Governance
+            </h4>
+            <ul className="space-y-3 font-sans text-xs">
+              {GOVERNANCE_LINKS.map(({ href, label }) => (
+                <li key={label}>
+                  <Link
+                    href={href}
+                    className="text-pinaka-slate hover:text-pinaka-saffron transition-colors block"
                   >
                     {label}
                   </Link>
                 </li>
               ))}
             </ul>
-          </nav>
+          </div>
+
         </div>
 
-        {/* Bottom bar */}
-        <div className="mt-10 border-t border-pinaka-border pt-6 text-center">
-          <p className="text-xs text-pinaka-ink-faint">
-            © 2026 Pinaka Studios. All rights reserved.
-          </p>
+        {/* Bottom Attribution Bar */}
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-pinaka-ash">
+          <div>
+            &copy; {new Date().getFullYear()} Pinaka Studios &middot; Independent Product Studio &middot; All Rights Reserved.
+          </div>
+          <div className="flex items-center gap-2 text-pinaka-slate">
+            <span>Sovereign Code</span>
+            <span>&middot;</span>
+            <span>Zero Compromise</span>
+          </div>
         </div>
+
       </div>
     </footer>
   );

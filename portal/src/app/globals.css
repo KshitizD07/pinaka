@@ -1,38 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    color-scheme: dark;
+    color-scheme: light dark;
   }
 
   html {
     scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    @apply bg-pinaka-void text-pinaka-ink font-sans antialiased;
+    @apply bg-pinaka-kailash text-pinaka-stone font-sans selection:bg-pinaka-saffron/20 selection:text-pinaka-saffron-deep;
   }
 
-  * {
-    @apply border-pinaka-border;
-  }
-
-  ::selection {
-    @apply bg-pinaka-accent/30 text-pinaka-ink;
+  /* Architectural rules */
+  hr {
+    @apply border-pinaka-hairline;
   }
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .font-serif-title {
+    font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
+    letter-spacing: 0.05em;
   }
 
-  .hide-scrollbar {
-    scrollbar-width: none;
+  .font-devanagari {
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.1em;
   }
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none;
+
+  .hairline-b {
+    border-bottom: 1px solid theme('colors.pinaka.hairline');
+  }
+
+  .hairline-t {
+    border-top: 1px solid theme('colors.pinaka.hairline');
+  }
+
+  .hairline-r {
+    border-right: 1px solid theme('colors.pinaka.hairline');
+  }
+
+  .hairline-l {
+    border-left: 1px solid theme('colors.pinaka.hairline');
   }
 }

@@ -1,17 +1,17 @@
 'use client';
 
 import { useProjects } from '@/hooks/useProjects';
-import ProjectCard from './ProjectCard';
+import ProjectLedgerRow from './ProjectLedgerRow';
 import Spinner from '@/components/ui/Spinner';
 import clsx from 'clsx';
 import { TRACK_LABELS } from '@/lib/constants';
 
 const FILTER_OPTIONS = [
-  { value: '', label: 'All' },
-  { value: 'flagship', label: TRACK_LABELS.flagship },
-  { value: 'research', label: TRACK_LABELS.research },
-  { value: 'incubating', label: TRACK_LABELS.incubating },
-  { value: 'community', label: TRACK_LABELS.community },
+  { value: '', label: 'Complete Ledger' },
+  { value: 'flagship', label: 'Primary Flagships' },
+  { value: 'research', label: 'DeepTech Research' },
+  { value: 'incubating', label: 'Incubating (SIH)' },
+  { value: 'community', label: 'Community Collective' },
 ];
 
 export default function PortfolioGrid() {
@@ -24,26 +24,37 @@ export default function PortfolioGrid() {
   return (
     <section
       id="portfolio"
-      className="bg-pinaka-void py-20"
+      className="w-full bg-pinaka-kailash py-16 sm:py-24"
       aria-labelledby="portfolio-heading"
     >
-      <div className="mx-auto max-w-6xl px-6">
-        {/* Section header */}
-        <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <div className="mx-auto max-w-[1440px] px-6 sm:px-10 lg:px-16">
+        
+        {/* Section Header */}
+        <div className="mb-10 flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-pinaka-hairline pb-6">
           <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="font-mono text-xs uppercase tracking-widest text-pinaka-saffron font-semibold">
+                Registry Index &middot; Phase 2026
+              </span>
+            </div>
             <h2
               id="portfolio-heading"
-              className="text-3xl font-extrabold tracking-tight text-pinaka-ink"
+              className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-pinaka-charcoal"
             >
-              Portfolio
+              The Studio Ledger of Works
             </h2>
-            <p className="mt-1 text-pinaka-ink-muted">
-              Products built at Pinaka, across tracks.
+            <p className="mt-2 text-sm text-pinaka-slate max-w-2xl font-sans">
+              Production systems, verified research models, and incubated student technologies 
+              curated under the Pinaka engineering baseline.
             </p>
           </div>
 
-          {/* Track filter */}
-          <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by track">
+          {/* Filter Bar (Tabbed Architectural Style) */}
+          <div
+            className="flex flex-wrap items-center gap-2 border border-pinaka-hairline bg-pinaka-chalk p-1.5 shadow-sm rounded-sm"
+            role="group"
+            aria-label="Filter ledger by track"
+          >
             {FILTER_OPTIONS.map(({ value, label }) => {
               const isActive = (filter.track ?? '') === value;
               return (
@@ -52,10 +63,10 @@ export default function PortfolioGrid() {
                   onClick={() => handleFilterChange(value)}
                   aria-pressed={isActive}
                   className={clsx(
-                    'rounded-full border px-4 py-1.5 text-xs font-medium transition-colors',
+                    'px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider transition-all duration-150 cursor-pointer rounded-sm font-sans',
                     isActive
-                      ? 'border-pinaka-accent bg-pinaka-accent/10 text-pinaka-accent'
-                      : 'border-pinaka-border bg-transparent text-pinaka-ink-muted hover:border-pinaka-ink-muted hover:text-pinaka-ink'
+                      ? 'bg-pinaka-saffron text-white shadow-saffron-sm'
+                      : 'text-pinaka-slate hover:text-pinaka-stone hover:bg-pinaka-ice'
                   )}
                 >
                   {label}
@@ -65,26 +76,52 @@ export default function PortfolioGrid() {
           </div>
         </div>
 
-        {/* Content */}
-        {isLoading ? (
-          <div className="flex items-center justify-center py-24">
-            <Spinner size="lg" />
+        {/* The Ledger Container */}
+        <div className="border border-pinaka-hairline bg-pinaka-chalk shadow-editorial">
+          {/* Ledger Table Sub-Header */}
+          <div className="hidden lg:grid grid-cols-12 gap-8 px-8 py-3.5 border-b border-pinaka-hairline bg-pinaka-ice text-[11px] font-mono uppercase tracking-widest text-pinaka-ash">
+            <div className="col-span-4">Venture Nomenclature & Index</div>
+            <div className="col-span-5 border-l border-pinaka-hairline pl-8">Core Architecture & Highlights</div>
+            <div className="col-span-3 border-l border-pinaka-hairline pl-8">Operational State & Launch</div>
           </div>
-        ) : error ? (
-          <div className="rounded-xl border border-pinaka-ember/30 bg-pinaka-ember/5 px-6 py-10 text-center">
-            <p className="text-pinaka-ember">Failed to load projects. Please try again.</p>
-          </div>
-        ) : projects.length === 0 ? (
-          <div className="rounded-xl border border-pinaka-border bg-pinaka-surface px-6 py-16 text-center">
-            <p className="text-pinaka-ink-muted">No projects found for this filter.</p>
-          </div>
-        ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {projects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
-          </div>
-        )}
+
+          {/* Content Rows */}
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-24 gap-3">
+              <Spinner size="lg" />
+              <span className="font-mono text-xs text-pinaka-ash uppercase tracking-wider">
+                Accessing Studio Ledger...
+              </span>
+            </div>
+          ) : error ? (
+            <div className="p-12 text-center">
+              <p className="font-serif text-lg text-pinaka-rudra">
+                Failed to access ledger registry.
+              </p>
+              <p className="text-xs text-pinaka-slate mt-1 font-mono">
+                Verify internal data/projects.json integrity.
+              </p>
+            </div>
+          ) : projects.length === 0 ? (
+            <div className="p-16 text-center">
+              <p className="font-serif text-lg text-pinaka-stone">
+                No active ventures found in this classification.
+              </p>
+              <p className="text-xs text-pinaka-slate mt-1">
+                Candidate prototypes in this track are currently pending Gate 2 Opportunity Evaluation.
+              </p>
+            </div>
+          ) : (
+            projects.map((project, idx) => (
+              <ProjectLedgerRow
+                key={project.id || project.name}
+                project={project}
+                index={idx}
+              />
+            ))
+          )}
+        </div>
+
       </div>
     </section>
   );
