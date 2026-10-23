@@ -1,0 +1,144 @@
+================================================================================
+SESSION LOG: Next.js Portal Scaffold — App Router, Tailwind, and Lib Layer
+================================================================================
+Date       : 2026-10-23
+Domain     : frontend
+Feature    : architecture
+Status     : Completed
+--------------------------------------------------------------------------------
+
+1. OBJECTIVE
+   - Scaffold the Pinaka portal as a Next.js 14 App Router application inside
+     the portal/ subdirectory of the monorepo.
+   - Set up Tailwind CSS with Pinaka design tokens, SWR for data fetching,
+     and the full component/lib/hook layer needed for the homepage.
+   - Keep the monorepo root clean — portal/ is self-contained except for
+     reading ../data/projects.json.
+
+2. WORK PERFORMED & ARCHITECTURE DETAILS
+
+   Config Files:
+   - portal/package.json: Next.js 14.2.5, Tailwind 3.4.x, SWR 2.2.x,
+     lucide-react, clsx. No TypeScript — JS with JSConfig aliases.
+   - portal/jsconfig.json: @/* alias resolves to ./src/*
+   - portal/next.config.js: Minimal config, reactStrictMode enabled.
+   - portal/tailwind.config.js: Full Pinaka color palette (12 tokens),
+     Inter font family, custom fadeUp animation.
+   - portal/postcss.config.js: Standard autoprefixer + tailwind plugins.
+   - portal/.env.local: NEXT_PUBLIC_APP_URL placeholder.
+   - portal/.gitignore: Excludes .next/, node_modules/, .env.local.
+
+   Lib Layer (portal/src/lib/):
+   - projects.js: Imports data/projects.json (two levels up from portal/src/lib).
+     Exports: getAllProjects(), getProjectsByTrack(), getProjectsByStatus(),
+     getFeaturedProjects() (flagship + mvp/pilot/live).
+   - constants.js: TRACKS, STATUSES, CATEGORIES arrays; TRACK_LABELS,
+     STATUS_LABELS, STATUS_COLORS maps; MANIFESTO_RULES array from docs.
+
+   Context:
+   - ThemeContext.jsx: 'use client' provider. Dark default. localStorage
+     persistence under 'pinaka-theme' key. Prevents hydration flash by
+     hiding children until mounted.
+
+   Hook:
+   - useProjects.js: SWR fetcher for /api/projects. Accepts initialFilter,
+     returns { projects, total, isLoading, error, filter, setFilter }.
+     Deduplication interval: 60s. No refetch on focus.
+
+   API Route:
+   - app/api/projects/route.js: Next.js Route Handler (GET). Reads
+     ../../data/projects.json via fs.readFileSync from process.cwd()/../data/.
+     Supports ?track, ?status, ?category query filters.
+     Returns { projects: [...], total: N }.
+
+   App Router:
+   - layout.jsx: Inter font (next/font/google), ThemeProvider wrapper,
+     Navbar + Footer in flex-col min-h-screen shell. Metadata object set.
+   - page.jsx: Composes Hero → StatsBar → PortfolioGrid → ManifestoStrip.
+   - globals.css: Tailwind directives, dark mode base, custom selection color.
+
+   UI Components:
+   - Badge.jsx: Track and status variants. Uses TRACK_LABELS, STATUS_COLORS.
+   - Button.jsx: primary/ghost/outline × sm/md/lg. Full a11y focus ring.
+   - Spinner.jsx: Accessible animated spinner with aria-label.
+
+   Layout Components:
+   - Navbar.jsx: Sticky top bar. Pinaka wordmark + Zap icon. Three nav links.
+     Theme toggle button (Sun/Moon). md: hidden on mobile nav links.
+   - Footer.jsx: Brand + tagline + nav links. "© 2026 Pinaka Studios."
+
+   Section Components:
+   - Hero.jsx: Full-width min-h-[90vh]. Subtle grid overlay (3% opacity).
+     "Build Bold. Ship Real." headline with accent color. Two CTAs.
+   - StatsBar.jsx: Server component. Derives stats from getAllProjects():
+     project count, track count, research lab indicator.
+   - PortfolioGrid.jsx: Client component. Uses useProjects SWR hook.
+     Track filter bar (All/Flagship/Research/Incubating/Community).
+     Handles loading, error, empty states gracefully.
+   - ProjectCard.jsx: Renders all project fields. Highlights list,
+     tech stack tags, conditional Demo/Repo action buttons.
+   - ManifestoStrip.jsx: Four numbered golden rules from MANIFESTO_RULES.
+
+3. WHY BEHIND THE CHANGE
+   - The portal is the public face of Pinaka. It needs to be functional,
+     accessible, and maintainable from day one — not "good enough for a demo."
+   - Building lib/ and hooks/ separately from components enforces separation
+     of concerns and makes the data layer testable independently of the UI.
+
+4. WHY NOT THE ALTERNATIVE(S)
+   - TypeScript: Spec requires JS. jsconfig.json provides path aliases.
+   - Redux/Zustand: Overkill for this data shape. SWR provides caching,
+     revalidation, and error handling with minimal boilerplate.
+   - React Query: SWR is lighter and sufficient for the read-only data needs.
+   - Glassmorphism/gradients: Spec explicitly prohibits. Editorial dark
+     typography is the intended aesthetic.
+   - Separate frontend repo: Monorepo keeps data and UI co-located,
+     enabling server-side reads of projects.json without a network hop.
+
+5. FILES MODIFIED / CREATED
+   - [CREATE] portal/package.json
+   - [CREATE] portal/jsconfig.json
+   - [CREATE] portal/next.config.js
+   - [CREATE] portal/tailwind.config.js
+   - [CREATE] portal/postcss.config.js
+   - [CREATE] portal/.env.local
+   - [CREATE] portal/.gitignore
+   - [CREATE] portal/src/lib/projects.js
+   - [CREATE] portal/src/lib/constants.js
+   - [CREATE] portal/src/context/ThemeContext.jsx
+   - [CREATE] portal/src/hooks/useProjects.js
+   - [CREATE] portal/src/app/api/projects/route.js
+   - [CREATE] portal/src/app/globals.css
+   - [CREATE] portal/src/app/layout.jsx
+   - [CREATE] portal/src/app/page.jsx
+   - [CREATE] portal/src/components/ui/Badge.jsx
+   - [CREATE] portal/src/components/ui/Button.jsx
+   - [CREATE] portal/src/components/ui/Spinner.jsx
+   - [CREATE] portal/src/components/layout/Navbar.jsx
+   - [CREATE] portal/src/components/layout/Footer.jsx
+   - [CREATE] portal/src/components/sections/Hero.jsx
+   - [CREATE] portal/src/components/sections/StatsBar.jsx
+   - [CREATE] portal/src/components/sections/PortfolioGrid.jsx
+   - [CREATE] portal/src/components/sections/ProjectCard.jsx
+   - [CREATE] portal/src/components/sections/ManifestoStrip.jsx
+
+6. API ENDPOINTS / DB / EVENT CHANGES (if applicable)
+   - GET /api/projects
+     Query params: track (string), status (string), category (string)
+     Response: { projects: Project[], total: number }
+     Error: { error: string, projects: [], total: 0 } with HTTP 500
+
+7. TESTING & VERIFICATION
+   - All files created and staged; git status confirmed 24 new files.
+   - JSON imports verified: data/projects.json path resolution from lib/projects.js
+     follows ../../data/projects.json pattern (from portal/src/lib → portal/src → portal → root).
+   - API route path: process.cwd()/../data/projects.json — cwd is portal/ at runtime.
+   - Build verification deferred to Phase 3 (feat/portal-ui) after npm install.
+
+8. NEXT STEPS / OPEN ITEMS
+   - Phase 3: Run npm install in portal/, then npx next build to verify compilation.
+   - Fix any import/type errors surfaced by the build.
+   - Add /join page (placeholder) — currently linked but not implemented.
+   - Add /labs page once research track projects have dedicated detail pages.
+   - Consider og:image generation using @vercel/og in a future phase.
+================================================================================
