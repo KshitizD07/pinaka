@@ -1,0 +1,104 @@
+================================================================================
+PINAKA LOGGING PROTOCOL
+================================================================================
+Project    : Pinaka Venture Studio Hub
+Maintained : Engineering Team
+Version    : 1.0.0
+--------------------------------------------------------------------------------
+
+PURPOSE
+-------
+Every meaningful engineering task, session, or architectural decision in the
+Pinaka project MUST produce a structured log file. These logs serve as the
+living institutional memory of the project — ensuring that any engineer can
+understand what was done, why it was done, and what comes next.
+
+Logs are NOT optional. They are part of the definition of "done".
+
+FILE NAMING CONVENTION
+----------------------
+  logs/<domain>/<feature>/<task_name>_YYYY-MM-DD.txt
+
+Examples:
+  logs/architecture/registry/project_registry_schema_2026-10-23.txt
+  logs/frontend/architecture/portal_scaffold_2026-10-23.txt
+  logs/frontend/portal/portal_ui_verification_2026-10-23.txt
+  logs/backend/auth/jwt_refresh_2026-10-24.txt
+
+DOMAINS
+-------
+  architecture  — System design, schemas, data models, ADRs
+  frontend      — UI components, pages, hooks, context
+  backend       — API routes, services, DB migrations
+  devops        — CI/CD, deployment, infra changes
+  security      — Auth, secrets, vulnerability fixes
+  testing       — Test suites, coverage, QA sessions
+
+LOG FILE TEMPLATE
+-----------------
+Every log file MUST follow this exact structure:
+
+================================================================================
+SESSION LOG: <TASK_TITLE>
+================================================================================
+Date       : YYYY-MM-DD
+Domain     : <domain>
+Feature    : <feature>
+Status     : [ Completed / In Progress / Blocked ]
+--------------------------------------------------------------------------------
+
+1. OBJECTIVE
+   - What was the goal of this session/task?
+
+2. WORK PERFORMED & ARCHITECTURE DETAILS
+   - Step-by-step description of what was built or changed
+   - Include design decisions and rationale inline
+
+3. WHY BEHIND THE CHANGE
+   - Business or technical reason this work was necessary
+
+4. WHY NOT THE ALTERNATIVE(S)
+   - What other approaches were considered and rejected, and why
+
+5. FILES MODIFIED / CREATED
+   - [CREATE] path/to/file
+   - [MODIFY] path/to/file
+   - [DELETE] path/to/file
+
+6. API ENDPOINTS / DB / EVENT CHANGES (if applicable)
+   - N/A or full details
+
+7. TESTING & VERIFICATION
+   - How was the work verified to be correct?
+
+8. NEXT STEPS / OPEN ITEMS
+   - What remains to be done? Any blockers?
+================================================================================
+
+GIT COMMIT DISCIPLINE
+---------------------
+Each log file should be committed separately after the feature commit it
+documents. Example:
+
+  git add data/projects.json
+  git commit -m "create: project registry schema and initial portfolio entries"
+
+  git add logs/architecture/registry/project_registry_schema_2026-10-23.txt
+  git commit -m "add: session log for project registry schema"
+
+COMMIT VERB CONVENTIONS
+-----------------------
+  create: — new file or module being introduced for the first time
+  add:    — adding content to an existing system (log, test, config entry)
+  update: — modifying existing functionality
+  fix:    — correcting a bug or broken behavior
+  remove: — deleting a file or feature
+
+RULES
+-----
+1. No skipping logs. If you built it, you logged it.
+2. No vague entries. "Updated stuff" is not acceptable.
+3. Logs are append-only. Never edit a past log — create a new one.
+4. One log per logical task/session. Don't bundle unrelated work.
+5. Logs must be committed to git alongside the work they describe.
+================================================================================
