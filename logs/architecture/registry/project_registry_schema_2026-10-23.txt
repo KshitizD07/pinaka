@@ -1,0 +1,72 @@
+================================================================================
+SESSION LOG: Project Registry Schema and Initial Portfolio Entries
+================================================================================
+Date       : 2026-10-23
+Domain     : architecture
+Feature    : registry
+Status     : Completed
+--------------------------------------------------------------------------------
+
+1. OBJECTIVE
+   - Define the canonical data schema for all Pinaka portfolio projects.
+   - Populate the registry with the three founding projects: Opendoor,
+     SkillSphere, and Intelli-Light.
+   - Establish data/projects.json as the single source of truth (SSoT)
+     for all project metadata across the Pinaka platform.
+
+2. WORK PERFORMED & ARCHITECTURE DETAILS
+   - Created data/projects.json at the monorepo root level.
+   - Defined a flat JSON array schema with the following fields per entry:
+       id           : URL-safe unique identifier (kebab-case)
+       name         : Display name
+       tagline      : One-line project description
+       category     : Domain category (Campus Tech, EdTech, AI / ML, etc.)
+       track        : Organizational track (flagship/research/incubating/community)
+       status       : Lifecycle stage (concept/prototype/mvp/pilot/live/paused/archived)
+       techStack    : Array of technology names
+       leadBuilder  : Primary builder's name
+       repoUrl      : GitHub repo URL or null if private/not yet created
+       demoUrl      : Live demo URL or null
+       description  : Full paragraph description of the project
+       highlights   : Array of 3 key technical/product highlights
+   - Populated with three projects:
+       1. Opendoor     — track: flagship, status: mvp
+       2. SkillSphere  — track: flagship, status: mvp, demoUrl set to live Vercel deployment
+       3. Intelli-Light — track: research, status: prototype
+
+3. WHY BEHIND THE CHANGE
+   - Pinaka needs a centralized, machine-readable registry to power the
+     portal UI (PortfolioGrid, StatsBar, filtering) without relying on a
+     database at this early stage.
+   - A flat JSON file is the correct choice now — zero infrastructure cost,
+     version-controlled with git, editable by any team member via PR.
+   - The schema is designed to be forward-compatible: null fields (repoUrl,
+     demoUrl) are explicit placeholders, not omissions.
+
+4. WHY NOT THE ALTERNATIVE(S)
+   - Database (PostgreSQL/MongoDB): Overkill for a portfolio registry that
+     changes infrequently. Adds infra burden with no benefit at this scale.
+   - CMS (Contentful, Sanity): Introduces external dependency and cost.
+     Git-native approach keeps all project data auditable and in-repo.
+   - Hardcoded in component files: Violates SSoT principle — data would
+     need to be updated in multiple places as projects are added.
+
+5. FILES MODIFIED / CREATED
+   - [CREATE] data/projects.json
+
+6. API ENDPOINTS / DB / EVENT CHANGES (if applicable)
+   - N/A — static JSON file; will be read by /api/projects route in Phase 2.
+
+7. TESTING & VERIFICATION
+   - JSON validated via PowerShell: (Get-Content data/projects.json | ConvertFrom-Json).Count
+     confirmed 3 entries parsed without error.
+   - Schema fields verified against spec: all required fields present in each entry.
+   - SkillSphere demoUrl confirmed: https://skill-sphere-v1.vercel.app/
+
+8. NEXT STEPS / OPEN ITEMS
+   - Phase 2: Build Next.js portal in portal/ directory.
+   - Create /api/projects route that reads this file with filtering support.
+   - Add more projects as they are onboarded into Pinaka.
+   - Consider adding a JSON Schema file (data/projects.schema.json) for
+     validation in CI once the project count grows beyond 5-6.
+================================================================================
