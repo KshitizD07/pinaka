@@ -1,0 +1,56 @@
+[
+  {
+    "id": "opendoor",
+    "name": "Opendoor",
+    "tagline": "Digital hostel management & gate pass platform for university campuses.",
+    "category": "Campus Tech",
+    "track": "flagship",
+    "status": "mvp",
+    "techStack": ["Node.js", "PostgreSQL", "Next.js", "Socket.io"],
+    "leadBuilder": "Kshitij",
+    "repoUrl": null,
+    "demoUrl": null,
+    "description": "Full-stack hostel management system with digital gate passes, QR-JWT scanning, concurrency-safe bed booking, payment processing, and real-time Socket.io updates.",
+    "highlights": [
+      "Cryptographic offline-ready QR gate passes",
+      "Concurrency-proof soft-lock bed allocation",
+      "Dual-token auth with Argon2id + TOTP 2FA"
+    ]
+  },
+  {
+    "id": "skillsphere",
+    "name": "SkillSphere",
+    "tagline": "Peer-to-peer skill exchange platform connecting learners and teachers within communities.",
+    "category": "EdTech",
+    "track": "flagship",
+    "status": "mvp",
+    "techStack": ["Next.js", "Node.js", "MongoDB", "Tailwind CSS"],
+    "leadBuilder": "Kshitij",
+    "repoUrl": null,
+    "demoUrl": "https://skill-sphere-v1.vercel.app/",
+    "description": "A community-driven platform where users can list skills they want to teach and skills they want to learn, enabling organic skill-swap connections with scheduling and session management.",
+    "highlights": [
+      "Organic skill-swap matching without monetary exchange",
+      "Integrated session scheduling and calendar sync",
+      "Community reputation and endorsement system"
+    ]
+  },
+  {
+    "id": "intelli-light",
+    "name": "Intelli-Light",
+    "tagline": "AI-driven adaptive street lighting system for smart cities and energy conservation.",
+    "category": "AI / ML",
+    "track": "research",
+    "status": "prototype",
+    "techStack": ["Python", "TensorFlow", "Raspberry Pi", "MQTT"],
+    "leadBuilder": "Kshitij",
+    "repoUrl": null,
+    "demoUrl": null,
+    "description": "An intelligent street lighting system using computer vision and ML to adaptively control light intensity based on real-time pedestrian and vehicle density, reducing energy consumption by up to 40%.",
+    "highlights": [
+      "Real-time pedestrian and vehicle density detection",
+      "Adaptive dimming algorithm with 40% energy savings",
+      "Edge-deployed ML inference on low-cost hardware"
+    ]
+  }
+]
