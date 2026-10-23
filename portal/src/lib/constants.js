@@ -26,8 +26,8 @@ export const CATEGORIES = [
 /** Human-readable track labels */
 export const TRACK_LABELS = {
   flagship: 'Primary Flagship',
-  research: 'DeepTech Research',
-  incubating: 'Incubation (SIH)',
+  research: 'Applied Research',
+  incubating: 'Incubation Track',
   community: 'Community Collective',
 };
 
@@ -122,28 +122,28 @@ export const TRACK_COLORS = {
 export const MANIFESTO_RULES = [
   {
     num: 'I',
-    devanagari: '०१',
+    code: '01',
     rule: 'Execution and Evidence Over Ideas',
     description:
       'Ideas carry zero sovereign weight until backed by working code, real user interaction, and verifiable audit trials.',
   },
   {
     num: 'II',
-    devanagari: '०२',
+    code: '02',
     rule: 'Start from the Problem, Not Technology',
     description:
       'We never deploy distributed consensus or neural nets where a plain Postgres table and a single clean index will suffice.',
   },
   {
     num: 'III',
-    devanagari: '०३',
+    code: '03',
     rule: 'The Simplest Architecture That Works Wins',
     description:
       'Every line of unnecessary complexity is technical liability. We build modular, resilient systems with crisp boundaries.',
   },
   {
     num: 'IV',
-    devanagari: '०४',
+    code: '04',
     rule: 'Never Fake Traction or Misrepresent Maturity',
     description:
       'Never present a prototype as a deployed product, or a deployed product as a business. Total transparency with builders and partners.',

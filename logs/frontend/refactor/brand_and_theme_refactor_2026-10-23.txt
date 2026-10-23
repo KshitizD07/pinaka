@@ -1,0 +1,104 @@
+================================================================================
+SESSION LOG: Brand Refactor, Theme Gradient Overhaul, and Studio Dossier Generalization
+================================================================================
+Date       : 2026-10-23
+Domain     : frontend
+Feature    : refactor
+Status     : Completed
+--------------------------------------------------------------------------------
+
+1. OBJECTIVE
+   - Execute user design refactor directives across the Pinaka platform:
+     1. Remove all Devanagari/Hindi mentions of Pinaka (॥ पिनाक ॥) and all references
+        to Lord Shiva, Rudra, and associated mythological framing.
+     2. Remove all specific mentions of Smart India Hackathon (SIH); generalize the
+        Foundry as an open umbrella backing any high-potential product or innovation.
+     3. Generalize the Studio Dossier (Active Ventures to show only count '03 Systems',
+        domain vectors generalized to 'Multi-Disciplinary Applied Software', engineering
+        standard generalized to 'Production Baseline · Strict Verification').
+     4. Purge all em dashes (— / &mdash;) across the codebase, replacing with colons,
+        standard hyphens, or natural phrasing.
+     5. Remove foundry coordinates and ensure the creator's name is rendered as 'KSHITIZ'.
+     6. Overhaul the background theme: Implement a smooth diagonal gradient traveling
+        from clean, soft blue at the top-left, through light blue into crisp white at
+        the center, transitioning into soft light green, and terminating as clean green
+        at the bottom-right (calibrated so colors remain luminous, not dark).
+
+2. WORK PERFORMED & ARCHITECTURE DETAILS
+   - Background Gradient Architecture (portal/src/app/globals.css):
+     * Configured fixed diagonal gradient:
+       `linear-gradient(135deg, #7fafe6 0%, #b3d7f9 22%, #e5f1fb 38%, #ffffff 50%, #e2f8ec 62%, #a3e8c1 78%, #4dc983 100%)`
+     * Applied `background-attachment: fixed` on body so the smooth transition spans
+       seamlessly across the viewport during scroll.
+     * Container backgrounds adjusted to translucent white (`bg-white/80` to `bg-white/95`
+       with `backdrop-blur-sm` and `border-pinaka-hairline`) ensuring high contrast
+       and text legibility for `#1E293B` text and saffron accents.
+   - Brand & Copy Cleanup:
+     * Removed `॥ पिनाक ॥` from Navbar, Footer, and layout metadata.
+     * Removed all mythological references and Devanagari numeral markers (`०१`, `०२`, etc.),
+       replacing them with clean modern indexing (`01`, `02`, `03`).
+     * Cleaned up PinakaBow.jsx vector component to serve as a pure aerodynamic mark.
+     * Updated data/projects.json: Changed `leadBuilder` from 'Kshitij' to 'KSHITIZ'.
+     * Purged foundry coordinates (`28°36'N 77°12'E`) from footer.
+     * Replaced all em dashes with colons, hyphens, or middle dots.
+   - Studio Dossier Generalization (portal/src/components/sections/Hero.jsx):
+     * Active Ventures: Displays `03 Systems` (names removed).
+     * Domain Vectors: Displays `Multi-Disciplinary Applied Software`.
+     * Engineering Standard: Displays `Production Baseline · Strict Verification`.
+     * Disciplines Box: Broadened to `Distributed Systems`, `High-Throughput Databases`,
+       `Applied Machine Learning`, `Event-Driven Architecture`, `Cryptographic Security`,
+       `Edge Computing`.
+   - Foundry & Incubation Generalization (portal/src/components/sections/FoundryIntake.jsx):
+     * Replaced SIH-specific branding with generalized tracks:
+       - Track 2.1: Early-Stage Product Incubation (Prototype Hardening)
+       - Track 2.2: Peer Ventures & Independent Builders (Community Showcase)
+       - Track 2.3: Sovereign 100% IP Retention (Builder Rights)
+     * Updated templates (`templates/contributor-agreement-checklist.md`,
+       `templates/opportunity-evaluation-template.md`, `templates/product-case-study-template.md`).
+
+3. WHY BEHIND THE CHANGE
+   - Aligns brand positioning with an open, secular, and globally respected product studio.
+   - Broadens builder intake beyond a single hackathon, inviting any ambitious student
+     or peer developer to incubate their software under Pinaka.
+   - The diagonal blue-to-white-to-green gradient creates a fresh, luminous, high-energy
+     feel while maintaining high text contrast and visual clarity.
+
+4. WHY NOT THE ALTERNATIVE(S)
+   - Alternative 1: Dark mode gradient with saturated neon blues and greens.
+     * Why Rejected: Violates the user's explicit directive ("don't make colors very dark").
+   - Alternative 2: Vertical linear gradient (top blue to bottom green).
+     * Why Rejected: A diagonal 135-degree flow creates an organic transition passing through
+       white at the center, giving the viewport dynamic balance.
+
+5. FILES MODIFIED / CREATED
+   - [MODIFY] data/projects.json
+   - [MODIFY] portal/src/app/globals.css
+   - [MODIFY] portal/src/app/layout.jsx
+   - [MODIFY] portal/src/components/layout/Navbar.jsx
+   - [MODIFY] portal/src/components/layout/Footer.jsx
+   - [MODIFY] portal/src/components/sections/Hero.jsx
+   - [MODIFY] portal/src/components/sections/StatsBar.jsx
+   - [MODIFY] portal/src/components/sections/PortfolioGrid.jsx
+   - [MODIFY] portal/src/components/sections/ProjectLedgerRow.jsx
+   - [MODIFY] portal/src/components/sections/ManifestoStrip.jsx
+   - [MODIFY] portal/src/components/sections/FoundryIntake.jsx
+   - [MODIFY] portal/src/components/ui/PinakaBow.jsx
+   - [MODIFY] portal/src/lib/constants.js
+   - [MODIFY] portal/tailwind.config.js
+   - [MODIFY] templates/contributor-agreement-checklist.md
+   - [MODIFY] templates/opportunity-evaluation-template.md
+   - [MODIFY] templates/product-case-study-template.md
+   - [CREATE] logs/frontend/refactor/brand_and_theme_refactor_2026-10-23.txt
+
+6. API ENDPOINTS / DB / EVENT CHANGES (if applicable)
+   - Updated data/projects.json leadBuilder entries to 'KSHITIZ'.
+
+7. TESTING & VERIFICATION
+   - Executed `npm run build` in portal/.
+   - Confirmed exit code 0; static pages and API routes generated successfully.
+   - Verified that search for prohibited terms (Shiva, Rudra, Devanagari, SIH, em dashes) returns 0 matches in source code.
+
+8. NEXT STEPS / OPEN ITEMS
+   - Commit log entry on feat/refactor-brand-and-theme.
+   - Merge feat/refactor-brand-and-theme into main with --no-ff and delete branch.
+================================================================================

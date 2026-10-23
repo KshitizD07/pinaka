@@ -1,6 +1,6 @@
 /**
- * Pinaka Celestial Bow Motif (Vector graphic)
- * Inspired by the divine bow of Lord Shiva — precision, balance, and focused power.
+ * Pinaka Studio Geometric Mark
+ * High-precision aerodynamic vector emblem.
  */
 export default function PinakaBow({ className = 'h-6 w-auto text-pinaka-saffron' }) {
   return (
@@ -11,7 +11,7 @@ export default function PinakaBow({ className = 'h-6 w-auto text-pinaka-saffron'
       className={className}
       aria-hidden="true"
     >
-      {/* Taut outer celestial arc */}
+      {/* Outer precision arc */}
       <path
         d="M 5 20 C 35 2, 85 2, 115 20"
         stroke="currentColor"
@@ -26,7 +26,7 @@ export default function PinakaBow({ className = 'h-6 w-auto text-pinaka-saffron'
         strokeOpacity="0.6"
         strokeLinecap="round"
       />
-      {/* Bowstring */}
+      {/* Precision horizontal axis */}
       <line
         x1="5"
         y1="20"
@@ -37,12 +37,10 @@ export default function PinakaBow({ className = 'h-6 w-auto text-pinaka-saffron'
         strokeDasharray="2 2"
         strokeOpacity="0.4"
       />
-      {/* Central Arrow rest / Axis */}
+      {/* Center focus and vector pointer */}
       <circle cx="60" cy="20" r="2.5" fill="currentColor" />
       <line x1="60" y1="9" x2="60" y2="34" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      {/* Arrowhead tip pointing down towards target */}
       <path d="M 57 31 L 60 36 L 63 31" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      {/* Bow nocks */}
       <circle cx="5" cy="20" r="1.5" fill="currentColor" />
       <circle cx="115" cy="20" r="1.5" fill="currentColor" />
     </svg>

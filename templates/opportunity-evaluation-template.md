@@ -1,14 +1,14 @@
 # Opportunity Evaluation Template (Gate 2 Deliverable)
 
 > Complete this document to transition from **Opportunity Evaluation** to **Validation / Prototyping** (Gate 2).
-> Useful for vetting hackathon / SIH submissions or external builder proposals.
+> Useful for vetting project candidate submissions and external builder proposals.
 
 ---
 
 ## 1. Project Overview
 * **Project Name:**
 * **Lead Builder(s):**
-* **Target Track:** [ Flagship / Incubating (SIH) / Community / Research ]
+* **Target Track:** [ Flagship / Incubating / Community / Research ]
 * **Category:** [ Campus Tech / GovTech / EdTech / AI / ML / FinTech / Open Source ]
 
 ## 2. Severity & Frequency Scorecard

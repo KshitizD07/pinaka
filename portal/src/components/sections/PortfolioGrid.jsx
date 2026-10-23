@@ -4,13 +4,12 @@ import { useProjects } from '@/hooks/useProjects';
 import ProjectLedgerRow from './ProjectLedgerRow';
 import Spinner from '@/components/ui/Spinner';
 import clsx from 'clsx';
-import { TRACK_LABELS } from '@/lib/constants';
 
 const FILTER_OPTIONS = [
   { value: '', label: 'Complete Ledger' },
   { value: 'flagship', label: 'Primary Flagships' },
-  { value: 'research', label: 'DeepTech Research' },
-  { value: 'incubating', label: 'Incubating (SIH)' },
+  { value: 'research', label: 'Applied Research' },
+  { value: 'incubating', label: 'Incubating Systems' },
   { value: 'community', label: 'Community Collective' },
 ];
 
@@ -24,7 +23,7 @@ export default function PortfolioGrid() {
   return (
     <section
       id="portfolio"
-      className="w-full bg-pinaka-kailash py-16 sm:py-24"
+      className="w-full bg-transparent py-16 sm:py-24"
       aria-labelledby="portfolio-heading"
     >
       <div className="mx-auto max-w-[1440px] px-6 sm:px-10 lg:px-16">
@@ -44,14 +43,14 @@ export default function PortfolioGrid() {
               The Studio Ledger of Works
             </h2>
             <p className="mt-2 text-sm text-pinaka-slate max-w-2xl font-sans">
-              Production systems, verified research models, and incubated student technologies 
+              Production systems, verified research models, and community ventures 
               curated under the Pinaka engineering baseline.
             </p>
           </div>
 
           {/* Filter Bar (Tabbed Architectural Style) */}
           <div
-            className="flex flex-wrap items-center gap-2 border border-pinaka-hairline bg-pinaka-chalk p-1.5 shadow-sm rounded-sm"
+            className="flex flex-wrap items-center gap-2 border border-pinaka-hairline bg-white/90 p-1.5 shadow-sm rounded-sm"
             role="group"
             aria-label="Filter ledger by track"
           >
@@ -77,9 +76,9 @@ export default function PortfolioGrid() {
         </div>
 
         {/* The Ledger Container */}
-        <div className="border border-pinaka-hairline bg-pinaka-chalk shadow-editorial">
+        <div className="border border-pinaka-hairline bg-white/90 backdrop-blur-sm shadow-editorial">
           {/* Ledger Table Sub-Header */}
-          <div className="hidden lg:grid grid-cols-12 gap-8 px-8 py-3.5 border-b border-pinaka-hairline bg-pinaka-ice text-[11px] font-mono uppercase tracking-widest text-pinaka-ash">
+          <div className="hidden lg:grid grid-cols-12 gap-8 px-8 py-3.5 border-b border-pinaka-hairline bg-pinaka-ice/80 text-[11px] font-mono uppercase tracking-widest text-pinaka-ash">
             <div className="col-span-4">Venture Nomenclature & Index</div>
             <div className="col-span-5 border-l border-pinaka-hairline pl-8">Core Architecture & Highlights</div>
             <div className="col-span-3 border-l border-pinaka-hairline pl-8">Operational State & Launch</div>
@@ -95,7 +94,7 @@ export default function PortfolioGrid() {
             </div>
           ) : error ? (
             <div className="p-12 text-center">
-              <p className="font-serif text-lg text-pinaka-rudra">
+              <p className="font-serif text-lg text-pinaka-crimson">
                 Failed to access ledger registry.
               </p>
               <p className="text-xs text-pinaka-slate mt-1 font-mono">

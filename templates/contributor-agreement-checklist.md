@@ -1,6 +1,6 @@
 # Pinaka Contributor & Project Onboarding Agreement Checklist
 
-> Use this checklist when onboarding a friend's project, external team, or hackathon (SIH) entry into the Pinaka Studio portfolio.
+> Use this checklist when onboarding an external project, peer initiative, or builder prototype into the Pinaka Studio portfolio.
 
 ---
 
@@ -8,7 +8,7 @@
 - [ ] Project Name: _______________________
 - [ ] Primary Creator / Lead Builder: _______________________
 - [ ] GitHub Repository URL: _______________________
-- [ ] Target Track: [ ] Flagship  [ ] Incubating (Hackathon/SIH)  [ ] Community Showcase  [ ] Research Labs
+- [ ] Target Track: [ ] Flagship  [ ] Incubating  [ ] Community Showcase  [ ] Research Labs
 
 ## 2. IP & Ownership Guarantees
 - [ ] **Creator Retains IP**: The creator/builder retains 100% intellectual property ownership of their source code, designs, and domain assets unless explicitly contracted under a formal spin-out equity agreement.

@@ -1,6 +1,6 @@
 # Product Case Study Template
 
-# {PROJECT_NAME} — Case Study
+# {PROJECT_NAME}: Case Study
 
 > A structured breakdown of the product for publication on the Pinaka showcase hub.
 

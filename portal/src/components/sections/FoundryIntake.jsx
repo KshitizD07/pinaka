@@ -1,12 +1,12 @@
 import Button from '@/components/ui/Button';
 import PinakaBow from '@/components/ui/PinakaBow';
-import { ShieldCheck, Award, GitBranch, ArrowUpRight, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, Layers, GitBranch, ArrowUpRight, CheckCircle2 } from 'lucide-react';
 
 export default function FoundryIntake() {
   return (
     <section
       id="foundry"
-      className="w-full border-t border-pinaka-hairline bg-pinaka-kailash py-16 sm:py-24"
+      className="w-full border-t border-pinaka-hairline bg-transparent py-16 sm:py-24"
       aria-labelledby="foundry-heading"
     >
       <div className="mx-auto max-w-[1440px] px-6 sm:px-10 lg:px-16">
@@ -15,85 +15,85 @@ export default function FoundryIntake() {
         <div className="mb-12">
           <div className="flex items-center gap-2 mb-2">
             <span className="font-mono text-xs uppercase tracking-widest text-pinaka-saffron font-semibold">
-              Incubator & Community Collective &middot; Track II
+              The Foundry &middot; Builder Collective
             </span>
           </div>
           <h2
             id="foundry-heading"
             className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-pinaka-charcoal"
           >
-            The Pinaka Foundry: Backing the Unbacked
+            The Pinaka Foundry: Backing High-Potential Products
           </h2>
           <p className="mt-2 text-sm text-pinaka-slate max-w-3xl font-sans leading-relaxed">
-            New founders and student builders struggle to raise capital or win institutional enterprise pilots 
-            due to a lack of institutional credibility. Pinaka provides the parent engineering spine, architectural 
-            standards, and collective brand credibility while you build.
+            Early-stage software and new builder initiatives often struggle for initial traction and institutional 
+            trust due to a lack of backing. Pinaka operates as a supportive umbrella, providing engineering standards, 
+            infrastructure baselines, and shared credibility to help promising products succeed.
           </p>
         </div>
 
         {/* 3 Foundation Pillars Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           
-          {/* Pillar 1: Smart India Hackathon & Hackathon Track */}
-          <div className="border border-pinaka-hairline bg-pinaka-chalk p-8 shadow-sm flex flex-col justify-between">
+          {/* Pillar 1: Prototype Incubation */}
+          <div className="border border-pinaka-hairline bg-white/90 backdrop-blur-sm p-8 shadow-sm flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-4">
                 <span className="font-mono text-xs font-bold text-pinaka-saffron uppercase tracking-widest">
-                  Track 2.1 &middot; SIH Rescue
+                  Track 2.1 &middot; Prototype Hardening
                 </span>
-                <Award className="h-5 w-5 text-pinaka-saffron" />
+                <Layers className="h-5 w-5 text-pinaka-saffron" />
               </div>
               <h3 className="font-serif text-xl font-bold text-pinaka-charcoal mb-3">
-                Smart India Hackathon & Civic Prototypes
+                Early-Stage Product Incubation
               </h3>
               <p className="text-xs sm:text-sm text-pinaka-slate leading-relaxed mb-6">
-                Most hackathon prototypes die within two weeks of event completion. Pinaka identifies high-potential 
-                ministry and civic problem solutions, stabilizes their architecture, and packages them into pilot-ready SaaS.
+                Have a functional prototype or ambitious project? Pinaka stabilizes your architecture, establishes 
+                continuous deployment pipelines, and prepares your software for live pilots.
               </p>
             </div>
             <ul className="space-y-2 text-xs text-pinaka-stone border-t border-pinaka-hairline pt-4">
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="h-3.5 w-3.5 text-pinaka-saffron shrink-0" />
-                Validated ministry problem statements
+                Validated problem-solving focus
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="h-3.5 w-3.5 text-pinaka-saffron shrink-0" />
-                Zero-cost staging and cloud deployment
+                Production-grade infrastructure baseline
               </li>
             </ul>
           </div>
 
-          {/* Pillar 2: Peer & Friends Collective */}
-          <div className="border border-pinaka-hairline bg-pinaka-chalk p-8 shadow-sm flex flex-col justify-between">
+          {/* Pillar 2: Peer Ventures */}
+          <div className="border border-pinaka-hairline bg-white/90 backdrop-blur-sm p-8 shadow-sm flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-4">
                 <span className="font-mono text-xs font-bold text-pinaka-saffron uppercase tracking-widest">
-                  Track 2.2 &middot; Peer Showcase
+                  Track 2.2 &middot; Peer Ventures
                 </span>
                 <GitBranch className="h-5 w-5 text-pinaka-saffron" />
               </div>
               <h3 className="font-serif text-xl font-bold text-pinaka-charcoal mb-3">
-                Peer Ventures & Friends&apos; Projects
+                Community Showcase & Credibility
               </h3>
               <p className="text-xs sm:text-sm text-pinaka-slate leading-relaxed mb-6">
-                Have an ambitious system built by you or your peers? Join Pinaka as a community venture. 
-                Gain exposure on the Pinaka ledger and access shared infrastructure without starting from zero credibility.
+                Ambitious projects built by peers and independent developers can join under the Pinaka umbrella. 
+                Gain exposure on our central ledger and leverage collective reputation instead of building credibility alone.
               </p>
             </div>
             <ul className="space-y-2 text-xs text-pinaka-stone border-t border-pinaka-hairline pt-4">
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="h-3.5 w-3.5 text-pinaka-saffron shrink-0" />
-                Cross-product traffic & shared user bases
+                Cross-product discoverability
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="h-3.5 w-3.5 text-pinaka-saffron shrink-0" />
-                Automated security & code reviews
+                Peer engineering review and feedback
               </li>
             </ul>
           </div>
 
           {/* Pillar 3: Sovereign IP Guarantee */}
-          <div className="border border-pinaka-hairline bg-pinaka-chalk p-8 shadow-sm flex flex-col justify-between">
+          <div className="border border-pinaka-hairline bg-white/90 backdrop-blur-sm p-8 shadow-sm flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-4">
                 <span className="font-mono text-xs font-bold text-pinaka-saffron uppercase tracking-widest">
@@ -105,8 +105,9 @@ export default function FoundryIntake() {
                 100% Builder IP Retention
               </h3>
               <p className="text-xs sm:text-sm text-pinaka-slate leading-relaxed mb-6">
-                Pinaka does not hold your source code hostage. Creators retain complete IP ownership under our 
-                Contributor Agreement. Pinaka acts as the distribution, quality assurance, and engineering umbrella.
+                You retain complete intellectual property rights to your code and products. 
+                Under our Contributor Agreement, Pinaka serves as the distribution, quality assurance, 
+                and engineering partner without seizing code ownership.
               </p>
             </div>
             <ul className="space-y-2 text-xs text-pinaka-stone border-t border-pinaka-hairline pt-4">
@@ -116,7 +117,7 @@ export default function FoundryIntake() {
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="h-3.5 w-3.5 text-pinaka-saffron shrink-0" />
-                Exit freedom: Spin off independently anytime
+                Full independence to spin off anytime
               </li>
             </ul>
           </div>
@@ -124,30 +125,30 @@ export default function FoundryIntake() {
         </div>
 
         {/* Action Callout Box */}
-        <div id="charter" className="border border-pinaka-hairline bg-pinaka-chalk p-8 sm:p-12 shadow-editorial flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+        <div id="charter" className="border border-pinaka-hairline bg-white/95 backdrop-blur-sm p-8 sm:p-12 shadow-editorial flex flex-col lg:flex-row lg:items-center justify-between gap-8">
           <div className="max-w-2xl">
             <div className="flex items-center gap-2 mb-2">
               <PinakaBow className="h-4 w-auto text-pinaka-saffron" />
               <span className="font-mono text-xs font-bold uppercase tracking-widest text-pinaka-saffron">
-                Ready to Submit a Candidate System?
+                Ready to Propose a Project?
               </span>
             </div>
             <h4 className="font-serif text-2xl font-bold text-pinaka-charcoal mb-2">
-              Review the Onboarding Pack & Submit Your Brief
+              Review the Onboarding Standards & Connect
             </h4>
             <p className="text-xs sm:text-sm text-pinaka-slate leading-relaxed">
-              Every prospective project completes a Gate 1 Problem Brief and Gate 2 Opportunity Evaluation. 
-              Review the templates in <code className="font-mono text-pinaka-saffron bg-pinaka-ice px-1 py-0.5 rounded-sm">templates/</code> to qualify for the Pinaka roster.
+              Every prospective product completes a standard Problem Brief and Opportunity Evaluation. 
+              Review the governance templates in <code className="font-mono text-pinaka-saffron bg-pinaka-ice px-1 py-0.5 rounded-sm">templates/</code> to explore showcasing under Pinaka.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-4">
             <a
-              href="mailto:contact@pinaka.dev?subject=Pinaka%20Venture%20Candidate%20Submission"
+              href="mailto:contact@pinaka.dev?subject=Pinaka%20Project%20Candidate%20Submission"
               className="inline-block"
             >
               <Button variant="primary" size="lg">
-                Submit Candidate Brief
+                Submit Candidate Project
                 <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
               </Button>
             </a>
