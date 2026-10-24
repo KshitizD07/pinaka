@@ -1,1 +1,22 @@
-[]
+[
+  {
+    "id": "PINAKA-657085-ZROR",
+    "name": "Chronos Realtime",
+    "leadBuilder": "KSHITIZ",
+    "contact": "kshitizd171@gmail.com",
+    "category": "Infrastructure",
+    "track": "incubating",
+    "tagline": "Deterministic low-latency state sync engine for collaborative venture tools.",
+    "description": "Distributed collaborative state synchronization often suffers from race conditions and split-brain states under spotty network connections. Chronos implements a CRDT-based deterministic state journal with sub-10ms peer sync.",
+    "techStack": [
+      "TypeScript",
+      "Rust",
+      "WebAssembly",
+      "WebRTC"
+    ],
+    "repoUrl": "https://github.com/KshitizD07/Skill-Sphere",
+    "demoUrl": "https://skill-sphere-v1.vercel.app",
+    "submittedAt": "2026-10-24T08:14:17.085Z",
+    "status": "UNDER_REVIEW"
+  }
+]
