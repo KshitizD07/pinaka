@@ -59,20 +59,35 @@ export async function POST(request) {
       status: 'UNDER_REVIEW',
     };
 
-    // Save to data/submissions.json
-    const submissionsPath = join(process.cwd(), '..', 'data', 'submissions.json');
-    let submissions = [];
-    if (existsSync(submissionsPath)) {
+    // Attempt to persist to data/submissions.json (writable in local dev, fallback gracefully on read-only serverless)
+    try {
+      const submissionsPath = join(process.cwd(), '..', 'data', 'submissions.json');
+      let submissions = [];
+      if (existsSync(submissionsPath)) {
+        try {
+          const raw = readFileSync(submissionsPath, 'utf-8');
+          submissions = JSON.parse(raw);
+        } catch {
+          submissions = [];
+        }
+      }
+      submissions.unshift(submission);
+      writeFileSync(submissionsPath, JSON.stringify(submissions, null, 2), 'utf-8');
+    } catch (fsErr) {
+      // Serverless (e.g. Vercel) read-only filesystem handling
+      console.warn('[Submissions] Non-fatal filesystem notice on serverless:', fsErr.message);
       try {
-        const raw = readFileSync(submissionsPath, 'utf-8');
-        submissions = JSON.parse(raw);
+        const tmpPath = join('/tmp', 'pinaka_submissions.json');
+        let tmpSubs = [];
+        if (existsSync(tmpPath)) {
+          tmpSubs = JSON.parse(readFileSync(tmpPath, 'utf-8'));
+        }
+        tmpSubs.unshift(submission);
+        writeFileSync(tmpPath, JSON.stringify(tmpSubs, null, 2), 'utf-8');
       } catch {
-        submissions = [];
+        // Safe no-op on ephemeral containers
       }
     }
-
-    submissions.unshift(submission);
-    writeFileSync(submissionsPath, JSON.stringify(submissions, null, 2), 'utf-8');
 
     return NextResponse.json({
       success: true,
