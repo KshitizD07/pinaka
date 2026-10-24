@@ -37,20 +37,21 @@
   },
   {
     "id": "intelli-light",
-    "name": "Intelli-Light",
-    "tagline": "AI-driven adaptive street lighting system for smart cities and energy conservation.",
+    "name": "Intelli-Light & Sentinel",
+    "tagline": "Universal Adaptive Traffic Signal Control (GAT+LSTM) and City-Wide Multi-Camera ANPR Trajectory Tracking.",
     "category": "AI / ML",
     "track": "research",
     "status": "prototype",
-    "techStack": ["Python", "TensorFlow", "Raspberry Pi", "MQTT"],
+    "techStack": ["PyTorch", "Stable-Baselines3", "SUMO", "TraCI", "Graph Attention Networks", "FastAPI", "WebSockets", "Leaflet", "Three.js"],
     "leadBuilder": "KSHITIZ",
-    "repoUrl": null,
+    "repoUrl": "https://github.com/KshitizD07/demo_intellilight.git",
     "demoUrl": null,
-    "description": "An intelligent street lighting system using computer vision and ML to adaptively control light intensity based on real-time pedestrian and vehicle density, reducing energy consumption by up to 40%.",
+    "description": "Dual-engine urban mobility platform comprising Intelli-Light 3.0 (spatio-temporal multi-agent RL adaptive signal control using Graph Attention Networks and NTCIP 1202 SNMP controllers) and Sentinel (city-wide ANPR trajectory tracking, GNN congestion-aware route anomaly scoring, and closed-loop traffic intercept orchestration for SIH26127).",
     "highlights": [
-      "Real-time pedestrian and vehicle density detection",
-      "Adaptive dimming algorithm with 40% energy savings",
-      "Edge-deployed ML inference on low-cost hardware"
+      "Spatio-Temporal MARL model coordinating grid intersections with GAT and LSTM feature extraction",
+      "Sentinel ANPR multi-frame consensus voter with fuzzy substitution tolerance (0/D, 1/I, 8/B)",
+      "GNN congestion-aware anomaly scoring cross-referencing live queue lengths with route deviation",
+      "Closed-loop traffic intercept orchestration with NTCIP failsafe watchdog and audit logging"
     ]
   }
 ]
