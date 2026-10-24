@@ -20,19 +20,19 @@
   {
     "id": "skillsphere",
     "name": "SkillSphere",
-    "tagline": "Peer-to-peer skill exchange platform connecting learners and teachers within communities.",
+    "tagline": "AI-powered proof-of-work skill verification, intelligent squad matching, and dynamic career roadmaps for students.",
     "category": "EdTech",
     "track": "flagship",
     "status": "mvp",
-    "techStack": ["Next.js", "Node.js", "MongoDB", "Tailwind CSS"],
+    "techStack": ["React 19", "Vite", "Node.js", "Express", "Prisma", "PostgreSQL", "Google Gemini AI", "Socket.io"],
     "leadBuilder": "KSHITIZ",
-    "repoUrl": null,
+    "repoUrl": "https://github.com/KshitizD07/Skill-Sphere",
     "demoUrl": "https://skill-sphere-v1.vercel.app/",
-    "description": "A community-driven platform where users can list skills they want to teach and skills they want to learn, enabling organic skill-swap connections with scheduling and session management.",
+    "description": "A next-generation talent and collaboration platform replacing generic resume claims with verified proof-of-work. Features Google Gemini-powered GitHub multi-stack repository analysis, the Antifragile N.E.X.U.S. matching engine, skill-gated project squads, and real-time Socket.io communication.",
     "highlights": [
-      "Organic skill-swap matching without monetary exchange",
-      "Integrated session scheduling and calendar sync",
-      "Community reputation and endorsement system"
+      "Gameproof multi-stack repository verification powered by Google Gemini AI",
+      "Antifragile N.E.X.U.S. multi-strategy consensus matching engine",
+      "Skill-gated project squads with automated background lifecycle maintenance"
     ]
   },
   {
