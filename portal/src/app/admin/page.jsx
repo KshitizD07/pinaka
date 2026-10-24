@@ -1,0 +1,632 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import PinakaBow from '@/components/ui/PinakaBow';
+import Button from '@/components/ui/Button';
+import Spinner from '@/components/ui/Spinner';
+import Badge from '@/components/ui/Badge';
+import {
+  Lock,
+  Unlock,
+  ShieldCheck,
+  CheckCircle2,
+  XCircle,
+  ExternalLink,
+  GitBranch,
+  Terminal,
+  LogOut,
+  ArrowRight,
+  Layers,
+  RefreshCw,
+} from 'lucide-react';
+
+export default function AdminPage() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  const [passphrase, setPassphrase] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+
+  // Data state
+  const [submissions, setSubmissions] = useState([]);
+  const [loadingSubmissions, setLoadingSubmissions] = useState(false);
+  const [selectedSubmission, setSelectedSubmission] = useState(null);
+  const [isApproving, setIsApproving] = useState(false);
+  const [actionMessage, setActionMessage] = useState(null);
+  const [activeTab, setActiveTab] = useState('review'); // 'review' | 'all'
+
+  // Editable approval form fields
+  const [approvalData, setApprovalData] = useState({
+    track: 'incubating',
+    status: 'prototype',
+    highlights: '',
+  });
+
+  // Check auth session on mount
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
+
+  async function checkAuthStatus() {
+    setCheckingAuth(true);
+    try {
+      const res = await fetch('/api/admin/auth');
+      const data = await res.json();
+      setIsAuthenticated(data.authenticated);
+      if (data.authenticated) {
+        loadSubmissions();
+      }
+    } catch {
+      setIsAuthenticated(false);
+    } finally {
+      setCheckingAuth(false);
+    }
+  }
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    setIsLoggingIn(true);
+    setLoginError('');
+
+    try {
+      const res = await fetch('/api/admin/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: passphrase }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Invalid passphrase.');
+      }
+
+      setIsAuthenticated(true);
+      loadSubmissions();
+    } catch (err) {
+      setLoginError(err.message);
+    } finally {
+      setIsLoggingIn(false);
+    }
+  }
+
+  async function handleLogout() {
+    await fetch('/api/admin/auth', { method: 'DELETE' });
+    setIsAuthenticated(false);
+    setPassphrase('');
+  }
+
+  async function loadSubmissions() {
+    setLoadingSubmissions(true);
+    try {
+      const res = await fetch('/api/admin/submissions');
+      const data = await res.json();
+      if (data.submissions) {
+        setSubmissions(data.submissions);
+      }
+    } catch (err) {
+      console.error('Failed to load submissions:', err);
+    } finally {
+      setLoadingSubmissions(false);
+    }
+  }
+
+  function handleSelectForApproval(sub) {
+    setSelectedSubmission(sub);
+    setApprovalData({
+      track: sub.track || 'incubating',
+      status: 'prototype',
+      highlights: `${sub.category} platform solving verified builder friction.\nEngineered with modular ${Array.isArray(sub.techStack) ? sub.techStack.slice(0, 3).join(', ') : 'modern'} architecture.`,
+    });
+    setActionMessage(null);
+  }
+
+  async function handleApproveSubmit(e) {
+    e.preventDefault();
+    if (!selectedSubmission) return;
+
+    setIsApproving(true);
+    setActionMessage(null);
+
+    try {
+      const highlightsArray = approvalData.highlights
+        .split('\n')
+        .map((s) => s.trim().replace(/^[-*•]\s*/, ''))
+        .filter(Boolean);
+
+      const payload = {
+        submissionId: selectedSubmission.id,
+        id: selectedSubmission.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+        name: selectedSubmission.name,
+        tagline: selectedSubmission.tagline,
+        category: selectedSubmission.category,
+        track: approvalData.track,
+        status: approvalData.status,
+        techStack: selectedSubmission.techStack,
+        leadBuilder: selectedSubmission.leadBuilder,
+        repoUrl: selectedSubmission.repoUrl,
+        demoUrl: selectedSubmission.demoUrl,
+        description: selectedSubmission.description,
+        highlights: highlightsArray,
+      };
+
+      const res = await fetch('/api/admin/approve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to approve project');
+      }
+
+      setActionMessage({
+        type: 'success',
+        text: data.message + (data.githubCommitSha ? ` (Commit: ${data.githubCommitSha.slice(0, 7)})` : ''),
+      });
+
+      // Update local status
+      setSubmissions((prev) =>
+        prev.map((s) => (s.id === selectedSubmission.id ? { ...s, status: 'APPROVED' } : s))
+      );
+      setSelectedSubmission(null);
+    } catch (err) {
+      setActionMessage({ type: 'error', text: err.message });
+    } finally {
+      setIsApproving(false);
+    }
+  }
+
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen flex items-center justify-center py-24">
+        <div className="flex flex-col items-center gap-3">
+          <Spinner size="lg" />
+          <span className="font-mono text-xs uppercase tracking-widest text-pinaka-slate">
+            Verifying Studio Lead Session...
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Unauthenticated: Login Screen ──────────────────────────────────────────
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-6 py-20">
+        <div className="w-full max-w-md border border-pinaka-hairline bg-white/95 backdrop-blur-sm p-8 sm:p-10 shadow-editorial">
+          <div className="flex items-center gap-2 mb-3">
+            <PinakaBow className="h-5 w-auto text-pinaka-saffron" />
+            <span className="font-mono text-xs font-bold uppercase tracking-widest text-pinaka-saffron">
+              Pinaka Foundry &middot; Control Room
+            </span>
+          </div>
+
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-pinaka-charcoal mb-2">
+            Studio Lead Gateway
+          </h1>
+          <p className="text-xs text-pinaka-slate font-sans leading-relaxed mb-6">
+            Enter your sovereign Studio Lead passphrase to review submissions and commit approved ventures to the ledger.
+          </p>
+
+          {loginError && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-sm">
+              {loginError}
+            </div>
+          )}
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5">
+                Passphrase
+              </label>
+              <div className="relative">
+                <input
+                  type="password"
+                  required
+                  value={passphrase}
+                  onChange={(e) => setPassphrase(e.target.value)}
+                  placeholder="Enter studio key"
+                  className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron pr-10 font-mono"
+                />
+                <Lock className="h-4 w-4 text-pinaka-ash absolute right-3 top-1/2 -translate-y-1/2" />
+              </div>
+            </div>
+
+            <Button variant="primary" size="lg" className="w-full justify-center" disabled={isLoggingIn}>
+              {isLoggingIn ? (
+                <>
+                  <Spinner size="sm" />
+                  Authenticating...
+                </>
+              ) : (
+                <>
+                  Unlock Control Room
+                  <ArrowRight className="h-4 w-4" />
+                </>
+              )}
+            </Button>
+          </form>
+
+          <div className="mt-8 pt-6 border-t border-pinaka-hairline flex items-center justify-between text-[11px] font-mono text-pinaka-ash">
+            <Link href="/" className="hover:text-pinaka-saffron transition-colors">
+              &larr; Return to Public Portal
+            </Link>
+            <span>Lead: KSHITIZ</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Authenticated: Control Room ───────────────────────────────────────────
+  const pendingSubmissions = submissions.filter((s) => s.status !== 'APPROVED');
+  const approvedSubmissions = submissions.filter((s) => s.status === 'APPROVED');
+  const displayedSubmissions = activeTab === 'review' ? pendingSubmissions : submissions;
+
+  return (
+    <div className="min-h-screen py-10 sm:py-16">
+      <div className="mx-auto max-w-[1440px] px-6 sm:px-10 lg:px-16">
+        
+        {/* Top Control Bar */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border-b border-pinaka-hairline pb-6">
+          <div className="flex items-center gap-3">
+            <PinakaBow className="h-6 w-auto text-pinaka-saffron" />
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-serif text-xl font-bold tracking-tight text-pinaka-charcoal">
+                  Foundry Control Room
+                </span>
+                <span className="px-2 py-0.5 text-[10px] font-mono uppercase bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-sm">
+                  Authorized Lead: KSHITIZ
+                </span>
+              </div>
+              <span className="font-mono text-xs text-pinaka-ash">
+                Intake Review &middot; Option A Git-Backed Promotion Engine
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Link href="/" target="_blank">
+              <Button variant="outline" size="sm">
+                View Live Portal
+                <ExternalLink className="h-3.5 w-3.5" />
+              </Button>
+            </Link>
+            <button
+              onClick={loadSubmissions}
+              disabled={loadingSubmissions}
+              className="p-2 border border-pinaka-hairline bg-white text-pinaka-slate hover:text-pinaka-stone rounded-sm hover:border-pinaka-ash transition-colors cursor-pointer"
+              aria-label="Refresh submissions"
+            >
+              <RefreshCw className={`h-4 w-4 ${loadingSubmissions ? 'animate-spin' : ''}`} />
+            </button>
+            <button
+              onClick={handleLogout}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono uppercase tracking-wider bg-pinaka-ice border border-pinaka-hairline text-pinaka-stone hover:bg-pinaka-charcoal hover:text-white transition-colors rounded-sm cursor-pointer"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+              Exit Session
+            </button>
+          </div>
+        </div>
+
+        {/* Global Action Message */}
+        {actionMessage && (
+          <div
+            className={`mb-6 p-4 border rounded-sm text-xs font-mono flex items-center justify-between ${
+              actionMessage.type === 'success'
+                ? 'bg-emerald-50 border-emerald-300 text-emerald-800'
+                : 'bg-red-50 border-red-300 text-red-800'
+            }`}
+          >
+            <span>{actionMessage.text}</span>
+            <button onClick={() => setActionMessage(null)} className="underline cursor-pointer">
+              Dismiss
+            </button>
+          </div>
+        )}
+
+        {/* Metrics Bar */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+          <div className="border border-pinaka-hairline bg-white/95 p-6 shadow-sm">
+            <span className="text-[11px] font-mono uppercase tracking-widest text-pinaka-ash block mb-1">
+              Candidate Queue
+            </span>
+            <span className="font-serif text-3xl font-bold text-pinaka-charcoal">
+              {pendingSubmissions.length}
+            </span>
+            <span className="text-xs text-pinaka-slate block mt-1">Pending Gate 1 Evaluation</span>
+          </div>
+
+          <div className="border border-pinaka-hairline bg-white/95 p-6 shadow-sm">
+            <span className="text-[11px] font-mono uppercase tracking-widest text-pinaka-ash block mb-1">
+              Promoted to Ledger
+            </span>
+            <span className="font-serif text-3xl font-bold text-emerald-700">
+              {approvedSubmissions.length}
+            </span>
+            <span className="text-xs text-pinaka-slate block mt-1">Approved & Published Ventures</span>
+          </div>
+
+          <div className="border border-pinaka-hairline bg-white/95 p-6 shadow-sm">
+            <span className="text-[11px] font-mono uppercase tracking-widest text-pinaka-ash block mb-1">
+              Total Recorded
+            </span>
+            <span className="font-serif text-3xl font-bold text-pinaka-stone">
+              {submissions.length}
+            </span>
+            <span className="text-xs text-pinaka-slate block mt-1">All Intake Records</span>
+          </div>
+        </div>
+
+        {/* Main Workspace Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          {/* Left Column: Submissions List (7 cols) */}
+          <div className="lg:col-span-7 space-y-4">
+            
+            {/* Tab Bar */}
+            <div className="flex items-center gap-2 border-b border-pinaka-hairline pb-2">
+              <button
+                onClick={() => setActiveTab('review')}
+                className={`px-3 py-1.5 text-xs font-mono uppercase tracking-wider rounded-sm transition-colors cursor-pointer ${
+                  activeTab === 'review'
+                    ? 'bg-pinaka-charcoal text-white font-bold'
+                    : 'text-pinaka-slate hover:text-pinaka-stone'
+                }`}
+              >
+                Needs Review ({pendingSubmissions.length})
+              </button>
+              <button
+                onClick={() => setActiveTab('all')}
+                className={`px-3 py-1.5 text-xs font-mono uppercase tracking-wider rounded-sm transition-colors cursor-pointer ${
+                  activeTab === 'all'
+                    ? 'bg-pinaka-charcoal text-white font-bold'
+                    : 'text-pinaka-slate hover:text-pinaka-stone'
+                }`}
+              >
+                All Records ({submissions.length})
+              </button>
+            </div>
+
+            {loadingSubmissions ? (
+              <div className="p-12 text-center bg-white/90 border border-pinaka-hairline">
+                <Spinner size="md" />
+                <span className="font-mono text-xs text-pinaka-ash block mt-2">Loading candidate docket...</span>
+              </div>
+            ) : displayedSubmissions.length === 0 ? (
+              <div className="p-12 text-center bg-white/90 border border-pinaka-hairline">
+                <p className="font-serif text-base text-pinaka-stone">
+                  {activeTab === 'review' ? 'No pending submissions in queue.' : 'No submission records found.'}
+                </p>
+                <p className="text-xs text-pinaka-slate mt-1 font-mono">
+                  When builders submit on /onboard, applications will appear here and ping your email.
+                </p>
+              </div>
+            ) : (
+              displayedSubmissions.map((sub) => {
+                const isSelected = selectedSubmission?.id === sub.id;
+                const isApproved = sub.status === 'APPROVED';
+
+                return (
+                  <div
+                    key={sub.id}
+                    className={`border transition-all duration-150 p-6 bg-white/95 shadow-sm rounded-sm ${
+                      isSelected
+                        ? 'border-pinaka-saffron ring-1 ring-pinaka-saffron'
+                        : 'border-pinaka-hairline hover:border-pinaka-ash'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-4 mb-3">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-mono text-[10px] text-pinaka-ash uppercase tracking-widest">
+                            {sub.id}
+                          </span>
+                          <span
+                            className={`text-[10px] font-mono px-2 py-0.5 rounded-sm uppercase tracking-wide border ${
+                              isApproved
+                                ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                                : 'bg-amber-50 text-amber-800 border-amber-300'
+                            }`}
+                          >
+                            {sub.status || 'UNDER_REVIEW'}
+                          </span>
+                        </div>
+                        <h3 className="font-serif text-xl font-bold text-pinaka-charcoal">
+                          {sub.name}
+                        </h3>
+                        <span className="text-xs text-pinaka-slate">
+                          by <strong className="text-pinaka-stone">{sub.leadBuilder}</strong> &bull; Contact: {sub.contact}
+                        </span>
+                      </div>
+
+                      <div className="text-right shrink-0">
+                        <span className="text-[11px] font-mono text-pinaka-ash block">
+                          {new Date(sub.submittedAt).toLocaleDateString()}
+                        </span>
+                        <span className="font-mono text-[11px] bg-pinaka-ice border border-pinaka-hairline px-2 py-0.5 rounded-sm text-pinaka-stone mt-1 inline-block">
+                          {sub.category}
+                        </span>
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-pinaka-slate font-sans leading-relaxed mb-4">
+                      {sub.tagline}
+                    </p>
+
+                    {/* Problem Statement excerpt */}
+                    <div className="p-3 bg-pinaka-ice/50 border border-pinaka-hairline rounded-sm text-xs font-mono text-pinaka-stone mb-4 whitespace-pre-wrap max-h-24 overflow-y-auto">
+                      {sub.description}
+                    </div>
+
+                    {/* Tech Stack Chips */}
+                    <div className="flex flex-wrap gap-1.5 mb-4">
+                      {(Array.isArray(sub.techStack) ? sub.techStack : [sub.techStack]).map((t) => (
+                        <span
+                          key={t}
+                          className="font-mono text-[10px] bg-white border border-pinaka-hairline px-2 py-0.5 text-pinaka-slate rounded-sm"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Action Bar */}
+                    <div className="flex items-center justify-between pt-3 border-t border-pinaka-hairline">
+                      <div className="flex items-center gap-3">
+                        {sub.repoUrl && (
+                          <a
+                            href={sub.repoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-xs font-mono text-pinaka-saffron hover:underline"
+                          >
+                            <GitBranch className="h-3 w-3" />
+                            Repository
+                          </a>
+                        )}
+                        {sub.demoUrl && (
+                          <a
+                            href={sub.demoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-xs font-mono text-pinaka-jade hover:underline"
+                          >
+                            <ExternalLink className="h-3 w-3" />
+                            Live Demo
+                          </a>
+                        )}
+                      </div>
+
+                      {!isApproved ? (
+                        <button
+                          onClick={() => handleSelectForApproval(sub)}
+                          className="px-3.5 py-1.5 text-xs font-mono uppercase tracking-wider bg-pinaka-saffron text-white hover:bg-pinaka-saffron-deep transition-colors rounded-sm cursor-pointer shadow-saffron-sm"
+                        >
+                          Review & Ingest &rarr;
+                        </button>
+                      ) : (
+                        <span className="text-xs font-mono text-emerald-700 flex items-center gap-1">
+                          <CheckCircle2 className="h-3.5 w-3.5" /> Published on Ledger
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })
+            )}
+
+          </div>
+
+          {/* Right Column: Approval Dossier & Ledger Ingestion (5 cols) */}
+          <div className="lg:col-span-5 border border-pinaka-hairline bg-white/95 backdrop-blur-sm p-6 sm:p-8 shadow-editorial sticky top-24">
+            <div className="flex items-center gap-2 mb-2">
+              <Terminal className="h-4 w-4 text-pinaka-saffron" />
+              <span className="font-mono text-xs font-bold uppercase tracking-widest text-pinaka-saffron">
+                Ledger Promotion Engine
+              </span>
+            </div>
+            <h3 className="font-serif text-xl font-bold text-pinaka-charcoal mb-4">
+              Ingestion Specifications
+            </h3>
+
+            {selectedSubmission ? (
+              <form onSubmit={handleApproveSubmit} className="space-y-4 text-xs">
+                <div>
+                  <span className="text-pinaka-ash block font-mono text-[10px] uppercase">Candidate</span>
+                  <strong className="text-pinaka-charcoal text-sm font-serif block">
+                    {selectedSubmission.name}
+                  </strong>
+                </div>
+
+                <div>
+                  <label className="block font-mono text-[10px] uppercase text-pinaka-stone mb-1">
+                    Assign Portfolio Track *
+                  </label>
+                  <select
+                    value={approvalData.track}
+                    onChange={(e) => setApprovalData((prev) => ({ ...prev, track: e.target.value }))}
+                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone p-2 rounded-sm font-sans"
+                  >
+                    <option value="incubating">Incubation Track (Active Prototype)</option>
+                    <option value="flagship">Primary Flagship (Deployed & Production Ready)</option>
+                    <option value="research">Applied Research</option>
+                    <option value="community">Community Collective</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block font-mono text-[10px] uppercase text-pinaka-stone mb-1">
+                    Status Classification *
+                  </label>
+                  <select
+                    value={approvalData.status}
+                    onChange={(e) => setApprovalData((prev) => ({ ...prev, status: e.target.value }))}
+                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone p-2 rounded-sm font-sans"
+                  >
+                    <option value="prototype">prototype</option>
+                    <option value="mvp">mvp</option>
+                    <option value="pilot">pilot</option>
+                    <option value="live">live</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block font-mono text-[10px] uppercase text-pinaka-stone mb-1">
+                    Architectural Highlights (1 per line)
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={approvalData.highlights}
+                    onChange={(e) => setApprovalData((prev) => ({ ...prev, highlights: e.target.value }))}
+                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone p-2 rounded-sm font-mono text-xs leading-relaxed"
+                  />
+                </div>
+
+                <div className="pt-4 border-t border-pinaka-hairline space-y-2">
+                  <Button
+                    variant="primary"
+                    size="md"
+                    className="w-full justify-center"
+                    disabled={isApproving}
+                  >
+                    {isApproving ? (
+                      <>
+                        <Spinner size="sm" />
+                        Committing to Git Ledger...
+                      </>
+                    ) : (
+                      <>
+                        Approve & Ingest into Ledger
+                        <ArrowRight className="h-4 w-4" />
+                      </>
+                    )}
+                  </Button>
+
+                  <button
+                    type="button"
+                    onClick={() => setSelectedSubmission(null)}
+                    className="w-full text-center py-1.5 text-xs font-mono text-pinaka-ash hover:text-pinaka-stone"
+                  >
+                    Cancel Selection
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="p-8 text-center text-xs text-pinaka-slate font-sans">
+                <Layers className="h-8 w-8 text-pinaka-ash mx-auto mb-2 opacity-60" />
+                Select any candidate on the left to review their full specifications and commit them directly to the Pinaka public ledger.
+              </div>
+            )}
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  );
+}

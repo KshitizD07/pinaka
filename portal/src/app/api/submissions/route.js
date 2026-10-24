@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
+import { sendCandidateNotificationEmail } from '@/lib/mailer';
 
 export const dynamic = 'force-dynamic';
 
@@ -59,7 +60,7 @@ export async function POST(request) {
       status: 'UNDER_REVIEW',
     };
 
-    // Attempt to persist to data/submissions.json (writable in local dev, fallback gracefully on read-only serverless)
+    // Attempt to persist to data/submissions.json (writable locally, fallback on /tmp)
     try {
       const submissionsPath = join(process.cwd(), '..', 'data', 'submissions.json');
       let submissions = [];
@@ -74,7 +75,6 @@ export async function POST(request) {
       submissions.unshift(submission);
       writeFileSync(submissionsPath, JSON.stringify(submissions, null, 2), 'utf-8');
     } catch (fsErr) {
-      // Serverless (e.g. Vercel) read-only filesystem handling
       console.warn('[Submissions] Non-fatal filesystem notice on serverless:', fsErr.message);
       try {
         const tmpPath = join('/tmp', 'pinaka_submissions.json');
@@ -88,6 +88,11 @@ export async function POST(request) {
         // Safe no-op on ephemeral containers
       }
     }
+
+    // Trigger instant email notification to the studio lead via SMTP
+    sendCandidateNotificationEmail(submission).catch((err) => {
+      console.error('[Submissions] Background email error:', err);
+    });
 
     return NextResponse.json({
       success: true,
