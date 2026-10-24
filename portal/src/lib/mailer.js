@@ -8,7 +8,7 @@ function getTransporter() {
     const rawPass = process.env.SMTP_PASS;
 
     if (!rawPass) {
-      console.warn('[Mailer] SMTP_PASS not configured in environment variables.');
+      console.warn('[Mailer] SMTP_PASS not found in process.env');
       return null;
     }
 
@@ -16,14 +16,15 @@ function getTransporter() {
     const cleanPass = String(rawPass).replace(/['"\s]+/g, '').trim();
 
     transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
       auth: {
         user: cleanUser,
         pass: cleanPass,
       },
-      tls: { rejectUnauthorized: false },
-      connectionTimeout: 15000,
-      socketTimeout: 15000,
+      connectionTimeout: 10000,
+      socketTimeout: 10000,
     });
   }
   return transporter;
@@ -35,10 +36,14 @@ function getTransporter() {
  */
 export async function sendCandidateNotificationEmail(submission) {
   try {
+    const rawPass = process.env.SMTP_PASS;
+    if (!rawPass) {
+      return { success: false, reason: 'SMTP_PASS not found in environment variables on this deployment.' };
+    }
+
     const transport = getTransporter();
     if (!transport) {
-      console.warn('[Mailer] SMTP transporter unavailable, skipping email.');
-      return { success: false, reason: 'SMTP not configured' };
+      return { success: false, reason: 'Failed to initialize SMTP transporter.' };
     }
 
     const recipient = process.env.ADMIN_EMAIL || process.env.SMTP_USER || 'kshitizd171@gmail.com';

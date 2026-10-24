@@ -123,7 +123,7 @@ export async function POST(request) {
       }
     }
 
-    // 3. Await SMTP notification so serverless runtime doesn't terminate prematurely
+    // 3. Await SMTP notification
     const emailResult = await sendCandidateNotificationEmail(submission);
 
     return NextResponse.json({
@@ -132,6 +132,7 @@ export async function POST(request) {
       message: 'Project candidate successfully submitted for Pinaka Foundry evaluation.',
       submission,
       emailNotified: emailResult?.success ?? false,
+      emailDebug: emailResult?.success ? undefined : (emailResult?.error || emailResult?.reason || 'SMTP transmission pending'),
     });
   } catch (err) {
     console.error('[API /submissions] Error:', err);
