@@ -60,7 +60,7 @@ export async function POST(request) {
       status: 'UNDER_REVIEW',
     };
 
-    // Attempt to persist to data/submissions.json (writable locally, fallback on /tmp)
+    // 1. Local / Serverless filesystem logging
     try {
       const submissionsPath = join(process.cwd(), '..', 'data', 'submissions.json');
       let submissions = [];
@@ -75,7 +75,6 @@ export async function POST(request) {
       submissions.unshift(submission);
       writeFileSync(submissionsPath, JSON.stringify(submissions, null, 2), 'utf-8');
     } catch (fsErr) {
-      console.warn('[Submissions] Non-fatal filesystem notice on serverless:', fsErr.message);
       try {
         const tmpPath = join('/tmp', 'pinaka_submissions.json');
         let tmpSubs = [];
@@ -84,21 +83,55 @@ export async function POST(request) {
         }
         tmpSubs.unshift(submission);
         writeFileSync(tmpPath, JSON.stringify(tmpSubs, null, 2), 'utf-8');
-      } catch {
-        // Safe no-op on ephemeral containers
+      } catch {}
+    }
+
+    // 2. Git-Backed logging via GitHub API (if GITHUB_TOKEN configured)
+    if (process.env.GITHUB_TOKEN) {
+      try {
+        const githubRepo = process.env.GITHUB_REPOSITORY || 'KshitizD07/pinaka';
+        const getRes = await fetch(`https://api.github.com/repos/${githubRepo}/contents/data/submissions.json`, {
+          headers: {
+            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+            Accept: 'application/vnd.github.v3+json',
+          },
+        });
+
+        if (getRes.ok) {
+          const fileData = await getRes.json();
+          const currentContent = JSON.parse(Buffer.from(fileData.content, 'base64').toString('utf-8'));
+          currentContent.unshift(submission);
+          const updatedBase64 = Buffer.from(JSON.stringify(currentContent, null, 2) + '\n').toString('base64');
+
+          await fetch(`https://api.github.com/repos/${githubRepo}/contents/data/submissions.json`, {
+            method: 'PUT',
+            headers: {
+              Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+              Accept: 'application/vnd.github.v3+json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              message: `intake: log candidate submission ${submission.name} (${submission.id})`,
+              content: updatedBase64,
+              sha: fileData.sha,
+              branch: 'main',
+            }),
+          });
+        }
+      } catch (ghErr) {
+        console.warn('[Submissions] GitHub API logging notice:', ghErr.message);
       }
     }
 
-    // Trigger instant email notification to the studio lead via SMTP
-    sendCandidateNotificationEmail(submission).catch((err) => {
-      console.error('[Submissions] Background email error:', err);
-    });
+    // 3. Await SMTP notification so serverless runtime doesn't terminate prematurely
+    const emailResult = await sendCandidateNotificationEmail(submission);
 
     return NextResponse.json({
       success: true,
       submissionId,
       message: 'Project candidate successfully submitted for Pinaka Foundry evaluation.',
       submission,
+      emailNotified: emailResult?.success ?? false,
     });
   } catch (err) {
     console.error('[API /submissions] Error:', err);

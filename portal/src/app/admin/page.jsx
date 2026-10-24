@@ -1,19 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import PinakaBow from '@/components/ui/PinakaBow';
 import Button from '@/components/ui/Button';
 import Spinner from '@/components/ui/Spinner';
-import Badge from '@/components/ui/Badge';
 import {
   Lock,
-  Unlock,
-  ShieldCheck,
-  CheckCircle2,
-  XCircle,
-  ExternalLink,
   GitBranch,
+  ExternalLink,
+  CheckCircle2,
   Terminal,
   LogOut,
   ArrowRight,
@@ -21,7 +18,8 @@ import {
   RefreshCw,
 } from 'lucide-react';
 
-export default function AdminPage() {
+function AdminControlRoom() {
+  const searchParams = useSearchParams();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [passphrase, setPassphrase] = useState('');
@@ -34,7 +32,7 @@ export default function AdminPage() {
   const [selectedSubmission, setSelectedSubmission] = useState(null);
   const [isApproving, setIsApproving] = useState(false);
   const [actionMessage, setActionMessage] = useState(null);
-  const [activeTab, setActiveTab] = useState('review'); // 'review' | 'all'
+  const [activeTab, setActiveTab] = useState('review');
 
   // Editable approval form fields
   const [approvalData, setApprovalData] = useState({
@@ -47,6 +45,25 @@ export default function AdminPage() {
   useEffect(() => {
     checkAuthStatus();
   }, []);
+
+  // Parse candidate payload from URL query (?sub=...) if opened via email link
+  useEffect(() => {
+    const subParam = searchParams.get('sub');
+    if (subParam) {
+      try {
+        const decoded = Buffer.from(decodeURIComponent(subParam), 'base64').toString('utf-8');
+        const parsed = JSON.parse(decoded);
+        setSelectedSubmission(parsed);
+        setApprovalData({
+          track: parsed.track || 'incubating',
+          status: 'prototype',
+          highlights: `${parsed.category} platform solving verified builder friction.\nEngineered with modular ${Array.isArray(parsed.techStack) ? parsed.techStack.slice(0, 3).join(', ') : 'modern'} architecture.`,
+        });
+      } catch (e) {
+        console.warn('Failed to parse candidate payload from query param:', e);
+      }
+    }
+  }, [searchParams]);
 
   async function checkAuthStatus() {
     setCheckingAuth(true);
@@ -166,7 +183,7 @@ export default function AdminPage() {
         text: data.message + (data.githubCommitSha ? ` (Commit: ${data.githubCommitSha.slice(0, 7)})` : ''),
       });
 
-      // Update local status
+      // Update local state
       setSubmissions((prev) =>
         prev.map((s) => (s.id === selectedSubmission.id ? { ...s, status: 'APPROVED' } : s))
       );
@@ -458,12 +475,10 @@ export default function AdminPage() {
                       {sub.tagline}
                     </p>
 
-                    {/* Problem Statement excerpt */}
                     <div className="p-3 bg-pinaka-ice/50 border border-pinaka-hairline rounded-sm text-xs font-mono text-pinaka-stone mb-4 whitespace-pre-wrap max-h-24 overflow-y-auto">
                       {sub.description}
                     </div>
 
-                    {/* Tech Stack Chips */}
                     <div className="flex flex-wrap gap-1.5 mb-4">
                       {(Array.isArray(sub.techStack) ? sub.techStack : [sub.techStack]).map((t) => (
                         <span
@@ -475,7 +490,6 @@ export default function AdminPage() {
                       ))}
                     </div>
 
-                    {/* Action Bar */}
                     <div className="flex items-center justify-between pt-3 border-t border-pinaka-hairline">
                       <div className="flex items-center gap-3">
                         {sub.repoUrl && (
@@ -541,6 +555,9 @@ export default function AdminPage() {
                   <strong className="text-pinaka-charcoal text-sm font-serif block">
                     {selectedSubmission.name}
                   </strong>
+                  <span className="text-pinaka-slate text-[11px]">
+                    By {selectedSubmission.leadBuilder} &bull; Contact: {selectedSubmission.contact}
+                  </span>
                 </div>
 
                 <div>
@@ -550,7 +567,7 @@ export default function AdminPage() {
                   <select
                     value={approvalData.track}
                     onChange={(e) => setApprovalData((prev) => ({ ...prev, track: e.target.value }))}
-                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone p-2 rounded-sm font-sans"
+                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone p-2 rounded-sm font-sans cursor-pointer"
                   >
                     <option value="incubating">Incubation Track (Active Prototype)</option>
                     <option value="flagship">Primary Flagship (Deployed & Production Ready)</option>
@@ -566,7 +583,7 @@ export default function AdminPage() {
                   <select
                     value={approvalData.status}
                     onChange={(e) => setApprovalData((prev) => ({ ...prev, status: e.target.value }))}
-                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone p-2 rounded-sm font-sans"
+                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone p-2 rounded-sm font-sans cursor-pointer"
                   >
                     <option value="prototype">prototype</option>
                     <option value="mvp">mvp</option>
@@ -610,7 +627,7 @@ export default function AdminPage() {
                   <button
                     type="button"
                     onClick={() => setSelectedSubmission(null)}
-                    className="w-full text-center py-1.5 text-xs font-mono text-pinaka-ash hover:text-pinaka-stone"
+                    className="w-full text-center py-1.5 text-xs font-mono text-pinaka-ash hover:text-pinaka-stone cursor-pointer"
                   >
                     Cancel Selection
                   </button>
@@ -628,5 +645,17 @@ export default function AdminPage() {
 
       </div>
     </div>
+  );
+}
+
+export default function AdminPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center py-24">
+        <Spinner size="lg" />
+      </div>
+    }>
+      <AdminControlRoom />
+    </Suspense>
   );
 }

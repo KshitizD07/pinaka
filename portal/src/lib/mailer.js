@@ -8,7 +8,7 @@ function getTransporter() {
     const rawPass = process.env.SMTP_PASS;
 
     if (!rawPass) {
-      console.warn('[Mailer] SMTP_PASS not set in environment variables. Email notification skipped.');
+      console.warn('[Mailer] SMTP_PASS not configured in environment variables.');
       return null;
     }
 
@@ -36,11 +36,17 @@ function getTransporter() {
 export async function sendCandidateNotificationEmail(submission) {
   try {
     const transport = getTransporter();
-    if (!transport) return { success: false, reason: 'SMTP not configured' };
+    if (!transport) {
+      console.warn('[Mailer] SMTP transporter unavailable, skipping email.');
+      return { success: false, reason: 'SMTP not configured' };
+    }
 
     const recipient = process.env.ADMIN_EMAIL || process.env.SMTP_USER || 'kshitizd171@gmail.com';
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://pinaka-v1.vercel.app';
-    const reviewUrl = `${siteUrl}/admin?id=${submission.id}`;
+    
+    // Encode full submission payload into review URL so review is 100% reliable across serverless instances
+    const encodedSub = Buffer.from(JSON.stringify(submission)).toString('base64');
+    const reviewUrl = `${siteUrl}/admin?sub=${encodeURIComponent(encodedSub)}`;
 
     const stackList = Array.isArray(submission.techStack)
       ? submission.techStack.join(', ')
@@ -70,7 +76,7 @@ export async function sendCandidateNotificationEmail(submission) {
         <body>
           <div class="container">
             <div class="header">
-              <h1>Pinaka Foundry &middot; New Candidate Intake</h1>
+              <h1>Pinaka Foundry &middot; New Candidate Proposal</h1>
               <p>Reference ID: ${submission.id}</p>
             </div>
             <div class="content">
@@ -99,8 +105,8 @@ export async function sendCandidateNotificationEmail(submission) {
               <div class="field-group">
                 <div class="field-label">Repository & Demo Links</div>
                 <div class="field-value">
-                  ${submission.repoUrl ? `<a href="${submission.repoUrl}" target="_blank" style="color: #d85a20;">GitHub Repository</a>` : 'No repo link provided'}
-                  ${submission.demoUrl ? ` &bull; <a href="${submission.demoUrl}" target="_blank" style="color: #0f766e;">Live Prototype Demo</a>` : ''}
+                  ${submission.repoUrl ? `<a href="${submission.repoUrl}" target="_blank" style="color: #d85a20; font-weight: 600;">GitHub Repository</a>` : 'No repo link provided'}
+                  ${submission.demoUrl ? ` &bull; <a href="${submission.demoUrl}" target="_blank" style="color: #0f766e; font-weight: 600;">Live Prototype Demo</a>` : ''}
                 </div>
               </div>
 
