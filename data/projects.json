@@ -1,29 +1,11 @@
 [
   {
-    "id": "opendoor",
-    "name": "Opendoor",
-    "tagline": "Digital hostel management & gate pass platform for university campuses.",
-    "category": "Campus Tech",
-    "track": "flagship",
-    "status": "mvp",
-    "techStack": ["Node.js", "PostgreSQL", "Next.js", "Socket.io"],
-    "leadBuilder": "KSHITIZ",
-    "repoUrl": null,
-    "demoUrl": null,
-    "description": "Full-stack hostel management system with digital gate passes, QR-JWT scanning, concurrency-safe bed booking, payment processing, and real-time Socket.io updates.",
-    "highlights": [
-      "Cryptographic offline-ready QR gate passes",
-      "Concurrency-proof soft-lock bed allocation",
-      "Dual-token auth with Argon2id + TOTP 2FA"
-    ]
-  },
-  {
     "id": "skillsphere",
     "name": "SkillSphere",
     "tagline": "AI-powered proof-of-work skill verification, intelligent squad matching, and dynamic career roadmaps for students.",
     "category": "EdTech",
     "track": "flagship",
-    "status": "mvp",
+    "status": "live",
     "techStack": ["React 19", "Vite", "Node.js", "Express", "Prisma", "PostgreSQL", "Google Gemini AI", "Socket.io"],
     "leadBuilder": "KSHITIZ",
     "repoUrl": "https://github.com/KshitizD07/Skill-Sphere",
@@ -33,6 +15,24 @@
       "Gameproof multi-stack repository verification powered by Google Gemini AI",
       "Antifragile N.E.X.U.S. multi-strategy consensus matching engine",
       "Skill-gated project squads with automated background lifecycle maintenance"
+    ]
+  },
+  {
+    "id": "opendoor",
+    "name": "Opendoor",
+    "tagline": "Digital hostel management & gate pass platform for university campuses.",
+    "category": "Campus Tech",
+    "track": "incubating",
+    "status": "prototype",
+    "techStack": ["Node.js", "PostgreSQL", "Next.js", "Socket.io"],
+    "leadBuilder": "KSHITIZ",
+    "repoUrl": null,
+    "demoUrl": null,
+    "description": "Full-stack hostel management system with digital gate passes, QR-JWT scanning, concurrency-safe bed booking, payment processing, and real-time Socket.io updates. Currently in active prototype development.",
+    "highlights": [
+      "Cryptographic offline-ready QR gate passes",
+      "Concurrency-proof soft-lock bed allocation",
+      "Dual-token auth with Argon2id + TOTP 2FA"
     ]
   },
   {

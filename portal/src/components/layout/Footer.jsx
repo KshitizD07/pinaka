@@ -2,15 +2,16 @@ import Link from 'next/link';
 import PinakaBow from '@/components/ui/PinakaBow';
 
 const VENTURE_LINKS = [
-  { href: '#portfolio', label: 'Opendoor &middot; Campus Infrastructure' },
-  { href: '#portfolio', label: 'SkillSphere &middot; Verified EdTech' },
-  { href: '#portfolio', label: 'Intelli-Light &middot; Adaptive Systems' },
+  { href: '/#portfolio', label: 'SkillSphere &middot; Verified EdTech' },
+  { href: '/#portfolio', label: 'Opendoor &middot; Campus Infrastructure' },
+  { href: '/#portfolio', label: 'Intelli-Light &middot; Adaptive Systems' },
 ];
 
 const GOVERNANCE_LINKS = [
-  { href: '#codex', label: 'The Engineering Codex' },
-  { href: '#foundry', label: 'Foundry & Incubation' },
-  { href: '#charter', label: 'Contributor IP Agreement' },
+  { href: '/#codex', label: 'The Engineering Codex' },
+  { href: '/#foundry', label: 'Foundry & Incubation' },
+  { href: '/onboard', label: 'Candidate Onboarding Guide' },
+  { href: '/#charter', label: 'Contributor IP Agreement' },
 ];
 
 export default function Footer() {
@@ -43,7 +44,7 @@ export default function Footer() {
           {/* Active Ventures (4 cols) */}
           <div className="md:col-span-4">
             <h4 className="font-serif text-xs font-bold uppercase tracking-widest text-pinaka-charcoal mb-4">
-              Active Studio Ventures
+              Studio Ventures
             </h4>
             <ul className="space-y-3 font-sans text-xs">
               {VENTURE_LINKS.map(({ href, label }) => (

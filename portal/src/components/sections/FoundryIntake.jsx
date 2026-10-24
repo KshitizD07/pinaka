@@ -1,6 +1,7 @@
+import Link from 'next/link';
 import Button from '@/components/ui/Button';
 import PinakaBow from '@/components/ui/PinakaBow';
-import { ShieldCheck, Layers, GitBranch, ArrowUpRight, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, Layers, GitBranch, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export default function FoundryIntake() {
   return (
@@ -134,24 +135,22 @@ export default function FoundryIntake() {
               </span>
             </div>
             <h4 className="font-serif text-2xl font-bold text-pinaka-charcoal mb-2">
-              Review the Onboarding Standards & Connect
+              Review the Onboarding Standards & Apply
             </h4>
             <p className="text-xs sm:text-sm text-pinaka-slate leading-relaxed">
-              Every prospective product completes a standard Problem Brief and Opportunity Evaluation. 
-              Review the governance templates in <code className="font-mono text-pinaka-saffron bg-pinaka-ice px-1 py-0.5 rounded-sm">templates/</code> to explore showcasing under Pinaka.
+              Every prospective product follows our structured onboarding workflow: Problem Brief validation, 
+              adding the <code className="font-mono text-pinaka-saffron bg-pinaka-ice px-1 py-0.5 rounded-sm">pinaka.json</code> manifest, 
+              and passing automated test checks. Explore the full step-by-step guide and apply on-platform.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-4">
-            <a
-              href="mailto:contact@pinaka.dev?subject=Pinaka%20Project%20Candidate%20Submission"
-              className="inline-block"
-            >
+            <Link href="/onboard" className="inline-block">
               <Button variant="primary" size="lg">
-                Submit Candidate Project
-                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                Explore Onboarding & Apply
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Button>
-            </a>
+            </Link>
           </div>
         </div>
 

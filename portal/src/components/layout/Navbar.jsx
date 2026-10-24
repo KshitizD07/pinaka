@@ -5,10 +5,10 @@ import PinakaBow from '@/components/ui/PinakaBow';
 import Button from '@/components/ui/Button';
 
 const NAV_LINKS = [
-  { href: '#portfolio', label: 'Portfolio Ledger' },
-  { href: '#foundry', label: 'Foundry & Incubation' },
-  { href: '#codex', label: 'Engineering Codex' },
-  { href: '#charter', label: 'Builder Charter' },
+  { href: '/#portfolio', label: 'Portfolio Ledger' },
+  { href: '/#foundry', label: 'Foundry & Incubation' },
+  { href: '/#codex', label: 'Engineering Codex' },
+  { href: '/onboard', label: 'Onboarding Guide' },
 ];
 
 export default function Navbar() {
@@ -51,11 +51,11 @@ export default function Navbar() {
 
         {/* Action button */}
         <div className="flex items-center gap-4">
-          <a href="#foundry">
+          <Link href="/onboard">
             <Button variant="primary" size="sm">
-              Submit Prototype
+              Submit Candidate
             </Button>
-          </a>
+          </Link>
         </div>
       </div>
     </header>

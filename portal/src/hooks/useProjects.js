@@ -11,7 +11,7 @@ const fetcher = (url) =>
 
 /**
  * SWR hook for fetching and filtering projects from the API.
- * Uses fast revalidation to ensure instant reflection of registry edits.
+ * Supports track, status, category, and live text search.
  * @returns {{ projects, total, isLoading, error, filter, setFilter }}
  */
 export function useProjects(initialFilter = {}) {
@@ -21,6 +21,7 @@ export function useProjects(initialFilter = {}) {
   if (filter.track) params.set('track', filter.track);
   if (filter.status) params.set('status', filter.status);
   if (filter.category) params.set('category', filter.category);
+  if (filter.search) params.set('search', filter.search.trim());
 
   const queryString = params.toString();
   const url = `/api/projects${queryString ? `?${queryString}` : ''}`;

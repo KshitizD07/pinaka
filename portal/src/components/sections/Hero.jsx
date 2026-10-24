@@ -91,11 +91,11 @@ export default function Hero() {
                     <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
                   </Button>
                 </a>
-                <a href="#foundry">
+                <Link href="/onboard">
                   <Button variant="outline" size="lg">
                     Submit Candidate Project
                   </Button>
-                </a>
+                </Link>
               </div>
             </div>
           </div>
