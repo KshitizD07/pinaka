@@ -72,7 +72,7 @@ intelli-light/
 
 ## 9.3 Sentinel (City-Wide ANPR Trajectory Tracking & Intercept Orchestration)
 
-**Type:** defense / civic surveillance intelligence layer (Targeting SIH26127 / Bharat Electronics Limited).
+**Type:** defense / civic surveillance intelligence layer.
 **Status targets:** `prototype` → `pilot` evaluation on municipal traffic camera grids.
 
 ### Recommended structure

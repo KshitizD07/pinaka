@@ -64,7 +64,7 @@
     "leadBuilder": "KSHITIZ",
     "repoUrl": "https://github.com/KshitizD07/Intelli_Light.git",
     "demoUrl": "http://localhost:8888",
-    "description": "City-wide autonomous urban surveillance and traffic intercept platform targeting SIH26127 for Bharat Electronics Limited (BEL). Ingests distributed ANPR camera feeds, resolves OCR noise via multi-frame consensus voting with fuzzy confusion tolerance, reconstructs road-snapped vehicle paths, detects evasive behavior using live GNN congestion telemetry, and provides closed-loop traffic intercept orchestration with emergency vehicle preemption.",
+    "description": "City-wide autonomous urban surveillance and traffic intercept platform. Ingests distributed ANPR camera feeds, resolves OCR noise via multi-frame consensus voting with fuzzy confusion tolerance, reconstructs road-snapped vehicle paths, detects evasive behavior using live GNN congestion telemetry, and provides closed-loop traffic intercept orchestration with emergency vehicle preemption.",
     "highlights": [
       "Multi-frame consensus OCR voter with RapidFuzz confusion pair tolerance (0/D, 1/I, 8/B, 5/S)",
       "Kinematic plausibility watchdog (v <= 30 m/s) with real road network polyline snapping (RoadSnapper)",
