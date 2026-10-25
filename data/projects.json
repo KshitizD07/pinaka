@@ -37,21 +37,39 @@
   },
   {
     "id": "intelli-light",
-    "name": "Intelli-Light & Sentinel",
-    "tagline": "Universal Adaptive Traffic Signal Control (GAT+LSTM) and City-Wide Multi-Camera ANPR Trajectory Tracking.",
+    "name": "Intelli-Light 3.0",
+    "tagline": "Universal Adaptive Traffic Signal Control using Spatio-Temporal MARL (GAT+LSTM), SUMO, and NTCIP 1202 Failsafes.",
     "category": "AI / ML",
     "track": "research",
     "status": "prototype",
-    "techStack": ["PyTorch", "Stable-Baselines3", "SUMO", "TraCI", "Graph Attention Networks", "FastAPI", "WebSockets", "Leaflet", "Three.js"],
+    "techStack": ["PyTorch", "Stable-Baselines3", "SUMO", "TraCI", "Graph Attention Networks", "FastAPI", "WebSockets", "Three.js"],
     "leadBuilder": "KSHITIZ",
-    "repoUrl": "https://github.com/KshitizD07/demo_intellilight.git",
-    "demoUrl": null,
-    "description": "Dual-engine urban mobility platform comprising Intelli-Light 3.0 (spatio-temporal multi-agent RL adaptive signal control using Graph Attention Networks and NTCIP 1202 SNMP controllers) and Sentinel (city-wide ANPR trajectory tracking, GNN congestion-aware route anomaly scoring, and closed-loop traffic intercept orchestration for SIH26127).",
+    "repoUrl": "https://github.com/KshitizD07/Intelli_Light.git",
+    "demoUrl": "http://localhost:8000",
+    "description": "Autonomous multi-agent adaptive traffic signal control system for chaotic urban grids. Replaces rigid grid arrays with topology-agnostic Graph Attention Networks (GAT) and LSTM temporal sequence memory, combining exponential anti-starvation reward engineering with deterministic NTCIP 1202 SNMP hardware failsafe watchdogs.",
     "highlights": [
-      "Spatio-Temporal MARL model coordinating grid intersections with GAT and LSTM feature extraction",
-      "Sentinel ANPR multi-frame consensus voter with fuzzy substitution tolerance (0/D, 1/I, 8/B)",
-      "GNN congestion-aware anomaly scoring cross-referencing live queue lengths with route deviation",
-      "Closed-loop traffic intercept orchestration with NTCIP failsafe watchdog and audit logging"
+      "Topology-agnostic Spatio-Temporal MARL model coordinating variable-degree intersections (3-way, 4-way, 5-way)",
+      "Multi-factor production reward engine with exponential anti-starvation penalty and green-wave bonus",
+      "Deterministic Failsafe Watchdog with NTCIP 1202 SNMP hardware cabinet integration for zero-risk municipal deployment"
+    ]
+  },
+  {
+    "id": "sentinel",
+    "name": "Sentinel",
+    "tagline": "City-Wide Multi-Camera ANPR Trajectory Tracking, Congestion-Aware Anomaly Scoring & Tactical Traffic Intercept.",
+    "category": "Defense Tech / Urban AI",
+    "track": "research",
+    "status": "prototype",
+    "techStack": ["Python", "FastAPI", "WebSockets", "Leaflet", "SUMO", "TraCI", "RapidFuzz", "SQLite", "YOLOv8", "PaddleOCR"],
+    "leadBuilder": "KSHITIZ",
+    "repoUrl": "https://github.com/KshitizD07/Intelli_Light.git",
+    "demoUrl": "http://localhost:8888",
+    "description": "City-wide autonomous urban surveillance and traffic intercept platform targeting SIH26127 for Bharat Electronics Limited (BEL). Ingests distributed ANPR camera feeds, resolves OCR noise via multi-frame consensus voting with fuzzy confusion tolerance, reconstructs road-snapped vehicle paths, detects evasive behavior using live GNN congestion telemetry, and provides closed-loop traffic intercept orchestration with emergency vehicle preemption.",
+    "highlights": [
+      "Multi-frame consensus OCR voter with RapidFuzz confusion pair tolerance (0/D, 1/I, 8/B, 5/S)",
+      "Kinematic plausibility watchdog (v <= 30 m/s) with real road network polyline snapping (RoadSnapper)",
+      "GNN congestion-aware anomaly scorer that cross-references route deviation with real-time queue lengths",
+      "Tactical red-wall intercept orchestrator with emergency vehicle preemption (EVP) and SHA-256 hash-chained audit logging"
     ]
   }
 ]

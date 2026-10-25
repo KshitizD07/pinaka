@@ -23,7 +23,7 @@ applies to every product in the portfolio.
 | `06-security-and-secrets.md` | Secrets handling, dependency security, access control, data protection |
 | `07-repo-standards-and-templates.md` | Standard repo layout, README template, CONTRIBUTING template |
 | `08-lifecycle-gates.md` | Stage-by-stage deliverables and go/no-go criteria |
-| `09-product-tech-notes.md` | Technical considerations for SkillSphere and Intelli-Light |
+| `09-product-tech-notes.md` | Technical considerations for SkillSphere, Intelli-Light, and Sentinel |
 | `10-metrics-and-observability.md` | What to measure (product, engineering, business) and how to instrument it |
 | `11-90-day-technical-checklist.md` | Engineering tasks mapped to the 90-day roadmap |
 | `templates/` | Copy-paste templates: problem brief, opportunity evaluation, ADR, product case study, retrospective, contributor agreement checklist |
