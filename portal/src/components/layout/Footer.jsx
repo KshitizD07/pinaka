@@ -1,12 +1,6 @@
 import Link from 'next/link';
 import PinakaBow from '@/components/ui/PinakaBow';
-
-const VENTURE_LINKS = [
-  { href: '/#portfolio', label: 'SkillSphere &middot; Talent & Squad Matching' },
-  { href: '/#portfolio', label: 'Opendoor &middot; Campus Management' },
-  { href: '/#portfolio', label: 'Intelli-Light &middot; Adaptive Traffic Research' },
-  { href: '/#portfolio', label: 'Sentinel &middot; Urban ANPR Intelligence' },
-];
+import { getAllProjects } from '@/lib/projects';
 
 const GOVERNANCE_LINKS = [
   { href: '/#principles', label: 'Brand & Operating Principles' },
@@ -16,6 +10,8 @@ const GOVERNANCE_LINKS = [
 ];
 
 export default function Footer() {
+  const projects = getAllProjects();
+
   return (
     <footer className="w-full border-t border-pinaka-hairline bg-white/80 backdrop-blur-sm text-pinaka-stone">
       <div className="mx-auto max-w-[1440px] px-4 sm:px-8 lg:px-16 py-12 sm:py-16 lg:py-20">
@@ -42,19 +38,21 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Featured Works (4 cols) */}
+          {/* Dynamic Curated Works (4 cols) */}
           <div className="md:col-span-4">
             <h4 className="font-serif text-xs font-bold uppercase tracking-widest text-pinaka-charcoal mb-3 sm:mb-4">
-              Featured Portfolio
+              Curated Portfolio ({projects.length})
             </h4>
             <ul className="space-y-2.5 sm:space-y-3 font-sans text-xs">
-              {VENTURE_LINKS.map(({ href, label }) => (
-                <li key={label}>
+              {projects.map((p) => (
+                <li key={p.id || p.name}>
                   <Link
-                    href={href}
+                    href="/#portfolio"
                     className="text-pinaka-slate hover:text-pinaka-saffron transition-colors block py-0.5"
-                    dangerouslySetInnerHTML={{ __html: label }}
-                  />
+                  >
+                    <span className="font-semibold text-pinaka-stone">{p.name}</span>
+                    <span className="text-pinaka-ash"> &middot; {p.tagline.slice(0, 40)}...</span>
+                  </Link>
                 </li>
               ))}
             </ul>
