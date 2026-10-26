@@ -90,15 +90,16 @@ function AdminControlRoom() {
       const res = await fetch('/api/admin/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ key: passphrase }),
+        body: JSON.stringify({ passphrase }),
       });
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || 'Invalid passphrase.');
+        throw new Error(data.error || 'Invalid credentials');
       }
 
       setIsAuthenticated(true);
+      setPassphrase('');
       loadSubmissions();
     } catch (err) {
       setLoginError(err.message);
@@ -108,9 +109,13 @@ function AdminControlRoom() {
   }
 
   async function handleLogout() {
-    await fetch('/api/admin/auth', { method: 'DELETE' });
-    setIsAuthenticated(false);
-    setPassphrase('');
+    try {
+      await fetch('/api/admin/auth', { method: 'DELETE' });
+      setIsAuthenticated(false);
+      setSelectedSubmission(null);
+    } catch (err) {
+      console.error('Logout error:', err);
+    }
   }
 
   async function loadSubmissions() {
@@ -118,9 +123,7 @@ function AdminControlRoom() {
     try {
       const res = await fetch('/api/admin/submissions');
       const data = await res.json();
-      if (data.submissions) {
-        setSubmissions(data.submissions);
-      }
+      setSubmissions(data.submissions || []);
     } catch (err) {
       console.error('Failed to load submissions:', err);
     } finally {
@@ -128,14 +131,19 @@ function AdminControlRoom() {
     }
   }
 
-  function handleSelectForApproval(sub) {
-    setSelectedSubmission(sub);
+  function handleSelectForApproval(submission) {
+    setSelectedSubmission(submission);
     setApprovalData({
-      track: sub.track || 'incubating',
+      track: submission.track || 'incubating',
       status: 'prototype',
-      highlights: `${sub.category} platform solving verified builder friction.\nEngineered with modular ${Array.isArray(sub.techStack) ? sub.techStack.slice(0, 3).join(', ') : 'modern'} architecture.`,
+      highlights: `${submission.category} platform engineered under Pinaka standards.\nBuilt with modular ${Array.isArray(submission.techStack) ? submission.techStack.slice(0, 3).join(', ') : 'modern'} architecture.`,
     });
-    setActionMessage(null);
+    // Smooth scroll to approval card on mobile
+    if (window.innerWidth < 1024) {
+      setTimeout(() => {
+        document.getElementById('approval-panel')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
   }
 
   async function handleApproveSubmit(e) {
@@ -148,12 +156,11 @@ function AdminControlRoom() {
     try {
       const highlightsArray = approvalData.highlights
         .split('\n')
-        .map((s) => s.trim().replace(/^[-*•]\s*/, ''))
+        .map((h) => h.trim())
         .filter(Boolean);
 
       const payload = {
         submissionId: selectedSubmission.id,
-        id: selectedSubmission.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
         name: selectedSubmission.name,
         tagline: selectedSubmission.tagline,
         category: selectedSubmission.category,
@@ -175,18 +182,15 @@ function AdminControlRoom() {
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to approve project');
+        throw new Error(data.error || 'Failed to approve submission');
       }
 
       setActionMessage({
         type: 'success',
-        text: data.message + (data.githubCommitSha ? ` (Commit: ${data.githubCommitSha.slice(0, 7)})` : ''),
+        text: `✓ Successfully committed "${selectedSubmission.name}" to Pinaka Ledger! ${data.message || ''}`,
       });
 
-      // Update local state
-      setSubmissions((prev) =>
-        prev.map((s) => (s.id === selectedSubmission.id ? { ...s, status: 'APPROVED' } : s))
-      );
+      loadSubmissions();
       setSelectedSubmission(null);
     } catch (err) {
       setActionMessage({ type: 'error', text: err.message });
@@ -211,11 +215,11 @@ function AdminControlRoom() {
   // ── Unauthenticated: Login Screen ──────────────────────────────────────────
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-6 py-20">
-        <div className="w-full max-w-md border border-pinaka-hairline bg-white/95 backdrop-blur-sm p-8 sm:p-10 shadow-editorial">
+      <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 py-12 sm:py-20">
+        <div className="w-full max-w-md border border-pinaka-hairline bg-white/95 backdrop-blur-sm p-6 sm:p-10 shadow-editorial rounded-sm">
           <div className="flex items-center gap-2 mb-3">
-            <PinakaBow className="h-5 w-auto text-pinaka-saffron" />
-            <span className="font-mono text-xs font-bold uppercase tracking-widest text-pinaka-saffron">
+            <PinakaBow className="h-4.5 sm:h-5 w-auto text-pinaka-saffron shrink-0" />
+            <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-widest text-pinaka-saffron">
               Pinaka Foundry &middot; Control Room
             </span>
           </div>
@@ -283,32 +287,32 @@ function AdminControlRoom() {
   const displayedSubmissions = activeTab === 'review' ? pendingSubmissions : submissions;
 
   return (
-    <div className="min-h-screen py-10 sm:py-16">
-      <div className="mx-auto max-w-[1440px] px-6 sm:px-10 lg:px-16">
+    <div className="min-h-screen py-8 sm:py-16">
+      <div className="mx-auto max-w-[1440px] px-4 sm:px-8 lg:px-16">
         
         {/* Top Control Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border-b border-pinaka-hairline pb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8 border-b border-pinaka-hairline pb-5 sm:pb-6">
           <div className="flex items-center gap-3">
-            <PinakaBow className="h-6 w-auto text-pinaka-saffron" />
+            <PinakaBow className="h-5 sm:h-6 w-auto text-pinaka-saffron shrink-0" />
             <div>
-              <div className="flex items-center gap-2">
-                <span className="font-serif text-xl font-bold tracking-tight text-pinaka-charcoal">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="font-serif text-lg sm:text-xl font-bold tracking-tight text-pinaka-charcoal">
                   Foundry Control Room
                 </span>
                 <span className="px-2 py-0.5 text-[10px] font-mono uppercase bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-sm">
                   Authorized Lead: KSHITIZ
                 </span>
               </div>
-              <span className="font-mono text-xs text-pinaka-ash">
+              <span className="font-mono text-[11px] sm:text-xs text-pinaka-ash block mt-0.5">
                 Intake Review &middot; Option A Git-Backed Promotion Engine
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <Link href="/" target="_blank">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <Link href="/" target="_blank" className="shrink-0">
               <Button variant="outline" size="sm">
-                View Live Portal
+                View Live
                 <ExternalLink className="h-3.5 w-3.5" />
               </Button>
             </Link>
@@ -325,7 +329,7 @@ function AdminControlRoom() {
               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono uppercase tracking-wider bg-pinaka-ice border border-pinaka-hairline text-pinaka-stone hover:bg-pinaka-charcoal hover:text-white transition-colors rounded-sm cursor-pointer"
             >
               <LogOut className="h-3.5 w-3.5" />
-              Exit Session
+              Exit
             </button>
           </div>
         </div>
@@ -333,46 +337,46 @@ function AdminControlRoom() {
         {/* Global Action Message */}
         {actionMessage && (
           <div
-            className={`mb-6 p-4 border rounded-sm text-xs font-mono flex items-center justify-between ${
+            className={`mb-6 p-3 sm:p-4 border rounded-sm text-xs font-mono flex items-center justify-between ${
               actionMessage.type === 'success'
                 ? 'bg-emerald-50 border-emerald-300 text-emerald-800'
                 : 'bg-red-50 border-red-300 text-red-800'
             }`}
           >
             <span>{actionMessage.text}</span>
-            <button onClick={() => setActionMessage(null)} className="underline cursor-pointer">
+            <button onClick={() => setActionMessage(null)} className="underline cursor-pointer ml-2">
               Dismiss
             </button>
           </div>
         )}
 
         {/* Metrics Bar */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-          <div className="border border-pinaka-hairline bg-white/95 p-6 shadow-sm">
-            <span className="text-[11px] font-mono uppercase tracking-widest text-pinaka-ash block mb-1">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+          <div className="border border-pinaka-hairline bg-white/95 p-4 sm:p-6 shadow-sm rounded-sm">
+            <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-widest text-pinaka-ash block mb-1">
               Candidate Queue
             </span>
-            <span className="font-serif text-3xl font-bold text-pinaka-charcoal">
+            <span className="font-serif text-2xl sm:text-3xl font-bold text-pinaka-charcoal">
               {pendingSubmissions.length}
             </span>
             <span className="text-xs text-pinaka-slate block mt-1">Pending Gate 1 Evaluation</span>
           </div>
 
-          <div className="border border-pinaka-hairline bg-white/95 p-6 shadow-sm">
-            <span className="text-[11px] font-mono uppercase tracking-widest text-pinaka-ash block mb-1">
+          <div className="border border-pinaka-hairline bg-white/95 p-4 sm:p-6 shadow-sm rounded-sm">
+            <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-widest text-pinaka-ash block mb-1">
               Promoted to Ledger
             </span>
-            <span className="font-serif text-3xl font-bold text-emerald-700">
+            <span className="font-serif text-2xl sm:text-3xl font-bold text-emerald-700">
               {approvedSubmissions.length}
             </span>
             <span className="text-xs text-pinaka-slate block mt-1">Approved & Published Ventures</span>
           </div>
 
-          <div className="border border-pinaka-hairline bg-white/95 p-6 shadow-sm">
-            <span className="text-[11px] font-mono uppercase tracking-widest text-pinaka-ash block mb-1">
+          <div className="border border-pinaka-hairline bg-white/95 p-4 sm:p-6 shadow-sm rounded-sm">
+            <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-widest text-pinaka-ash block mb-1">
               Total Recorded
             </span>
-            <span className="font-serif text-3xl font-bold text-pinaka-stone">
+            <span className="font-serif text-2xl sm:text-3xl font-bold text-pinaka-stone">
               {submissions.length}
             </span>
             <span className="text-xs text-pinaka-slate block mt-1">All Intake Records</span>
@@ -380,7 +384,7 @@ function AdminControlRoom() {
         </div>
 
         {/* Main Workspace Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
           
           {/* Left Column: Submissions List (7 cols) */}
           <div className="lg:col-span-7 space-y-4">
@@ -410,12 +414,12 @@ function AdminControlRoom() {
             </div>
 
             {loadingSubmissions ? (
-              <div className="p-12 text-center bg-white/90 border border-pinaka-hairline">
+              <div className="p-10 sm:p-12 text-center bg-white/90 border border-pinaka-hairline rounded-sm">
                 <Spinner size="md" />
                 <span className="font-mono text-xs text-pinaka-ash block mt-2">Loading candidate docket...</span>
               </div>
             ) : displayedSubmissions.length === 0 ? (
-              <div className="p-12 text-center bg-white/90 border border-pinaka-hairline">
+              <div className="p-8 sm:p-12 text-center bg-white/90 border border-pinaka-hairline rounded-sm">
                 <p className="font-serif text-base text-pinaka-stone">
                   {activeTab === 'review' ? 'No pending submissions in queue.' : 'No submission records found.'}
                 </p>
@@ -431,13 +435,13 @@ function AdminControlRoom() {
                 return (
                   <div
                     key={sub.id}
-                    className={`border transition-all duration-150 p-6 bg-white/95 shadow-sm rounded-sm ${
+                    className={`border transition-all duration-150 p-4 sm:p-6 bg-white/95 shadow-sm rounded-sm ${
                       isSelected
                         ? 'border-pinaka-saffron ring-1 ring-pinaka-saffron'
                         : 'border-pinaka-hairline hover:border-pinaka-ash'
                     }`}
                   >
-                    <div className="flex items-start justify-between gap-4 mb-3">
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 sm:gap-4 mb-3">
                       <div>
                         <div className="flex items-center gap-2 mb-1">
                           <span className="font-mono text-[10px] text-pinaka-ash uppercase tracking-widest">
@@ -453,7 +457,7 @@ function AdminControlRoom() {
                             {sub.status || 'UNDER_REVIEW'}
                           </span>
                         </div>
-                        <h3 className="font-serif text-xl font-bold text-pinaka-charcoal">
+                        <h3 className="font-serif text-lg sm:text-xl font-bold text-pinaka-charcoal">
                           {sub.name}
                         </h3>
                         <span className="text-xs text-pinaka-slate">
@@ -461,21 +465,21 @@ function AdminControlRoom() {
                         </span>
                       </div>
 
-                      <div className="text-right shrink-0">
-                        <span className="text-[11px] font-mono text-pinaka-ash block">
+                      <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start shrink-0">
+                        <span className="text-[11px] font-mono text-pinaka-ash">
                           {new Date(sub.submittedAt).toLocaleDateString()}
                         </span>
-                        <span className="font-mono text-[11px] bg-pinaka-ice border border-pinaka-hairline px-2 py-0.5 rounded-sm text-pinaka-stone mt-1 inline-block">
+                        <span className="font-mono text-[10px] sm:text-[11px] bg-pinaka-ice border border-pinaka-hairline px-2 py-0.5 rounded-sm text-pinaka-stone sm:mt-1 inline-block">
                           {sub.category}
                         </span>
                       </div>
                     </div>
 
-                    <p className="text-xs text-pinaka-slate font-sans leading-relaxed mb-4">
+                    <p className="text-xs text-pinaka-slate font-sans leading-relaxed mb-3 sm:mb-4">
                       {sub.tagline}
                     </p>
 
-                    <div className="p-3 bg-pinaka-ice/50 border border-pinaka-hairline rounded-sm text-xs font-mono text-pinaka-stone mb-4 whitespace-pre-wrap max-h-24 overflow-y-auto">
+                    <div className="p-3 bg-pinaka-ice/50 border border-pinaka-hairline rounded-sm text-xs font-mono text-pinaka-stone mb-3 sm:mb-4 whitespace-pre-wrap max-h-24 overflow-y-auto">
                       {sub.description}
                     </div>
 
@@ -490,7 +494,7 @@ function AdminControlRoom() {
                       ))}
                     </div>
 
-                    <div className="flex items-center justify-between pt-3 border-t border-pinaka-hairline">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-pinaka-hairline">
                       <div className="flex items-center gap-3">
                         {sub.repoUrl && (
                           <a
@@ -519,7 +523,7 @@ function AdminControlRoom() {
                       {!isApproved ? (
                         <button
                           onClick={() => handleSelectForApproval(sub)}
-                          className="px-3.5 py-1.5 text-xs font-mono uppercase tracking-wider bg-pinaka-saffron text-white hover:bg-pinaka-saffron-deep transition-colors rounded-sm cursor-pointer shadow-saffron-sm"
+                          className="w-full sm:w-auto px-3.5 py-1.5 text-xs font-mono uppercase tracking-wider bg-pinaka-saffron text-white hover:bg-pinaka-saffron-deep transition-colors rounded-sm cursor-pointer shadow-saffron-sm text-center"
                         >
                           Review & Ingest &rarr;
                         </button>
@@ -537,14 +541,17 @@ function AdminControlRoom() {
           </div>
 
           {/* Right Column: Approval Dossier & Ledger Ingestion (5 cols) */}
-          <div className="lg:col-span-5 border border-pinaka-hairline bg-white/95 backdrop-blur-sm p-6 sm:p-8 shadow-editorial sticky top-24">
+          <div
+            id="approval-panel"
+            className="lg:col-span-5 border border-pinaka-hairline bg-white/95 backdrop-blur-sm p-5 sm:p-8 shadow-editorial rounded-sm lg:sticky lg:top-24"
+          >
             <div className="flex items-center gap-2 mb-2">
-              <Terminal className="h-4 w-4 text-pinaka-saffron" />
+              <Terminal className="h-4 w-4 text-pinaka-saffron shrink-0" />
               <span className="font-mono text-xs font-bold uppercase tracking-widest text-pinaka-saffron">
                 Ledger Promotion Engine
               </span>
             </div>
-            <h3 className="font-serif text-xl font-bold text-pinaka-charcoal mb-4">
+            <h3 className="font-serif text-lg sm:text-xl font-bold text-pinaka-charcoal mb-4">
               Ingestion Specifications
             </h3>
 
@@ -567,7 +574,7 @@ function AdminControlRoom() {
                   <select
                     value={approvalData.track}
                     onChange={(e) => setApprovalData((prev) => ({ ...prev, track: e.target.value }))}
-                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone p-2 rounded-sm font-sans cursor-pointer"
+                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone p-2 rounded-sm font-sans cursor-pointer text-xs"
                   >
                     <option value="incubating">Incubation Track (Active Prototype)</option>
                     <option value="flagship">Primary Flagship (Deployed & Production Ready)</option>
@@ -583,7 +590,7 @@ function AdminControlRoom() {
                   <select
                     value={approvalData.status}
                     onChange={(e) => setApprovalData((prev) => ({ ...prev, status: e.target.value }))}
-                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone p-2 rounded-sm font-sans cursor-pointer"
+                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone p-2 rounded-sm font-sans cursor-pointer text-xs"
                   >
                     <option value="prototype">prototype</option>
                     <option value="mvp">mvp</option>
@@ -634,7 +641,7 @@ function AdminControlRoom() {
                 </div>
               </form>
             ) : (
-              <div className="p-8 text-center text-xs text-pinaka-slate font-sans">
+              <div className="p-6 sm:p-8 text-center text-xs text-pinaka-slate font-sans">
                 <Layers className="h-8 w-8 text-pinaka-ash mx-auto mb-2 opacity-60" />
                 Select any candidate on the left to review their full specifications and commit them directly to the Pinaka public ledger.
               </div>
