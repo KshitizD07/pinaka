@@ -28,6 +28,9 @@ export async function POST(request) {
       status,
       techStack,
       leadBuilder,
+      squadUrl,
+      skillSphereUrl,
+      skillSphereLabel,
       repoUrl,
       demoUrl,
       description,
@@ -53,6 +56,7 @@ export async function POST(request) {
         ? techStack.split(',').map((s) => s.trim()).filter(Boolean)
         : [],
       leadBuilder: (leadBuilder || 'KSHITIZ').toUpperCase(),
+      squadUrl: squadUrl?.trim() || null,
       skillSphereUrl: skillSphereUrl?.trim() || null,
       skillSphereLabel: skillSphereLabel?.trim() || null,
       repoUrl: repoUrl?.trim() || null,
