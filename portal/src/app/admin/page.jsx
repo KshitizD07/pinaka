@@ -16,6 +16,7 @@ import {
   ArrowRight,
   Layers,
   RefreshCw,
+  Users,
 } from 'lucide-react';
 
 function AdminControlRoom() {
@@ -168,6 +169,7 @@ function AdminControlRoom() {
         status: approvalData.status,
         techStack: selectedSubmission.techStack,
         leadBuilder: selectedSubmission.leadBuilder,
+        squadUrl: selectedSubmission.squadUrl,
         skillSphereUrl: selectedSubmission.skillSphereUrl,
         skillSphereLabel: selectedSubmission.skillSphereLabel,
         repoUrl: selectedSubmission.repoUrl,
@@ -498,6 +500,17 @@ function AdminControlRoom() {
 
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-pinaka-hairline">
                       <div className="flex items-center gap-3">
+                        {sub.squadUrl && (
+                          <a
+                            href={sub.squadUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-xs font-mono text-pinaka-saffron hover:underline"
+                          >
+                            <Users className="h-3 w-3" />
+                            Squad
+                          </a>
+                        )}
                         {sub.repoUrl && (
                           <a
                             href={sub.repoUrl}
@@ -578,9 +591,10 @@ function AdminControlRoom() {
                     onChange={(e) => setApprovalData((prev) => ({ ...prev, track: e.target.value }))}
                     className="w-full bg-white border border-pinaka-hairline text-pinaka-stone p-2 rounded-sm font-sans cursor-pointer text-xs"
                   >
-                    <option value="incubating">Incubation Track (Active Prototype)</option>
-                    <option value="flagship">Primary Flagship (Deployed & Production Ready)</option>
-                    <option value="research">Applied Research</option>
+                    <option value="incubating">Ongoing Work (Active Prototype)</option>
+                    <option value="flagship">Featured (Deployed & Production Ready)</option>
+                    <option value="breakthroughs">Breakthroughs (Deeptech / Advanced AI)</option>
+                    <option value="proposals">Proposals (Proposed Ideas & Briefs)</option>
                     <option value="community">Community Collective</option>
                   </select>
                 </div>
