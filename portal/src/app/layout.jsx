@@ -3,21 +3,23 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 
 export const metadata = {
-  title: 'Pinaka: Product Studio & Builder Collective',
+  title: 'Pinaka: A Home for Ambitious Ideas, Promising Projects, and Emerging Ventures',
   description:
-    'Pinaka is an independent product studio and builder collective engineering production-grade software across enterprise systems, deeptech, and applied software.',
+    'Pinaka is a curated project ecosystem that discovers, showcases, and connects ambitious ideas, prototypes, research, and emerging ventures with collaboration pathways through SkillSphere.',
   keywords: [
     'Pinaka',
-    'Pinaka Studios',
-    'Product Studio',
-    'Builder Collective',
-    'Opendoor',
+    'Curated Ecosystem',
+    'Ambitious Ideas',
+    'Prototypes',
     'SkillSphere',
+    'Builder Collective',
     'Intelli-Light',
+    'Sentinel',
+    'Opendoor',
   ],
   openGraph: {
-    title: 'Pinaka: Product Studio & Builder Collective',
-    description: 'Precision in Engineering. Sovereign in Execution.',
+    title: 'Pinaka: A Home for Ambitious Ideas & Promising Projects',
+    description: 'Discover ideas. Connect talent. Build what matters.',
     type: 'website',
   },
 };
