@@ -4,7 +4,7 @@ import { Terminal, ArrowUpRight } from 'lucide-react';
 
 /**
  * Editorial Project Ledger Row component.
- * Expansive, architectural dossier format.
+ * Expansive, architectural dossier format with responsive mobile padding & flow.
  */
 export default function ProjectLedgerRow({ project, index }) {
   const {
@@ -31,37 +31,37 @@ export default function ProjectLedgerRow({ project, index }) {
       {/* Saffron left border indicator on hover */}
       <div className="absolute left-0 top-0 bottom-0 w-1 bg-pinaka-saffron opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
 
-      <div className="px-6 sm:px-8 lg:px-12 py-8 sm:py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div className="px-4 sm:px-8 lg:px-12 py-6 sm:py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           
           {/* Column 1: Nomenclature & Classification (4 cols) */}
           <div className="lg:col-span-4 flex flex-col justify-between h-full">
             <div>
               {/* Index & Badges */}
-              <div className="flex items-center gap-3 mb-3">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2.5 sm:mb-3">
                 <span className="font-mono text-xs font-bold text-pinaka-saffron tracking-wider">
                   [{displayIndex}]
                 </span>
                 <Badge variant="track" value={track} />
-                <span className="text-[11px] font-mono text-pinaka-ash uppercase tracking-wider">
+                <span className="text-[10px] sm:text-[11px] font-mono text-pinaka-ash uppercase tracking-wider">
                   {category}
                 </span>
               </div>
 
               {/* Project Name */}
-              <h3 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-pinaka-charcoal group-hover:text-pinaka-saffron-deep transition-colors mb-2">
+              <h3 className="font-serif text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-pinaka-charcoal group-hover:text-pinaka-saffron-deep transition-colors mb-2">
                 {name}
               </h3>
 
               {/* Tagline */}
-              <p className="text-sm text-pinaka-slate leading-relaxed font-sans mb-4">
+              <p className="text-xs sm:text-sm text-pinaka-slate leading-relaxed font-sans mb-3 sm:mb-4">
                 {tagline}
               </p>
             </div>
 
             {/* Attribution & Status */}
             <div className="pt-3 border-t border-pinaka-hairline flex items-center justify-between">
-              <span className="text-[11px] font-mono text-pinaka-ash">
+              <span className="text-[10px] sm:text-[11px] font-mono text-pinaka-ash">
                 Architect: <strong className="text-pinaka-stone font-semibold">{leadBuilder ? leadBuilder.toUpperCase() : 'KSHITIZ'}</strong>
               </span>
               <Badge variant="status" value={status} />
@@ -69,18 +69,18 @@ export default function ProjectLedgerRow({ project, index }) {
           </div>
 
           {/* Column 2: Architecture Thesis & Technical Proof (5 cols) */}
-          <div className="lg:col-span-5 lg:border-l lg:border-pinaka-hairline lg:pl-8">
-            <div className="text-[11px] font-mono uppercase tracking-widest text-pinaka-ash mb-2.5 flex items-center gap-1.5">
-              <Terminal className="h-3.5 w-3.5 text-pinaka-saffron" />
+          <div className="lg:col-span-5 border-t lg:border-t-0 pt-5 lg:pt-0 lg:border-l lg:border-pinaka-hairline lg:pl-8">
+            <div className="text-[10px] sm:text-[11px] font-mono uppercase tracking-widest text-pinaka-ash mb-2 sm:mb-2.5 flex items-center gap-1.5">
+              <Terminal className="h-3.5 w-3.5 text-pinaka-saffron shrink-0" />
               Core Architecture & Highlights
             </div>
 
             {/* Highlights List */}
-            <ul className="space-y-2 mb-5">
+            <ul className="space-y-1.5 sm:space-y-2 mb-4 sm:mb-5">
               {highlights.map((highlight) => (
                 <li
                   key={highlight}
-                  className="flex items-start gap-2.5 text-xs text-pinaka-stone leading-relaxed"
+                  className="flex items-start gap-2 text-xs text-pinaka-stone leading-relaxed"
                 >
                   <span className="mt-1 h-1.5 w-1.5 rounded-full bg-pinaka-saffron shrink-0" />
                   <span>{highlight}</span>
@@ -97,7 +97,7 @@ export default function ProjectLedgerRow({ project, index }) {
                 {techStack.map((tech) => (
                   <span
                     key={tech}
-                    className="font-mono text-[11px] bg-pinaka-ice border border-pinaka-hairline px-2 py-0.5 text-pinaka-slate rounded-sm"
+                    className="font-mono text-[10px] sm:text-[11px] bg-pinaka-ice border border-pinaka-hairline px-2 py-0.5 text-pinaka-slate rounded-sm"
                   >
                     {tech}
                   </span>
@@ -107,9 +107,9 @@ export default function ProjectLedgerRow({ project, index }) {
           </div>
 
           {/* Column 3: Operational State & Launchpad (3 cols) */}
-          <div className="lg:col-span-3 lg:border-l lg:border-pinaka-hairline lg:pl-8 flex flex-col justify-between h-full space-y-4">
+          <div className="lg:col-span-3 border-t lg:border-t-0 pt-5 lg:pt-0 lg:border-l lg:border-pinaka-hairline lg:pl-8 flex flex-col justify-between h-full space-y-4">
             <div>
-              <div className="text-[11px] font-mono uppercase tracking-widest text-pinaka-ash mb-2">
+              <div className="text-[10px] sm:text-[11px] font-mono uppercase tracking-widest text-pinaka-ash mb-2">
                 Operational Status
               </div>
               <p className="text-xs text-pinaka-slate leading-relaxed mb-4">
@@ -118,7 +118,7 @@ export default function ProjectLedgerRow({ project, index }) {
             </div>
 
             {/* Actions */}
-            <div className="space-y-2.5 pt-4 border-t border-pinaka-hairline">
+            <div className="space-y-2.5 pt-3 sm:pt-4 border-t border-pinaka-hairline">
               {demoUrl ? (
                 <a
                   href={demoUrl}
@@ -132,8 +132,8 @@ export default function ProjectLedgerRow({ project, index }) {
                   </Button>
                 </a>
               ) : (
-                <div className="flex items-center justify-center gap-2 border border-pinaka-hairline bg-pinaka-ice py-2 px-3 text-xs font-mono text-pinaka-slate rounded-sm">
-                  <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
+                <div className="flex items-center justify-center gap-2 border border-pinaka-hairline bg-pinaka-ice py-2 px-3 text-xs font-mono text-pinaka-slate rounded-sm text-center">
+                  <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse shrink-0" />
                   Pilot / Sandbox Active
                 </div>
               )}
@@ -150,8 +150,8 @@ export default function ProjectLedgerRow({ project, index }) {
                   </Button>
                 </a>
               ) : (
-                <div className="text-center">
-                  <span className="text-[11px] font-mono text-pinaka-ash">
+                <div className="text-center py-1">
+                  <span className="text-[10px] sm:text-[11px] font-mono text-pinaka-ash">
                     Private Studio Monorepo
                   </span>
                 </div>
