@@ -44,31 +44,33 @@ export default function StatsBar() {
       className="w-full border-b border-pinaka-hairline bg-white/80 backdrop-blur-sm"
       aria-label="Studio Statistics & Performance Matrix"
     >
-      <div className="mx-auto max-w-[1440px] px-6 sm:px-10 lg:px-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-pinaka-hairline">
-          {stats.map(({ index, value, title, subtitle, highlight }) => (
+      <div className="mx-auto max-w-[1440px] px-4 sm:px-8 lg:px-16">
+        <div className="grid grid-cols-2 lg:grid-cols-4 divide-y-0 sm:divide-x divide-pinaka-hairline gap-y-6 sm:gap-y-0 py-2 sm:py-0">
+          {stats.map(({ index, value, title, subtitle, highlight }, i) => (
             <div
               key={title}
-              className="py-6 sm:py-8 px-4 sm:first:pl-0 sm:last:pr-0 flex flex-col justify-between"
+              className={`py-4 sm:py-8 px-2 sm:px-4 flex flex-col justify-between ${
+                i % 2 === 1 ? 'border-l border-pinaka-hairline sm:border-l-0' : ''
+              } sm:first:pl-0 sm:last:pr-0`}
             >
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-mono text-xs text-pinaka-ash tracking-widest uppercase">
+                <div className="flex items-center justify-between mb-1.5 sm:mb-2">
+                  <span className="font-mono text-[10px] sm:text-xs text-pinaka-ash tracking-widest uppercase">
                     Metric {index}
                   </span>
                   <span className="h-1.5 w-1.5 rounded-full bg-pinaka-saffron" />
                 </div>
-                <div className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-pinaka-charcoal mb-1">
+                <div className="font-serif text-2xl sm:text-4xl font-bold tracking-tight text-pinaka-charcoal mb-0.5 sm:mb-1">
                   {value}
                 </div>
-                <div className="font-sans text-xs font-bold uppercase tracking-wider text-pinaka-stone mb-0.5">
+                <div className="font-sans text-[11px] sm:text-xs font-bold uppercase tracking-wider text-pinaka-stone mb-0.5">
                   {title}
                 </div>
-                <div className="text-xs text-pinaka-slate mb-3">
+                <div className="text-[11px] sm:text-xs text-pinaka-slate mb-2 sm:mb-3 leading-snug">
                   {subtitle}
                 </div>
               </div>
-              <div className="pt-2 border-t border-pinaka-hairline/60 text-[11px] font-mono text-pinaka-saffron">
+              <div className="pt-2 border-t border-pinaka-hairline/60 text-[10px] sm:text-[11px] font-mono text-pinaka-saffron">
                 {highlight}
               </div>
             </div>
