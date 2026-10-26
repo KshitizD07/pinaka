@@ -11,9 +11,7 @@ import {
   Copy,
   Check,
   ArrowLeft,
-  Layers,
   Users,
-  Sparkles,
   ArrowRight,
   Compass,
 } from 'lucide-react';
@@ -44,7 +42,6 @@ const MANIFEST_TEMPLATE = `{
   "id": "your-project-slug",
   "name": "Project Name",
   "tagline": "A single compelling sentence describing the value proposition.",
-  "category": "Campus Tech",
   "track": "incubating",
   "status": "prototype",
   "leadBuilder": "Creator Name or Team Name",
@@ -67,12 +64,11 @@ export default function OnboardPage() {
   const [copiedBrief, setCopiedBrief] = useState(false);
   const [copiedManifest, setCopiedManifest] = useState(false);
 
-  // Form state
+  // Form state without domain
   const [formData, setFormData] = useState({
     name: '',
     leadBuilder: '',
     contact: '',
-    category: 'Campus Tech',
     track: 'incubating',
     tagline: '',
     techStack: '',
@@ -141,7 +137,7 @@ export default function OnboardPage() {
           </Link>
         </div>
 
-        {/* Hero Banner (§5.1) */}
+        {/* Hero Banner */}
         <div className="border border-pinaka-hairline bg-white/95 backdrop-blur-sm p-5 sm:p-10 lg:p-12 mb-8 sm:mb-12 shadow-editorial rounded-sm">
           <div className="flex items-center gap-2 mb-3">
             <PinakaBow className="h-4.5 sm:h-5 w-auto text-pinaka-saffron shrink-0" />
@@ -161,13 +157,13 @@ export default function OnboardPage() {
             <strong className="text-pinaka-stone font-semibold">SkillSphere</strong>.
           </p>
 
-          {/* Core Guarantees Grid (§6.1, §7, §1.2) */}
+          {/* Clean Guarantees Grid (Symbols and section numbers removed) */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 pt-5 sm:pt-6 border-t border-pinaka-hairline">
             <div className="flex items-start gap-3">
               <ShieldCheck className="h-5 w-5 text-pinaka-saffron shrink-0 mt-0.5" />
               <div>
                 <h2 className="font-serif text-xs font-bold uppercase tracking-wider text-pinaka-charcoal">
-                  100% Creator Ownership (§6.1)
+                  100% Creator Ownership
                 </h2>
                 <p className="text-xs text-pinaka-slate mt-1 leading-relaxed">
                   Submitting or showcasing work never transfers ownership of your code, design, or IP to Pinaka.
@@ -179,7 +175,7 @@ export default function OnboardPage() {
               <Users className="h-5 w-5 text-pinaka-saffron shrink-0 mt-0.5" />
               <div>
                 <h2 className="font-serif text-xs font-bold uppercase tracking-wider text-pinaka-charcoal">
-                  SkillSphere Collaboration (§7)
+                  SkillSphere Squad Collaboration
                 </h2>
                 <p className="text-xs text-pinaka-slate mt-1 leading-relaxed">
                   A transparent pathway to connect with student/alumni collaborators and form project squads.
@@ -191,7 +187,7 @@ export default function OnboardPage() {
               <Compass className="h-5 w-5 text-pinaka-saffron shrink-0 mt-0.5" />
               <div>
                 <h2 className="font-serif text-xs font-bold uppercase tracking-wider text-pinaka-charcoal">
-                  Manual & Fair Curation (§5.3)
+                  Manual & Fair Curation
                 </h2>
                 <p className="text-xs text-pinaka-slate mt-1 leading-relaxed">
                   Reviewed manually on problem significance, originality, evidence, and creator readiness.
@@ -201,7 +197,7 @@ export default function OnboardPage() {
           </div>
         </div>
 
-        {/* 3 Step Onboarding Steps */}
+        {/* Steps */}
         <div className="space-y-6 sm:space-y-10 mb-10 sm:mb-16">
           
           {/* Step 1: Problem Definition */}
@@ -235,7 +231,7 @@ export default function OnboardPage() {
             </pre>
           </div>
 
-          {/* Step 2: Add pinaka.json Manifest (Optional Machine Ingestion) */}
+          {/* Step 2: Add pinaka.json Manifest */}
           <div className="border border-pinaka-hairline bg-white/90 p-5 sm:p-8 shadow-sm rounded-sm">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 pb-4 border-b border-pinaka-hairline">
               <div>
@@ -269,10 +265,10 @@ export default function OnboardPage() {
           {/* Step 3: Creator Rights Notice */}
           <div id="rights" className="border border-pinaka-hairline bg-white/90 p-5 sm:p-8 shadow-sm rounded-sm">
             <span className="font-mono text-[11px] sm:text-xs font-bold text-pinaka-saffron uppercase tracking-widest">
-              Section 6 &middot; Creator Rights & Credit
+              Creator Rights & Credit
             </span>
             <h2 className="font-serif text-lg sm:text-2xl font-bold text-pinaka-charcoal mt-1 mb-4">
-              Our Default Commitments to Creators
+              Our Commitments to Creators
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs">
@@ -312,7 +308,7 @@ export default function OnboardPage() {
 
         </div>
 
-        {/* Step 4: Submission Form */}
+        {/* Step 4: Submission Form (Domain field cleanly removed) */}
         <div id="submit-form" className="border border-pinaka-hairline bg-white/95 backdrop-blur-sm p-5 sm:p-10 lg:p-12 shadow-editorial mb-12 sm:mb-16 rounded-sm">
           <div className="mb-6 sm:mb-8">
             <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-widest text-pinaka-saffron">
@@ -363,7 +359,6 @@ export default function OnboardPage() {
                       name: '',
                       leadBuilder: '',
                       contact: '',
-                      category: 'Campus Tech',
                       track: 'incubating',
                       tagline: '',
                       techStack: '',
@@ -405,7 +400,7 @@ export default function OnboardPage() {
                   />
                 </div>
 
-                {/* Lead Builder / Creator Name */}
+                {/* Creator Credit */}
                 <div>
                   <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5">
                     Creator Name / Team Credit *
@@ -422,7 +417,7 @@ export default function OnboardPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 {/* Contact Email or Handle */}
                 <div>
                   <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5">
@@ -439,28 +434,7 @@ export default function OnboardPage() {
                   />
                 </div>
 
-                {/* Classification Category */}
-                <div>
-                  <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5">
-                    Project Domain *
-                  </label>
-                  <select
-                    name="category"
-                    value={formData.category}
-                    onChange={handleInputChange}
-                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron cursor-pointer"
-                  >
-                    <option value="Campus Tech">Campus Tech</option>
-                    <option value="EdTech">EdTech</option>
-                    <option value="AI / ML">AI / ML</option>
-                    <option value="GovTech">GovTech</option>
-                    <option value="FinTech">FinTech</option>
-                    <option value="Open Source">Open Source</option>
-                    <option value="Research">Research & DeepTech</option>
-                  </select>
-                </div>
-
-                {/* Portfolio Track (§3.1) */}
+                {/* Portfolio Category (Domain selector removed) */}
                 <div>
                   <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5">
                     Portfolio Category *
@@ -471,10 +445,10 @@ export default function OnboardPage() {
                     onChange={handleInputChange}
                     className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron cursor-pointer"
                   >
-                    <option value="incubating">Active Project (Prototype / Progress)</option>
-                    <option value="research">Concept / Research Proposal</option>
-                    <option value="community">Community Showcase</option>
-                    <option value="flagship">Featured Initiative (Live / Launched)</option>
+                    <option value="flagship">Featured (Deployed & Operating)</option>
+                    <option value="incubating">Ongoing Work (Active Prototype / MVP)</option>
+                    <option value="breakthroughs">Breakthroughs (Advanced AI / DeepTech)</option>
+                    <option value="proposals">Proposals (Suggested Idea / Problem Brief)</option>
                   </select>
                 </div>
               </div>
