@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import PinakaBow from '@/components/ui/PinakaBow';
 import Button from '@/components/ui/Button';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ArrowLeft } from 'lucide-react';
 
 const NAV_LINKS = [
   { href: '/#portfolio', label: 'Ecosystem Portfolio' },
@@ -15,6 +16,7 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-pinaka-hairline bg-white/90 backdrop-blur-md">
@@ -62,6 +64,18 @@ export default function Navbar() {
             </Button>
           </Link>
 
+          {/* Mobile back link if not on home */}
+          {pathname !== '/' && (
+            <Link
+              href="/"
+              className="lg:hidden inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-mono uppercase tracking-wider text-pinaka-stone bg-pinaka-ice border border-pinaka-hairline hover:border-pinaka-saffron hover:text-pinaka-saffron rounded-sm"
+              aria-label="Return to Pinaka Home"
+            >
+              <ArrowLeft className="h-3.5 w-3.5 text-pinaka-saffron" />
+              <span>Home</span>
+            </Link>
+          )}
+
           {/* Mobile hamburger button */}
           <button
             type="button"
@@ -79,6 +93,14 @@ export default function Navbar() {
       {mobileMenuOpen && (
         <div className="lg:hidden border-t border-pinaka-hairline bg-white/95 backdrop-blur-md px-4 py-5 shadow-lg animate-fadeIn">
           <nav className="flex flex-col space-y-3 pb-4 border-b border-pinaka-hairline">
+            <Link
+              href="/"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-sm font-semibold tracking-wide text-pinaka-saffron flex items-center gap-2 py-2 px-1 transition-colors border-b border-pinaka-hairline/60 mb-1"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Return to Pinaka Home
+            </Link>
             {NAV_LINKS.map(({ href, label }) => (
               <Link
                 key={href}
@@ -91,15 +113,27 @@ export default function Navbar() {
             ))}
           </nav>
           <div className="pt-4">
-            <Link
-              href="/onboard"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full block"
-            >
-              <Button variant="primary" size="md" className="w-full">
-                Apply to Showcase
-              </Button>
-            </Link>
+            {pathname === '/onboard' ? (
+              <Link
+                href="/"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full block"
+              >
+                <Button variant="outline" size="md" className="w-full">
+                  Return to Portfolio
+                </Button>
+              </Link>
+            ) : (
+              <Link
+                href="/onboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full block"
+              >
+                <Button variant="primary" size="md" className="w-full">
+                  Apply to Showcase
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       )}
