@@ -14,6 +14,7 @@ import {
   Users,
   ArrowRight,
   Compass,
+  Sparkles,
 } from 'lucide-react';
 
 const PROBLEM_BRIEF_TEMPLATE = `# Project Application Brief
@@ -45,6 +46,7 @@ const MANIFEST_TEMPLATE = `{
   "track": "incubating",
   "status": "prototype",
   "leadBuilder": "Creator Name or Team Name",
+  "skillSphereHandle": "your_handle",
   "repoUrl": "https://github.com/username/project",
   "demoUrl": "https://project.example.com",
   "description": "Summary of the problem, proposed solution, and current user impact.",
@@ -64,10 +66,11 @@ export default function OnboardPage() {
   const [copiedBrief, setCopiedBrief] = useState(false);
   const [copiedManifest, setCopiedManifest] = useState(false);
 
-  // Form state without domain
+  // Form state including optional skillSphereHandle
   const [formData, setFormData] = useState({
     name: '',
     leadBuilder: '',
+    skillSphereHandle: '',
     contact: '',
     track: 'incubating',
     tagline: '',
@@ -157,7 +160,7 @@ export default function OnboardPage() {
             <strong className="text-pinaka-stone font-semibold">SkillSphere</strong>.
           </p>
 
-          {/* Clean Guarantees Grid (Symbols and section numbers removed) */}
+          {/* Clean Guarantees Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 pt-5 sm:pt-6 border-t border-pinaka-hairline">
             <div className="flex items-start gap-3">
               <ShieldCheck className="h-5 w-5 text-pinaka-saffron shrink-0 mt-0.5" />
@@ -178,7 +181,7 @@ export default function OnboardPage() {
                   SkillSphere Squad Collaboration
                 </h2>
                 <p className="text-xs text-pinaka-slate mt-1 leading-relaxed">
-                  A transparent pathway to connect with student/alumni collaborators and form project squads.
+                  Link your SkillSphere handle so visitors can find your profile and send squad collaboration requests.
                 </p>
               </div>
             </div>
@@ -254,7 +257,7 @@ export default function OnboardPage() {
 
             <p className="text-xs sm:text-sm text-pinaka-slate leading-relaxed mb-4">
               For codebases, adding a <code className="font-mono font-semibold text-pinaka-stone">pinaka.json</code> manifest allows 
-              structured indexing of your creator credit, live demo, and tech stack:
+              structured indexing of your creator credit, SkillSphere handle, live demo, and tech stack:
             </p>
 
             <pre className="p-3.5 sm:p-4 bg-pinaka-charcoal text-emerald-400 font-mono text-[11px] sm:text-xs overflow-x-auto rounded-sm leading-relaxed max-h-56">
@@ -308,7 +311,7 @@ export default function OnboardPage() {
 
         </div>
 
-        {/* Step 4: Submission Form (Domain field cleanly removed) */}
+        {/* Step 4: Submission Form */}
         <div id="submit-form" className="border border-pinaka-hairline bg-white/95 backdrop-blur-sm p-5 sm:p-10 lg:p-12 shadow-editorial mb-12 sm:mb-16 rounded-sm">
           <div className="mb-6 sm:mb-8">
             <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-widest text-pinaka-saffron">
@@ -358,6 +361,7 @@ export default function OnboardPage() {
                     setFormData({
                       name: '',
                       leadBuilder: '',
+                      skillSphereHandle: '',
                       contact: '',
                       track: 'incubating',
                       tagline: '',
@@ -384,7 +388,7 @@ export default function OnboardPage() {
               )}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                {/* Project Name */}
+                {/* Project Title */}
                 <div>
                   <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5">
                     Project Title *
@@ -417,7 +421,7 @@ export default function OnboardPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
                 {/* Contact Email or Handle */}
                 <div>
                   <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5">
@@ -434,7 +438,29 @@ export default function OnboardPage() {
                   />
                 </div>
 
-                {/* Portfolio Category (Domain selector removed) */}
+                {/* SkillSphere Handle (Optional) */}
+                <div>
+                  <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5 flex items-center justify-between">
+                    <span className="flex items-center gap-1 text-pinaka-saffron-deep font-semibold">
+                      <Sparkles className="h-3 w-3 text-pinaka-saffron" />
+                      SkillSphere Handle
+                    </span>
+                    <span className="text-[10px] text-pinaka-ash lowercase">(optional)</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="skillSphereHandle"
+                    value={formData.skillSphereHandle}
+                    onChange={handleInputChange}
+                    placeholder="e.g. kshitiz or @username"
+                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron font-mono"
+                  />
+                  <span className="text-[10px] text-pinaka-ash block mt-1">
+                    Links your public SkillSphere profile on the ledger card.
+                  </span>
+                </div>
+
+                {/* Portfolio Category */}
                 <div>
                   <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5">
                     Portfolio Category *
