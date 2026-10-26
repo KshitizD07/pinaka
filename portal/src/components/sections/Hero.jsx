@@ -1,9 +1,13 @@
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
 import PinakaBow from '@/components/ui/PinakaBow';
-import { ArrowUpRight, CheckCircle2, Compass, Users } from 'lucide-react';
+import { getAllProjects } from '@/lib/projects';
+import { ArrowUpRight, Compass } from 'lucide-react';
 
 export default function Hero() {
+  const projects = getAllProjects();
+  const projectCount = projects.length;
+
   return (
     <section
       className="relative w-full border-b border-pinaka-hairline bg-transparent overflow-hidden"
@@ -38,7 +42,7 @@ export default function Hero() {
                 </span>
               </div>
 
-              {/* Title / Proclamation from Section 1.5 of Strategy Doc */}
+              {/* Title / Proclamation */}
               <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-pinaka-charcoal leading-[1.15] mb-5 sm:mb-6">
                 A home for ambitious ideas,{' '}
                 <span className="text-pinaka-saffron underline decoration-pinaka-saffron/30 underline-offset-4 sm:underline-offset-8">
@@ -46,7 +50,7 @@ export default function Hero() {
                 </span>, and emerging ventures.
               </h1>
 
-              {/* Thesis Statement from Executive Summary */}
+              {/* Thesis Statement */}
               <p className="text-sm sm:text-base lg:text-lg text-pinaka-slate leading-relaxed mb-6 sm:mb-8 max-w-2xl font-sans">
                 <strong className="font-semibold text-pinaka-stone">Pinaka</strong> is an emerging, 
                 manually curated ecosystem for thoughtful concepts, prototypes, research, and early ventures. 
@@ -54,7 +58,7 @@ export default function Hero() {
                 collaborators through <strong className="font-semibold text-pinaka-stone">SkillSphere</strong>.
               </p>
 
-              {/* Core Ecosystem Pillars (§1.2 & §1.6) */}
+              {/* Core Ecosystem Pillars */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 sm:mb-10 border-y border-pinaka-hairline py-4 sm:py-5">
                 <div>
                   <div className="font-serif text-xs font-bold uppercase tracking-wider text-pinaka-saffron mb-1">
@@ -99,7 +103,7 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Right Column: Ecosystem Charter & Operating Profile (5 cols) */}
+          {/* Right Column: Dynamic Ecosystem Charter */}
           <div className="lg:col-span-5 bg-white/95 backdrop-blur-sm border border-pinaka-hairline p-5 sm:p-8 shadow-editorial rounded-sm">
             {/* Charter Header */}
             <div className="flex items-center justify-between border-b border-pinaka-hairline pb-4 mb-5 sm:mb-6">
@@ -114,7 +118,7 @@ export default function Hero() {
               </span>
             </div>
 
-            {/* Charter Specifications */}
+            {/* Dynamic Charter Specifications */}
             <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
               <div className="flex flex-col sm:flex-row sm:items-start justify-between border-b border-pinaka-hairline/60 pb-3 gap-1">
                 <span className="text-[11px] sm:text-xs font-mono uppercase tracking-wider text-pinaka-ash">
@@ -126,10 +130,10 @@ export default function Hero() {
               </div>
               <div className="flex flex-col sm:flex-row sm:items-start justify-between border-b border-pinaka-hairline/60 pb-3 gap-1">
                 <span className="text-[11px] sm:text-xs font-mono uppercase tracking-wider text-pinaka-ash">
-                  Initial Featured Cohort
+                  Curated Projects
                 </span>
-                <span className="text-xs font-semibold text-pinaka-stone sm:text-right font-mono">
-                  03 Featured Works + Incubating Projects
+                <span className="text-xs font-semibold text-pinaka-stone sm:text-right font-mono text-pinaka-saffron">
+                  {projectCount < 10 ? `0${projectCount}` : projectCount} Approved Works
                 </span>
               </div>
               <div className="flex flex-col sm:flex-row sm:items-start justify-between border-b border-pinaka-hairline/60 pb-3 gap-1">
@@ -150,7 +154,7 @@ export default function Hero() {
               </div>
             </div>
 
-            {/* What Pinaka Is Not Box (§1.2) */}
+            {/* What Pinaka Is Not Box */}
             <div className="bg-pinaka-ice border border-pinaka-hairline/80 p-3.5 sm:p-4 rounded-sm">
               <div className="text-[11px] font-mono uppercase tracking-wider text-pinaka-slate font-semibold mb-2 flex items-center gap-2">
                 <Compass className="h-3.5 w-3.5 text-pinaka-saffron shrink-0" />
