@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import { useProjects } from '@/hooks/useProjects';
 import ProjectLedgerRow from './ProjectLedgerRow';
 import Spinner from '@/components/ui/Spinner';
-import { Search, X, Layers, Filter } from 'lucide-react';
+import { Search, X, Filter } from 'lucide-react';
 import clsx from 'clsx';
 
 const TRACK_OPTIONS = [
@@ -73,81 +73,83 @@ export default function PortfolioGrid() {
   return (
     <section
       id="portfolio"
-      className="w-full bg-transparent py-16 sm:py-24"
+      className="w-full bg-transparent py-12 sm:py-20 lg:py-24"
       aria-labelledby="portfolio-heading"
     >
-      <div className="mx-auto max-w-[1440px] px-6 sm:px-10 lg:px-16">
+      <div className="mx-auto max-w-[1440px] px-4 sm:px-8 lg:px-16">
         
         {/* Section Header */}
-        <div className="mb-8 border-b border-pinaka-hairline pb-6">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+        <div className="mb-6 sm:mb-8 border-b border-pinaka-hairline pb-5 sm:pb-6">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 sm:gap-6">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="font-mono text-xs uppercase tracking-widest text-pinaka-saffron font-semibold">
+                <span className="font-mono text-[11px] sm:text-xs uppercase tracking-widest text-pinaka-saffron font-semibold">
                   Registry Index &middot; Phase 2026
                 </span>
               </div>
               <h2
                 id="portfolio-heading"
-                className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-pinaka-charcoal"
+                className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-pinaka-charcoal"
               >
                 The Studio Ledger of Works
               </h2>
-              <p className="mt-2 text-sm text-pinaka-slate max-w-2xl font-sans">
+              <p className="mt-2 text-xs sm:text-sm text-pinaka-slate max-w-2xl font-sans">
                 Production flagships, active incubation prototypes, and applied research systems 
                 curated under the Pinaka engineering baseline.
               </p>
             </div>
 
             {/* Quick Registry Metric */}
-            <div className="flex items-center gap-3 font-mono text-xs text-pinaka-slate bg-white/90 border border-pinaka-hairline px-4 py-2 rounded-sm shadow-sm">
-              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            <div className="inline-flex self-start sm:self-auto items-center gap-2.5 font-mono text-xs text-pinaka-slate bg-white/90 border border-pinaka-hairline px-3.5 py-2 rounded-sm shadow-sm">
+              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
               <span>
-                Ledger Status: <strong className="text-pinaka-stone">{total}</strong> Registered Ventures
+                Ledger: <strong className="text-pinaka-stone">{total}</strong> Registered
               </span>
             </div>
           </div>
         </div>
 
         {/* Filter & Search Toolbar */}
-        <div className="mb-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+        <div className="mb-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 sm:gap-4">
           
-          {/* Track Filter Tabs */}
-          <div
-            className="flex flex-wrap items-center gap-1.5 border border-pinaka-hairline bg-white/90 p-1.5 shadow-sm rounded-sm"
-            role="group"
-            aria-label="Filter ledger by track"
-          >
-            {TRACK_OPTIONS.map(({ value, label }) => {
-              const isActive = (filter.track ?? '') === value;
-              return (
-                <button
-                  key={value}
-                  onClick={() => handleTrackChange(value)}
-                  aria-pressed={isActive}
-                  className={clsx(
-                    'px-3 py-1.5 text-xs font-semibold uppercase tracking-wider transition-all duration-150 cursor-pointer rounded-sm font-sans',
-                    isActive
-                      ? 'bg-pinaka-saffron text-white shadow-saffron-sm'
-                      : 'text-pinaka-slate hover:text-pinaka-stone hover:bg-pinaka-ice'
-                  )}
-                >
-                  {label}
-                </button>
-              );
-            })}
+          {/* Track Filter Tabs: Horizontally scrollable on mobile */}
+          <div className="overflow-x-auto pb-1 sm:pb-0 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
+            <div
+              className="inline-flex items-center gap-1.5 border border-pinaka-hairline bg-white/90 p-1.5 shadow-sm rounded-sm whitespace-nowrap min-w-full sm:min-w-0"
+              role="group"
+              aria-label="Filter ledger by track"
+            >
+              {TRACK_OPTIONS.map(({ value, label }) => {
+                const isActive = (filter.track ?? '') === value;
+                return (
+                  <button
+                    key={value}
+                    onClick={() => handleTrackChange(value)}
+                    aria-pressed={isActive}
+                    className={clsx(
+                      'px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-semibold uppercase tracking-wider transition-all duration-150 cursor-pointer rounded-sm font-sans shrink-0',
+                      isActive
+                        ? 'bg-pinaka-saffron text-white shadow-saffron-sm'
+                        : 'text-pinaka-slate hover:text-pinaka-stone hover:bg-pinaka-ice'
+                    )}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Search & Category Filter Controls */}
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
             
             {/* Category Dropdown */}
-            <div className="relative">
+            <div className="relative w-full sm:w-auto">
               <select
                 value={filter.category || 'All Categories'}
                 onChange={handleCategoryChange}
                 aria-label="Filter by industry category"
-                className="appearance-none bg-white/90 border border-pinaka-hairline text-pinaka-stone text-xs font-sans px-3.5 py-2 pr-8 rounded-sm shadow-sm hover:border-pinaka-ash focus:outline-none focus:border-pinaka-saffron cursor-pointer"
+                className="w-full sm:w-auto appearance-none bg-white/90 border border-pinaka-hairline text-pinaka-stone text-xs font-sans px-3.5 py-2 pr-8 rounded-sm shadow-sm hover:border-pinaka-ash focus:outline-none focus:border-pinaka-saffron cursor-pointer"
               >
                 {CATEGORY_OPTIONS.map((cat) => (
                   <option key={cat} value={cat}>
@@ -161,7 +163,7 @@ export default function PortfolioGrid() {
             </div>
 
             {/* Search Input Box */}
-            <form onSubmit={handleSearchSubmit} className="relative flex-1 sm:w-64">
+            <form onSubmit={handleSearchSubmit} className="relative w-full sm:w-64">
               <input
                 type="text"
                 value={searchInput}
@@ -186,12 +188,12 @@ export default function PortfolioGrid() {
         </div>
 
         {/* Dynamic Ledger Summary Bar */}
-        <div className="mb-4 flex items-center justify-between text-xs font-mono text-pinaka-ash px-1">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-pinaka-ash px-1">
           <div>
             Showing <strong className="text-pinaka-stone">{displayedProjects.length}</strong> of{' '}
             <strong className="text-pinaka-stone">{projects.length}</strong> matching ventures
             {hasActiveFilters && (
-              <span className="ml-2 text-pinaka-saffron font-semibold">
+              <span className="ml-1 sm:ml-2 text-pinaka-saffron font-semibold">
                 (Filtered view)
               </span>
             )}
@@ -199,7 +201,7 @@ export default function PortfolioGrid() {
           {hasActiveFilters && (
             <button
               onClick={handleResetAll}
-              className="text-pinaka-saffron hover:underline cursor-pointer"
+              className="text-pinaka-saffron hover:underline cursor-pointer text-xs"
             >
               Reset all filters
             </button>
@@ -207,8 +209,8 @@ export default function PortfolioGrid() {
         </div>
 
         {/* The Ledger Container */}
-        <div className="border border-pinaka-hairline bg-white/90 backdrop-blur-sm shadow-editorial">
-          {/* Ledger Table Sub-Header */}
+        <div className="border border-pinaka-hairline bg-white/90 backdrop-blur-sm shadow-editorial rounded-sm overflow-hidden">
+          {/* Ledger Table Sub-Header (desktop only) */}
           <div className="hidden lg:grid grid-cols-12 gap-8 px-8 py-3.5 border-b border-pinaka-hairline bg-pinaka-ice/80 text-[11px] font-mono uppercase tracking-widest text-pinaka-ash">
             <div className="col-span-4">Venture Nomenclature & Index</div>
             <div className="col-span-5 border-l border-pinaka-hairline pl-8">Core Architecture & Highlights</div>
@@ -217,15 +219,15 @@ export default function PortfolioGrid() {
 
           {/* Content Rows */}
           {isLoading ? (
-            <div className="flex flex-col items-center justify-center py-24 gap-3">
+            <div className="flex flex-col items-center justify-center py-20 sm:py-24 gap-3">
               <Spinner size="lg" />
               <span className="font-mono text-xs text-pinaka-ash uppercase tracking-wider">
                 Accessing Studio Ledger...
               </span>
             </div>
           ) : error ? (
-            <div className="p-12 text-center">
-              <p className="font-serif text-lg text-pinaka-crimson">
+            <div className="p-8 sm:p-12 text-center">
+              <p className="font-serif text-base sm:text-lg text-pinaka-crimson">
                 Failed to access ledger registry.
               </p>
               <p className="text-xs text-pinaka-slate mt-1 font-mono">
@@ -233,8 +235,8 @@ export default function PortfolioGrid() {
               </p>
             </div>
           ) : projects.length === 0 ? (
-            <div className="p-16 text-center">
-              <p className="font-serif text-lg text-pinaka-stone">
+            <div className="p-8 sm:p-16 text-center">
+              <p className="font-serif text-base sm:text-lg text-pinaka-stone">
                 No active ventures found matching current criteria.
               </p>
               <p className="text-xs text-pinaka-slate mt-2 mb-4">
@@ -261,12 +263,12 @@ export default function PortfolioGrid() {
           )}
         </div>
 
-        {/* Progressive Reveal Pagination Control (Scales for 3+ products) */}
+        {/* Progressive Reveal Pagination Control */}
         {!isLoading && projects.length > visibleCount && (
           <div className="mt-8 flex justify-center">
             <button
               onClick={() => setVisibleCount((prev) => prev + INITIAL_PAGE_SIZE)}
-              className="px-6 py-3 border border-pinaka-hairline bg-white/95 text-pinaka-stone hover:bg-pinaka-saffron hover:text-white hover:border-pinaka-saffron text-xs font-mono uppercase tracking-widest transition-all duration-200 shadow-sm cursor-pointer rounded-sm"
+              className="w-full sm:w-auto px-6 py-3 border border-pinaka-hairline bg-white/95 text-pinaka-stone hover:bg-pinaka-saffron hover:text-white hover:border-pinaka-saffron text-xs font-mono uppercase tracking-widest transition-all duration-200 shadow-sm cursor-pointer rounded-sm"
             >
               Show More Ventures ({projects.length - visibleCount} Remaining)
             </button>
