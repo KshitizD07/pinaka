@@ -53,7 +53,8 @@ export async function POST(request) {
         ? techStack.split(',').map((s) => s.trim()).filter(Boolean)
         : [],
       leadBuilder: (leadBuilder || 'KSHITIZ').toUpperCase(),
-      skillSphereHandle: skillSphereHandle ? skillSphereHandle.replace(/^@/, '').trim() : null,
+      skillSphereUrl: skillSphereUrl?.trim() || null,
+      skillSphereLabel: skillSphereLabel?.trim() || null,
       repoUrl: repoUrl?.trim() || null,
       demoUrl: demoUrl?.trim() || null,
       description: description?.trim() || '',

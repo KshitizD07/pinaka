@@ -14,7 +14,6 @@ import {
   Users,
   ArrowRight,
   Compass,
-  Sparkles,
 } from 'lucide-react';
 
 const PROBLEM_BRIEF_TEMPLATE = `# Project Application Brief
@@ -46,7 +45,8 @@ const MANIFEST_TEMPLATE = `{
   "track": "incubating",
   "status": "prototype",
   "leadBuilder": "Creator Name or Team Name",
-  "skillSphereHandle": "your_handle",
+  "skillSphereUrl": "https://skill-sphere-v1.vercel.app/profile/your-uuid",
+  "skillSphereLabel": "Your Name / Squad",
   "repoUrl": "https://github.com/username/project",
   "demoUrl": "https://project.example.com",
   "description": "Summary of the problem, proposed solution, and current user impact.",
@@ -66,11 +66,12 @@ export default function OnboardPage() {
   const [copiedBrief, setCopiedBrief] = useState(false);
   const [copiedManifest, setCopiedManifest] = useState(false);
 
-  // Form state including optional skillSphereHandle
+  // Form state
   const [formData, setFormData] = useState({
     name: '',
     leadBuilder: '',
-    skillSphereHandle: '',
+    skillSphereUrl: '',
+    skillSphereLabel: '',
     contact: '',
     track: 'incubating',
     tagline: '',
@@ -181,7 +182,7 @@ export default function OnboardPage() {
                   SkillSphere Squad Collaboration
                 </h2>
                 <p className="text-xs text-pinaka-slate mt-1 leading-relaxed">
-                  Link your SkillSphere handle so visitors can find your profile and send squad collaboration requests.
+                  Link your SkillSphere profile URL so visitors can view your verified work and send squad collaboration requests.
                 </p>
               </div>
             </div>
@@ -257,7 +258,7 @@ export default function OnboardPage() {
 
             <p className="text-xs sm:text-sm text-pinaka-slate leading-relaxed mb-4">
               For codebases, adding a <code className="font-mono font-semibold text-pinaka-stone">pinaka.json</code> manifest allows 
-              structured indexing of your creator credit, SkillSphere handle, live demo, and tech stack:
+              structured indexing of your creator credit, SkillSphere link, live demo, and tech stack:
             </p>
 
             <pre className="p-3.5 sm:p-4 bg-pinaka-charcoal text-emerald-400 font-mono text-[11px] sm:text-xs overflow-x-auto rounded-sm leading-relaxed max-h-56">
@@ -361,7 +362,8 @@ export default function OnboardPage() {
                     setFormData({
                       name: '',
                       leadBuilder: '',
-                      skillSphereHandle: '',
+                      skillSphereUrl: '',
+                      skillSphereLabel: '',
                       contact: '',
                       track: 'incubating',
                       tagline: '',
@@ -421,7 +423,7 @@ export default function OnboardPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 {/* Contact Email or Handle */}
                 <div>
                   <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5">
@@ -436,28 +438,6 @@ export default function OnboardPage() {
                     placeholder="creator@domain.com or @handle"
                     className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron"
                   />
-                </div>
-
-                {/* SkillSphere Handle (Optional) */}
-                <div>
-                  <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5 flex items-center justify-between">
-                    <span className="flex items-center gap-1 text-pinaka-saffron-deep font-semibold">
-                      <Sparkles className="h-3 w-3 text-pinaka-saffron" />
-                      SkillSphere Handle
-                    </span>
-                    <span className="text-[10px] text-pinaka-ash lowercase">(optional)</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="skillSphereHandle"
-                    value={formData.skillSphereHandle}
-                    onChange={handleInputChange}
-                    placeholder="e.g. kshitiz or @username"
-                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron font-mono"
-                  />
-                  <span className="text-[10px] text-pinaka-ash block mt-1">
-                    Links your public SkillSphere profile on the ledger card.
-                  </span>
                 </div>
 
                 {/* Portfolio Category */}
@@ -477,6 +457,47 @@ export default function OnboardPage() {
                     <option value="proposals">Proposals (Suggested Idea / Problem Brief)</option>
                   </select>
                 </div>
+              </div>
+
+              {/* SkillSphere Profile Link & Custom Label (Optional) */}
+              <div className="p-4 bg-pinaka-ice/40 border border-pinaka-hairline rounded-sm space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-mono uppercase tracking-wider text-pinaka-stone font-semibold">
+                    SkillSphere Profile Integration
+                  </span>
+                  <span className="text-[10px] font-mono text-pinaka-ash lowercase">(optional)</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[11px] font-mono text-pinaka-slate mb-1">
+                      Full SkillSphere Profile URL
+                    </label>
+                    <input
+                      type="url"
+                      name="skillSphereUrl"
+                      value={formData.skillSphereUrl}
+                      onChange={handleInputChange}
+                      placeholder="https://skill-sphere-v1.vercel.app/profile/your-id"
+                      className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3 py-2 rounded-sm focus:outline-none focus:border-pinaka-saffron font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-mono text-pinaka-slate mb-1">
+                      Display Label for Link
+                    </label>
+                    <input
+                      type="text"
+                      name="skillSphereLabel"
+                      value={formData.skillSphereLabel}
+                      onChange={handleInputChange}
+                      placeholder="e.g. KSHITIZ or Profile"
+                      className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3 py-2 rounded-sm focus:outline-none focus:border-pinaka-saffron font-sans"
+                    />
+                  </div>
+                </div>
+                <p className="text-[11px] text-pinaka-slate font-sans">
+                  Paste the full link from your browser when viewing your profile on SkillSphere. If left empty, no SkillSphere badge will appear on your card.
+                </p>
               </div>
 
               {/* Tagline */}
