@@ -25,19 +25,19 @@ export const CATEGORIES = [
 
 /** Human-readable track labels */
 export const TRACK_LABELS = {
-  flagship: 'Primary Flagship',
-  research: 'Applied Research',
-  incubating: 'Incubation Track',
-  community: 'Community Collective',
+  flagship: 'Featured Initiative',
+  research: 'Research & Concepts',
+  incubating: 'Active Projects',
+  community: 'Community Showcase',
 };
 
-/** Human-readable status labels */
+/** Human-readable status labels reflecting §3.1 and §1.6 */
 export const STATUS_LABELS = {
   concept: 'Concept Stage',
-  prototype: 'Lab Prototype',
-  mvp: 'Functional MVP',
-  pilot: 'Active Pilot',
-  live: 'Production Live',
+  prototype: 'Working Prototype',
+  mvp: 'Active Build / MVP',
+  pilot: 'Pilot Evaluation',
+  live: 'Launched Product',
   paused: 'Paused',
   archived: 'Archived',
 };
@@ -117,35 +117,35 @@ export const TRACK_COLORS = {
 };
 
 /**
- * The 4 Pinaka Golden Laws from documentation.
+ * The Brand & Operating Principles from Section 1.6 of the Strategy Document.
  */
 export const MANIFESTO_RULES = [
   {
     num: 'I',
     code: '01',
-    rule: 'Execution and Evidence Over Ideas',
+    rule: 'Curiosity & Creator Respect',
     description:
-      'Ideas carry zero sovereign weight until backed by working code, real user interaction, and verifiable audit trials.',
+      'We make room for thoughtful, unconventional, and technically ambitious work while recognizing the independent creators behind each idea.',
   },
   {
     num: 'II',
     code: '02',
-    rule: 'Start from the Problem, Not Technology',
+    rule: 'Earned Curation & Review',
     description:
-      'We never deploy distributed consensus or neural nets where a plain Postgres table and a single clean index will suffice.',
+      'Publication is earned through manual review, not automatic submission. We prioritize problem significance and creator readiness.',
   },
   {
     num: 'III',
     code: '03',
-    rule: 'The Simplest Architecture That Works Wins',
+    rule: 'Clarity Over Vanity Hype',
     description:
-      'Every line of unnecessary complexity is technical liability. We build modular, resilient systems with crisp boundaries.',
+      'We distinguish concepts, prototypes, active builds, and launched products. Never present a prototype as a business or a feature as an endorsement.',
   },
   {
     num: 'IV',
     code: '04',
-    rule: 'Never Fake Traction or Misrepresent Maturity',
+    rule: 'Sovereign Trust & IP Retention',
     description:
-      'Never present a prototype as a deployed product, or a deployed product as a business. Total transparency with builders and partners.',
+      'Submitting work never transfers ownership to Pinaka. Creators retain complete IP and recognition unless separate, explicit agreements are made.',
   },
 ];
