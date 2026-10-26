@@ -11,6 +11,7 @@ export async function POST(request) {
     const {
       name,
       leadBuilder,
+      squadUrl,
       skillSphereUrl,
       skillSphereLabel,
       contact,
@@ -39,6 +40,9 @@ export async function POST(request) {
     if (!description?.trim()) {
       return NextResponse.json({ error: 'Problem brief / description is required' }, { status: 400 });
     }
+    if ((track === 'proposals' || track === 'incubating') && !squadUrl?.trim()) {
+      return NextResponse.json({ error: 'A SkillSphere Squad URL is mandatory for Ongoing Work and Proposals.' }, { status: 400 });
+    }
 
     const submissionId = `PINAKA-${Date.now().toString().slice(-6)}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
 
@@ -47,6 +51,7 @@ export async function POST(request) {
       name: name.trim(),
       leadBuilder: leadBuilder.trim(),
       contact: contact.trim(),
+      squadUrl: squadUrl?.trim() || null,
       skillSphereUrl: skillSphereUrl?.trim() || null,
       skillSphereLabel: skillSphereLabel?.trim() || null,
       category: category || 'Campus Tech',
