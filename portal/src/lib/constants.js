@@ -1,5 +1,5 @@
 /** Valid track values */
-export const TRACKS = ['flagship', 'research', 'incubating', 'community'];
+export const TRACKS = ['flagship', 'incubating', 'breakthroughs', 'proposals'];
 
 /** Valid status values */
 export const STATUSES = [
@@ -12,32 +12,32 @@ export const STATUSES = [
   'archived',
 ];
 
-/** Valid category values */
-export const CATEGORIES = [
-  'Campus Tech',
-  'GovTech',
-  'EdTech',
-  'AI / ML',
-  'FinTech',
-  'Open Source',
-  'Research',
-];
-
 /** Human-readable track labels */
 export const TRACK_LABELS = {
-  flagship: 'Featured Initiative',
-  research: 'Research & Concepts',
-  incubating: 'Active Projects',
-  community: 'Community Showcase',
+  flagship: 'Featured',
+  incubating: 'Ongoing Work',
+  breakthroughs: 'Breakthroughs',
+  research: 'Breakthroughs', // alias for backwards compatibility
+  proposals: 'Proposals',
+  community: 'Community',
 };
 
-/** Human-readable status labels reflecting §3.1 and §1.6 */
+/** Category descriptions for one-liner display under tabs */
+export const TRACK_DESCRIPTIONS = {
+  '': 'Complete ecosystem directory of curated ideas, prototypes, and launched systems.',
+  flagship: 'Deployed, tested, and actively operating production systems with verified users.',
+  incubating: 'Active projects with working prototypes, running builds, or functional MVPs.',
+  breakthroughs: 'Advanced AI architectures, multi-agent simulations, and deep scientific research.',
+  proposals: 'Early problem briefs, architectural proposals, and suggested initiatives seeking collaborators.',
+};
+
+/** Human-readable status labels */
 export const STATUS_LABELS = {
-  concept: 'Concept Stage',
+  concept: 'Proposed Idea',
   prototype: 'Working Prototype',
-  mvp: 'Active Build / MVP',
-  pilot: 'Pilot Evaluation',
-  live: 'Launched Product',
+  mvp: 'Active MVP',
+  pilot: 'Pilot Stage',
+  live: 'Launched & Live',
   paused: 'Paused',
   archived: 'Archived',
 };
@@ -99,6 +99,11 @@ export const TRACK_COLORS = {
     text: 'text-pinaka-saffron-deep',
     border: 'border-pinaka-saffron/40',
   },
+  breakthroughs: {
+    bg: 'bg-blue-50',
+    text: 'text-blue-900',
+    border: 'border-blue-200',
+  },
   research: {
     bg: 'bg-blue-50',
     text: 'text-blue-900',
@@ -109,6 +114,11 @@ export const TRACK_COLORS = {
     text: 'text-purple-900',
     border: 'border-purple-200',
   },
+  proposals: {
+    bg: 'bg-amber-50',
+    text: 'text-amber-900',
+    border: 'border-amber-200',
+  },
   community: {
     bg: 'bg-stone-50',
     text: 'text-stone-800',
@@ -117,7 +127,7 @@ export const TRACK_COLORS = {
 };
 
 /**
- * The Brand & Operating Principles from Section 1.6 of the Strategy Document.
+ * The Brand & Operating Principles.
  */
 export const MANIFESTO_RULES = [
   {
