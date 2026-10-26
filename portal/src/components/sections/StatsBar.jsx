@@ -7,30 +7,30 @@ function deriveStats(projects) {
     {
       index: '01',
       value: `0${projects.length}`,
-      title: 'Active Ventures',
-      subtitle: 'Engineered & Deployed Systems',
-      highlight: 'Commercial Flagships & Labs',
+      title: 'Curated Works',
+      subtitle: 'Ideas, Prototypes & Ventures',
+      highlight: 'Manually Reviewed Cohort',
     },
     {
       index: '02',
       value: `0${tracks}`,
-      title: 'Studio Tracks',
-      subtitle: 'Commercial & Applied Research',
-      highlight: 'Multi-Disciplinary Product Portfolio',
+      title: 'Ecosystem Categories',
+      subtitle: 'From Concepts to Live Products',
+      highlight: 'Structured Portfolio Model',
     },
     {
       index: '03',
       value: '100%',
-      title: 'Sovereign IP',
-      subtitle: 'Builder Ownership Protected',
-      highlight: 'Founders own source & data rights',
+      title: 'Creator Ownership',
+      subtitle: 'Zero Equity or IP Transfers',
+      highlight: 'Creators retain full credit & rights',
     },
     {
       index: '04',
-      value: 'Gate 4',
-      title: 'Deployment Maturity',
-      subtitle: 'Pre-Pilot Production Validation',
-      highlight: 'Full test pyramid & CI/CD standard',
+      value: 'SkillSphere',
+      title: 'Execution Pathway',
+      subtitle: 'Team Formation & Discovery',
+      highlight: 'Collaborative execution support',
     },
   ];
 }
@@ -42,7 +42,7 @@ export default function StatsBar() {
   return (
     <section
       className="w-full border-b border-pinaka-hairline bg-white/80 backdrop-blur-sm"
-      aria-label="Studio Statistics & Performance Matrix"
+      aria-label="Ecosystem Scope & Operating Metrics"
     >
       <div className="mx-auto max-w-[1440px] px-4 sm:px-8 lg:px-16">
         <div className="grid grid-cols-2 lg:grid-cols-4 divide-y-0 sm:divide-x divide-pinaka-hairline gap-y-6 sm:gap-y-0 py-2 sm:py-0">
@@ -56,7 +56,7 @@ export default function StatsBar() {
               <div>
                 <div className="flex items-center justify-between mb-1.5 sm:mb-2">
                   <span className="font-mono text-[10px] sm:text-xs text-pinaka-ash tracking-widest uppercase">
-                    Metric {index}
+                    Dimension {index}
                   </span>
                   <span className="h-1.5 w-1.5 rounded-full bg-pinaka-saffron" />
                 </div>
@@ -70,7 +70,7 @@ export default function StatsBar() {
                   {subtitle}
                 </div>
               </div>
-              <div className="pt-2 border-t border-pinaka-hairline/60 text-[10px] sm:text-[11px] font-mono text-pinaka-saffron">
+              <div className="pt-2 border-t border-pinaka-hairline/60 text-[10px] sm:text-[11px] font-mono text-pinaka-saffron font-medium">
                 {highlight}
               </div>
             </div>
