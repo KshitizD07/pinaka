@@ -12,11 +12,13 @@ import {
   Check,
   ArrowLeft,
   Layers,
+  Users,
   Sparkles,
   ArrowRight,
+  Compass,
 } from 'lucide-react';
 
-const PROBLEM_BRIEF_TEMPLATE = `# Problem Brief (Gate 1 Deliverable)
+const PROBLEM_BRIEF_TEMPLATE = `# Project Application Brief
 
 ## 1. Problem Statement
 * What specific friction, inefficiency, or pain point exists?
@@ -26,16 +28,16 @@ const PROBLEM_BRIEF_TEMPLATE = `# Problem Brief (Gate 1 Deliverable)
 * Who experiences this problem directly?
 * How are they currently reached or accessed for validation?
 
-## 3. Evidence of Problem (Not Just Opinion)
-* Direct Quotes / Pilot Feedback:
-* Observed Workarounds: What do people currently do to hack around this?
+## 3. Evidence of Progress (Not Just Opinion)
+* Direct Quotes / User Feedback:
+* Prototypes, code repositories, or simulation results:
 
 ## 4. Current Alternatives & Limitations
 * What tools, processes, or software do users currently use?
 * Why do these alternatives fall short?
 
-## 5. Architectural Solution & Tech Stack
-* High-level system design and primary libraries/frameworks.`;
+## 5. What are you seeking from Pinaka?
+* Visibility & Discovery / Feedback / Collaborators via SkillSphere / Testing`;
 
 const MANIFEST_TEMPLATE = `{
   "$schema": "https://pinaka.dev/schemas/manifest.v1.json",
@@ -45,20 +47,19 @@ const MANIFEST_TEMPLATE = `{
   "category": "Campus Tech",
   "track": "incubating",
   "status": "prototype",
-  "leadBuilder": "Your Name (@github_handle)",
+  "leadBuilder": "Creator Name or Team Name",
   "repoUrl": "https://github.com/username/project",
   "demoUrl": "https://project.example.com",
-  "description": "In-depth summary of the problem, the architectural solution, and current user impact.",
+  "description": "Summary of the problem, proposed solution, and current user impact.",
   "techStack": [
     "Next.js",
     "Node.js",
-    "PostgreSQL",
-    "Docker"
+    "PostgreSQL"
   ],
   "highlights": [
     "Key architectural achievement or unique technical feature #1",
     "Performance, security, or concurrency guarantee #2",
-    "Pilot validation or notable user metric #3"
+    "Evidence of progress, test feedback, or milestone #3"
   ]
 }`;
 
@@ -114,7 +115,7 @@ export default function OnboardPage() {
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to submit project');
+        throw new Error(data.error || 'Failed to submit application');
       }
 
       setSubmitResult(data);
@@ -136,64 +137,64 @@ export default function OnboardPage() {
             className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-pinaka-slate hover:text-pinaka-saffron transition-colors"
           >
             <ArrowLeft className="h-3.5 w-3.5 shrink-0" />
-            <span>Return to Studio Home & Ledger</span>
+            <span>Return to Pinaka Home</span>
           </Link>
         </div>
 
-        {/* Hero Banner */}
+        {/* Hero Banner (§5.1) */}
         <div className="border border-pinaka-hairline bg-white/95 backdrop-blur-sm p-5 sm:p-10 lg:p-12 mb-8 sm:mb-12 shadow-editorial rounded-sm">
           <div className="flex items-center gap-2 mb-3">
             <PinakaBow className="h-4.5 sm:h-5 w-auto text-pinaka-saffron shrink-0" />
             <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-widest text-pinaka-saffron">
-              The Pinaka Foundry &middot; Project Onboarding Guide
+              Creator Application & Curation Guide
             </span>
           </div>
 
           <h1 className="font-serif text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-pinaka-charcoal mb-3 sm:mb-4">
-            How to Get Backed Under Pinaka
+            Showcase Your Work on Pinaka
           </h1>
 
           <p className="text-xs sm:text-sm lg:text-base text-pinaka-slate leading-relaxed max-w-3xl font-sans mb-6 sm:mb-8">
-            Early-stage software initiatives often struggle for traction and institutional credibility. 
-            Pinaka operates as an engineering backbone and supportive studio umbrella. We provide engineering 
-            baselines, architectural hardening, and shared distribution while guaranteeing that{' '}
-            <strong className="text-pinaka-stone font-semibold">you retain 100% intellectual property ownership</strong>.
+            Pinaka is a manually curated ecosystem for ambitious ideas, promising projects, research, and emerging ventures. 
+            Anyone may apply to showcase their work. We discover and present promising projects, help them find an audience, 
+            and where creators want execution support, provide a path toward team formation through{' '}
+            <strong className="text-pinaka-stone font-semibold">SkillSphere</strong>.
           </p>
 
-          {/* Core Guarantees Grid */}
+          {/* Core Guarantees Grid (§6.1, §7, §1.2) */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 pt-5 sm:pt-6 border-t border-pinaka-hairline">
             <div className="flex items-start gap-3">
               <ShieldCheck className="h-5 w-5 text-pinaka-saffron shrink-0 mt-0.5" />
               <div>
                 <h2 className="font-serif text-xs font-bold uppercase tracking-wider text-pinaka-charcoal">
-                  100% Builder IP Retention
+                  100% Creator Ownership (§6.1)
                 </h2>
                 <p className="text-xs text-pinaka-slate mt-1 leading-relaxed">
-                  You own your code, trademarks, and repository. Zero equity grabs or non-competes.
+                  Submitting or showcasing work never transfers ownership of your code, design, or IP to Pinaka.
                 </p>
               </div>
             </div>
 
             <div className="flex items-start gap-3">
-              <Layers className="h-5 w-5 text-pinaka-saffron shrink-0 mt-0.5" />
+              <Users className="h-5 w-5 text-pinaka-saffron shrink-0 mt-0.5" />
               <div>
                 <h2 className="font-serif text-xs font-bold uppercase tracking-wider text-pinaka-charcoal">
-                  Shared Engineering Baseline
+                  SkillSphere Collaboration (§7)
                 </h2>
                 <p className="text-xs text-pinaka-slate mt-1 leading-relaxed">
-                  Automated test suites, CI/CD pipelines, and resilience audits provided out of the box.
+                  A transparent pathway to connect with student/alumni collaborators and form project squads.
                 </p>
               </div>
             </div>
 
             <div className="flex items-start gap-3">
-              <Sparkles className="h-5 w-5 text-pinaka-saffron shrink-0 mt-0.5" />
+              <Compass className="h-5 w-5 text-pinaka-saffron shrink-0 mt-0.5" />
               <div>
                 <h2 className="font-serif text-xs font-bold uppercase tracking-wider text-pinaka-charcoal">
-                  Verified Talent & Cross-Launch
+                  Manual & Fair Curation (§5.3)
                 </h2>
                 <p className="text-xs text-pinaka-slate mt-1 leading-relaxed">
-                  Synergy with SkillSphere talent squads and showcase on the central Pinaka registry.
+                  Reviewed manually on problem significance, originality, evidence, and creator readiness.
                 </p>
               </div>
             </div>
@@ -203,15 +204,15 @@ export default function OnboardPage() {
         {/* 3 Step Onboarding Steps */}
         <div className="space-y-6 sm:space-y-10 mb-10 sm:mb-16">
           
-          {/* Step 1: Problem Validation */}
+          {/* Step 1: Problem Definition */}
           <div className="border border-pinaka-hairline bg-white/90 p-5 sm:p-8 shadow-sm rounded-sm">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 pb-4 border-b border-pinaka-hairline">
               <div>
                 <span className="font-mono text-[11px] sm:text-xs font-bold text-pinaka-saffron uppercase tracking-widest">
-                  Step 01 &middot; Gate 1 Requirement
+                  Step 01 &middot; Preparation
                 </span>
                 <h2 className="font-serif text-lg sm:text-2xl font-bold text-pinaka-charcoal mt-1">
-                  Define the Problem Brief
+                  Prepare Your Project Brief
                 </h2>
               </div>
               <button
@@ -220,13 +221,13 @@ export default function OnboardPage() {
                 className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-mono uppercase tracking-wider bg-pinaka-ice border border-pinaka-hairline text-pinaka-stone hover:bg-pinaka-saffron hover:text-white transition-colors rounded-sm cursor-pointer shrink-0 w-full sm:w-auto"
               >
                 {copiedBrief ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
-                {copiedBrief ? 'Copied Template' : 'Copy Problem Brief Template'}
+                {copiedBrief ? 'Copied Brief Template' : 'Copy Brief Template'}
               </button>
             </div>
 
             <p className="text-xs sm:text-sm text-pinaka-slate leading-relaxed mb-4">
-              Pinaka rejects vanity decks and buzzwords. We evaluate candidate initiatives on whether they 
-              solve verifiable user friction. Copy the structured Problem Brief below and keep it in your docs:
+              We look for genuine problem significance and evidence of progress over attractive pitch decks. 
+              Use this structure to outline your project:
             </p>
 
             <pre className="p-3.5 sm:p-4 bg-pinaka-charcoal text-white font-mono text-[11px] sm:text-xs overflow-x-auto rounded-sm leading-relaxed max-h-56">
@@ -234,15 +235,15 @@ export default function OnboardPage() {
             </pre>
           </div>
 
-          {/* Step 2: Add pinaka.json Manifest */}
+          {/* Step 2: Add pinaka.json Manifest (Optional Machine Ingestion) */}
           <div className="border border-pinaka-hairline bg-white/90 p-5 sm:p-8 shadow-sm rounded-sm">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 pb-4 border-b border-pinaka-hairline">
               <div>
                 <span className="font-mono text-[11px] sm:text-xs font-bold text-pinaka-saffron uppercase tracking-widest">
-                  Step 02 &middot; Machine-Readable Ingestion
+                  Step 02 &middot; Optional Repository Ingestion
                 </span>
                 <h2 className="font-serif text-lg sm:text-2xl font-bold text-pinaka-charcoal mt-1">
-                  Add <code className="font-mono text-pinaka-saffron bg-pinaka-ice px-1.5 sm:px-2 py-0.5 rounded-sm text-xs sm:text-lg">pinaka.json</code> to Your Repo Root
+                  Add <code className="font-mono text-pinaka-saffron bg-pinaka-ice px-1.5 sm:px-2 py-0.5 rounded-sm text-xs sm:text-lg">pinaka.json</code> to Your Repo
                 </h2>
               </div>
               <button
@@ -251,13 +252,13 @@ export default function OnboardPage() {
                 className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-mono uppercase tracking-wider bg-pinaka-ice border border-pinaka-hairline text-pinaka-stone hover:bg-pinaka-saffron hover:text-white transition-colors rounded-sm cursor-pointer shrink-0 w-full sm:w-auto"
               >
                 {copiedManifest ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
-                {copiedManifest ? 'Copied JSON' : 'Copy pinaka.json Template'}
+                {copiedManifest ? 'Copied Manifest' : 'Copy pinaka.json Template'}
               </button>
             </div>
 
             <p className="text-xs sm:text-sm text-pinaka-slate leading-relaxed mb-4">
-              To be indexed in the studio ledger, place a <code className="font-mono font-semibold text-pinaka-stone">pinaka.json</code> file 
-              at the root of your project repository. This declares your tech stack, architectural highlights, and live URLs:
+              For codebases, adding a <code className="font-mono font-semibold text-pinaka-stone">pinaka.json</code> manifest allows 
+              structured indexing of your creator credit, live demo, and tech stack:
             </p>
 
             <pre className="p-3.5 sm:p-4 bg-pinaka-charcoal text-emerald-400 font-mono text-[11px] sm:text-xs overflow-x-auto rounded-sm leading-relaxed max-h-56">
@@ -265,45 +266,45 @@ export default function OnboardPage() {
             </pre>
           </div>
 
-          {/* Step 3: Engineering Standards Checklist */}
-          <div className="border border-pinaka-hairline bg-white/90 p-5 sm:p-8 shadow-sm rounded-sm">
+          {/* Step 3: Creator Rights Notice */}
+          <div id="rights" className="border border-pinaka-hairline bg-white/90 p-5 sm:p-8 shadow-sm rounded-sm">
             <span className="font-mono text-[11px] sm:text-xs font-bold text-pinaka-saffron uppercase tracking-widest">
-              Step 03 &middot; Engineering Standards
+              Section 6 &middot; Creator Rights & Credit
             </span>
             <h2 className="font-serif text-lg sm:text-2xl font-bold text-pinaka-charcoal mt-1 mb-4">
-              Quality & Verification Baseline
+              Our Default Commitments to Creators
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs">
               <div className="border border-pinaka-hairline bg-pinaka-ice/50 p-3.5 sm:p-4 rounded-sm flex items-start gap-2.5">
                 <CheckCircle2 className="h-4 w-4 text-pinaka-saffron shrink-0 mt-0.5" />
                 <div>
-                  <strong className="text-pinaka-stone block mb-0.5">Automated Test Suites</strong>
-                  <span>Every project must implement unit or integration tests (Jest, Vitest, PyTest) before pilot.</span>
+                  <strong className="text-pinaka-stone block mb-0.5">No Automatic Ownership Transfer</strong>
+                  <span>Submitting or showcasing work does not grant Pinaka equity, IP, or repository control.</span>
                 </div>
               </div>
 
               <div className="border border-pinaka-hairline bg-pinaka-ice/50 p-3.5 sm:p-4 rounded-sm flex items-start gap-2.5">
                 <CheckCircle2 className="h-4 w-4 text-pinaka-saffron shrink-0 mt-0.5" />
                 <div>
-                  <strong className="text-pinaka-stone block mb-0.5">Clean Git Commit Pattern</strong>
-                  <span>Strict prefix convention: <code className="font-mono text-pinaka-saffron">add:</code>, <code className="font-mono text-pinaka-saffron">fix:</code>, <code className="font-mono text-pinaka-saffron">update:</code>.</span>
+                  <strong className="text-pinaka-stone block mb-0.5">Accurate Contributor Credit</strong>
+                  <span>Public credit reflects actual contributions and the creator’s preferred public name.</span>
                 </div>
               </div>
 
               <div className="border border-pinaka-hairline bg-pinaka-ice/50 p-3.5 sm:p-4 rounded-sm flex items-start gap-2.5">
                 <CheckCircle2 className="h-4 w-4 text-pinaka-saffron shrink-0 mt-0.5" />
                 <div>
-                  <strong className="text-pinaka-stone block mb-0.5">Zero Plaintext Secrets</strong>
-                  <span>All API tokens and credentials isolated in <code className="font-mono">.env</code>; zero hardcoded keys.</span>
+                  <strong className="text-pinaka-stone block mb-0.5">No Confidentiality Breaches</strong>
+                  <span>Never share credentials, private keys, or unfiled patent details in public summaries.</span>
                 </div>
               </div>
 
               <div className="border border-pinaka-hairline bg-pinaka-ice/50 p-3.5 sm:p-4 rounded-sm flex items-start gap-2.5">
                 <CheckCircle2 className="h-4 w-4 text-pinaka-saffron shrink-0 mt-0.5" />
                 <div>
-                  <strong className="text-pinaka-stone block mb-0.5">Modular Architecture</strong>
-                  <span>Independent service decoupling and documented API boundaries.</span>
+                  <strong className="text-pinaka-stone block mb-0.5">Separate Collaboration Agreements</strong>
+                  <span>If collaborators or Pinaka contribute substantial work, terms are agreed before work begins.</span>
                 </div>
               </div>
             </div>
@@ -315,14 +316,14 @@ export default function OnboardPage() {
         <div id="submit-form" className="border border-pinaka-hairline bg-white/95 backdrop-blur-sm p-5 sm:p-10 lg:p-12 shadow-editorial mb-12 sm:mb-16 rounded-sm">
           <div className="mb-6 sm:mb-8">
             <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-widest text-pinaka-saffron">
-              Step 04 &middot; On-Platform Application
+              Application &middot; Manual Review
             </span>
             <h2 className="font-serif text-xl sm:text-3xl font-bold text-pinaka-charcoal mt-1">
-              Submit Candidate Project to Pinaka Foundry
+              Apply to Showcase on Pinaka
             </h2>
             <p className="text-xs sm:text-sm text-pinaka-slate mt-2 leading-relaxed max-w-2xl">
-              Fill in your project specifications below. Our studio lead will review your submission 
-              within 48 hours for onboarding and ledger inclusion.
+              Fill in your project details below. Our curation team manually reviews each application 
+              for problem significance, originality, and evidence before publication.
             </p>
           </div>
 
@@ -335,7 +336,7 @@ export default function OnboardPage() {
                 </div>
                 <div>
                   <h3 className="font-serif text-base sm:text-lg font-bold text-emerald-900">
-                    Application Successfully Recorded
+                    Application Received for Review
                   </h3>
                   <span className="font-mono text-[11px] sm:text-xs text-emerald-700">
                     Reference ID: <strong>{submitResult.submissionId}</strong>
@@ -344,15 +345,14 @@ export default function OnboardPage() {
               </div>
 
               <p className="text-xs sm:text-sm text-emerald-800 leading-relaxed mb-6">
-                Your candidate project <strong className="font-semibold">{submitResult.submission.name}</strong> has been logged in the 
-                Pinaka Foundry intake register. You will be contacted via <strong className="font-semibold">{submitResult.submission.contact}</strong> for 
-                Gate 1 evaluation.
+                Your application for <strong className="font-semibold">{submitResult.submission.name}</strong> has been logged for manual review. 
+                We will follow up via <strong className="font-semibold">{submitResult.submission.contact}</strong> regarding review feedback or profile preparation.
               </p>
 
               <div className="border-t border-emerald-200 pt-4 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
                 <Link href="/" className="w-full sm:w-auto">
                   <Button variant="primary" size="sm" className="w-full sm:w-auto">
-                    Return to Studio Ledger
+                    Return to Portfolio
                   </Button>
                 </Link>
                 <button
@@ -392,7 +392,7 @@ export default function OnboardPage() {
                 {/* Project Name */}
                 <div>
                   <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5">
-                    Project Name *
+                    Project Title *
                   </label>
                   <input
                     type="text"
@@ -405,10 +405,10 @@ export default function OnboardPage() {
                   />
                 </div>
 
-                {/* Lead Builder */}
+                {/* Lead Builder / Creator Name */}
                 <div>
                   <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5">
-                    Lead Builder Name / Handle *
+                    Creator Name / Team Credit *
                   </label>
                   <input
                     type="text"
@@ -416,7 +416,7 @@ export default function OnboardPage() {
                     required
                     value={formData.leadBuilder}
                     onChange={handleInputChange}
-                    placeholder="e.g. KSHITIZ (@github)"
+                    placeholder="e.g. Your Name, Team Name, or @handle"
                     className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron"
                   />
                 </div>
@@ -426,7 +426,7 @@ export default function OnboardPage() {
                 {/* Contact Email or Handle */}
                 <div>
                   <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5">
-                    Contact Email / Handle *
+                    Contact Email / Profile *
                   </label>
                   <input
                     type="text"
@@ -434,7 +434,7 @@ export default function OnboardPage() {
                     required
                     value={formData.contact}
                     onChange={handleInputChange}
-                    placeholder="builder@domain.com or @handle"
+                    placeholder="creator@domain.com or @handle"
                     className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron"
                   />
                 </div>
@@ -442,7 +442,7 @@ export default function OnboardPage() {
                 {/* Classification Category */}
                 <div>
                   <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5">
-                    Industry Category *
+                    Project Domain *
                   </label>
                   <select
                     name="category"
@@ -456,14 +456,14 @@ export default function OnboardPage() {
                     <option value="GovTech">GovTech</option>
                     <option value="FinTech">FinTech</option>
                     <option value="Open Source">Open Source</option>
-                    <option value="Infrastructure">Infrastructure</option>
+                    <option value="Research">Research & DeepTech</option>
                   </select>
                 </div>
 
-                {/* Candidate Track */}
+                {/* Portfolio Track (§3.1) */}
                 <div>
                   <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5">
-                    Proposed Track *
+                    Portfolio Category *
                   </label>
                   <select
                     name="track"
@@ -471,10 +471,10 @@ export default function OnboardPage() {
                     onChange={handleInputChange}
                     className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron cursor-pointer"
                   >
-                    <option value="incubating">Incubation Track (In-Development)</option>
-                    <option value="research">Applied Research</option>
-                    <option value="community">Community Venture</option>
-                    <option value="flagship">Flagship Candidate (Live Deployed)</option>
+                    <option value="incubating">Active Project (Prototype / Progress)</option>
+                    <option value="research">Concept / Research Proposal</option>
+                    <option value="community">Community Showcase</option>
+                    <option value="flagship">Featured Initiative (Live / Launched)</option>
                   </select>
                 </div>
               </div>
@@ -482,7 +482,7 @@ export default function OnboardPage() {
               {/* Tagline */}
               <div>
                 <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5">
-                  One-Sentence Tagline *
+                  One-Sentence Value Proposition *
                 </label>
                 <input
                   type="text"
@@ -490,7 +490,7 @@ export default function OnboardPage() {
                   required
                   value={formData.tagline}
                   onChange={handleInputChange}
-                  placeholder="e.g. Digital hostel management & gate pass platform for university campuses."
+                  placeholder="A single concise sentence describing what the project does and for whom."
                   className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron"
                 />
               </div>
@@ -499,7 +499,7 @@ export default function OnboardPage() {
                 {/* GitHub Repository URL */}
                 <div>
                   <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5">
-                    GitHub Repository Link
+                    Codebase or Document Link
                   </label>
                   <input
                     type="url"
@@ -514,7 +514,7 @@ export default function OnboardPage() {
                 {/* Demo / Live URL */}
                 <div>
                   <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5">
-                    Live Demo URL (If Deployed)
+                    Interactive Demo / Prototype URL
                   </label>
                   <input
                     type="url"
@@ -530,7 +530,7 @@ export default function OnboardPage() {
               {/* Primary Tech Stack */}
               <div>
                 <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5">
-                  Primary Tech Stack (Comma-Separated) *
+                  Primary Technologies / Tools *
                 </label>
                 <input
                   type="text"
@@ -538,7 +538,7 @@ export default function OnboardPage() {
                   required
                   value={formData.techStack}
                   onChange={handleInputChange}
-                  placeholder="e.g. React 19, Node.js, Express, PostgreSQL, Prisma, Docker"
+                  placeholder="e.g. React, Node.js, Python, PostgreSQL, PyTorch"
                   className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron"
                 />
               </div>
@@ -546,7 +546,7 @@ export default function OnboardPage() {
               {/* Description & Problem Solved */}
               <div>
                 <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5">
-                  Problem Solved & Architecture Overview *
+                  Problem Addressed & Current Evidence *
                 </label>
                 <textarea
                   name="description"
@@ -554,7 +554,7 @@ export default function OnboardPage() {
                   rows={4}
                   value={formData.description}
                   onChange={handleInputChange}
-                  placeholder="Explain the specific user pain point, the architectural solution, and current stage of the codebase..."
+                  placeholder="Explain the specific problem, target users, proposed solution, and what evidence of progress currently exists..."
                   className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron leading-relaxed"
                 />
               </div>
@@ -562,17 +562,17 @@ export default function OnboardPage() {
               {/* Submit Button */}
               <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
                 <span className="text-[11px] font-mono text-pinaka-ash text-center sm:text-left">
-                  100% Sovereign IP Protected &middot; Gate 1 Evaluation
+                  100% Creator IP Retained &middot; Manual Review Process
                 </span>
                 <Button variant="primary" size="lg" disabled={isSubmitting} className="w-full sm:w-auto">
                   {isSubmitting ? (
                     <>
                       <Spinner size="sm" />
-                      Recording Application...
+                      Submitting Application...
                     </>
                   ) : (
                     <>
-                      Submit Candidate Project
+                      Submit Application for Review
                       <ArrowRight className="h-4 w-4" />
                     </>
                   )}
