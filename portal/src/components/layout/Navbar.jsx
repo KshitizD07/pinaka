@@ -7,10 +7,10 @@ import Button from '@/components/ui/Button';
 import { Menu, X } from 'lucide-react';
 
 const NAV_LINKS = [
-  { href: '/#portfolio', label: 'Portfolio Ledger' },
-  { href: '/#foundry', label: 'Foundry & Incubation' },
-  { href: '/#codex', label: 'Engineering Codex' },
-  { href: '/onboard', label: 'Onboarding Guide' },
+  { href: '/#portfolio', label: 'Ecosystem Portfolio' },
+  { href: '/#foundry', label: 'How It Works' },
+  { href: '/#principles', label: 'Guiding Principles' },
+  { href: '/onboard', label: 'Submit Project' },
 ];
 
 export default function Navbar() {
@@ -23,7 +23,7 @@ export default function Navbar() {
         <Link
           href="/"
           className="group flex items-center gap-2.5 sm:gap-3.5"
-          aria-label="Pinaka Studios Home"
+          aria-label="Pinaka Ecosystem Home"
           onClick={() => setMobileMenuOpen(false)}
         >
           <div className="flex items-center justify-center p-1 sm:p-1.5 transition-transform duration-200 group-hover:scale-105 shrink-0">
@@ -36,7 +36,7 @@ export default function Navbar() {
               </span>
             </div>
             <span className="text-[9px] sm:text-[10px] tracking-widest uppercase text-pinaka-ash font-mono -mt-0.5">
-              Product Studio &middot; Labs
+              Curated Project Ecosystem
             </span>
           </div>
         </Link>
@@ -58,7 +58,7 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <Link href="/onboard" className="hidden sm:inline-block">
             <Button variant="primary" size="sm">
-              Submit Candidate
+              Apply to Showcase
             </Button>
           </Link>
 
@@ -97,7 +97,7 @@ export default function Navbar() {
               className="w-full block"
             >
               <Button variant="primary" size="md" className="w-full">
-                Submit Candidate
+                Apply to Showcase
               </Button>
             </Link>
           </div>
