@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
-import { ArrowUpRight, UserCheck, AlertCircle, X, ExternalLink } from 'lucide-react';
+import { ArrowUpRight, UserCheck, AlertCircle, X, ExternalLink, Users } from 'lucide-react';
 
 /**
  * Editorial Project Profile Row component.
- * Displays Creator / Team, and optionally a clean, non-glowing SkillSphere profile link.
+ * Displays Creator / Team, optional creator profile link,
+ * and a dedicated "Collaborate on SkillSphere" button for squads.
  */
 export default function ProjectLedgerRow({ project, index }) {
   const {
@@ -19,6 +20,7 @@ export default function ProjectLedgerRow({ project, index }) {
     highlights,
     demoUrl,
     repoUrl,
+    squadUrl,
     leadBuilder,
     skillSphereUrl,
     skillSphereLabel,
@@ -34,6 +36,9 @@ export default function ProjectLedgerRow({ project, index }) {
       setShowNoDeployModal(true);
     }
   }
+
+  // Active collaboration link: uses squadUrl if available, falls back to creator's skillSphereUrl
+  const collaborationUrl = squadUrl || skillSphereUrl;
 
   return (
     <>
@@ -70,17 +75,19 @@ export default function ProjectLedgerRow({ project, index }) {
                 </p>
               </div>
 
-              {/* Creator Credit & Clean Non-Glowing SkillSphere Link */}
+              {/* Creator Credit & Clean SkillSphere Profile Link */}
               <div className="pt-3 border-t border-pinaka-hairline space-y-1.5">
-                <div className="text-[10px] sm:text-[11px] font-mono text-pinaka-ash flex items-center gap-1.5">
-                  <UserCheck className="h-3 w-3 text-pinaka-saffron shrink-0" />
-                  <span>Creator / Team:</span>
-                  <strong className="text-pinaka-stone font-semibold">
-                    {leadBuilder || 'Independent Builder'}
-                  </strong>
+                <div className="text-[10px] sm:text-[11px] font-mono text-pinaka-ash flex items-start gap-1.5">
+                  <UserCheck className="h-3 w-3 text-pinaka-saffron shrink-0 mt-0.5" />
+                  <div className="leading-snug">
+                    <span className="mr-1">Creator / Team:</span>
+                    <strong className="text-pinaka-stone font-semibold">
+                      {leadBuilder || 'Independent Builder'}
+                    </strong>
+                  </div>
                 </div>
 
-                {/* Clean, editorial SkillSphere link (only shown if provided) */}
+                {/* Creator profile link */}
                 {skillSphereUrl && (
                   <div className="pl-4">
                     <a
@@ -88,11 +95,11 @@ export default function ProjectLedgerRow({ project, index }) {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 text-[11px] font-mono text-pinaka-slate hover:text-pinaka-saffron transition-colors"
-                      title="View SkillSphere Profile"
+                      title="View Creator SkillSphere Profile"
                     >
-                      <span className="text-pinaka-ash">SkillSphere:</span>
+                      <span className="text-pinaka-ash">Profile:</span>
                       <span className="underline decoration-pinaka-hairline underline-offset-2 font-medium">
-                        {skillSphereLabel || 'Profile'}
+                        {skillSphereLabel || 'SkillSphere'}
                       </span>
                       <ExternalLink className="h-2.5 w-2.5 text-pinaka-ash" />
                     </a>
@@ -107,7 +114,7 @@ export default function ProjectLedgerRow({ project, index }) {
                 Proposed Solution & Highlights
               </div>
 
-              {/* Highlights / Evidence list */}
+              {/* Highlights list */}
               <ul className="space-y-1.5 sm:space-y-2 mb-4 sm:mb-5">
                 {highlights.map((highlight) => (
                   <li
@@ -138,7 +145,7 @@ export default function ProjectLedgerRow({ project, index }) {
               </div>
             </div>
 
-            {/* Column 3: Current State & Launch Actions (3 cols) */}
+            {/* Column 3: Current State & Launch / Collaboration Actions (3 cols) */}
             <div className="lg:col-span-3 border-t lg:border-t-0 pt-5 lg:pt-0 lg:border-l lg:border-pinaka-hairline lg:pl-8 flex flex-col justify-between h-full space-y-4">
               <div>
                 <div className="text-[10px] sm:text-[11px] font-mono uppercase tracking-widest text-pinaka-ash mb-2">
@@ -149,8 +156,10 @@ export default function ProjectLedgerRow({ project, index }) {
                 </p>
               </div>
 
-              {/* Action Buttons: Launch System & Inspect Codebase */}
+              {/* Action Buttons */}
               <div className="space-y-2.5 pt-3 sm:pt-4 border-t border-pinaka-hairline">
+                
+                {/* 1. Launch System */}
                 {demoUrl ? (
                   <a
                     href={demoUrl}
@@ -175,6 +184,27 @@ export default function ProjectLedgerRow({ project, index }) {
                   </Button>
                 )}
 
+                {/* 2. Collaborate on SkillSphere (Option C) */}
+                {collaborationUrl && (
+                  <a
+                    href={collaborationUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full block"
+                  >
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full border-pinaka-saffron/40 hover:border-pinaka-saffron hover:bg-pinaka-saffron-wash text-pinaka-saffron-deep"
+                    >
+                      <Users className="h-3.5 w-3.5 text-pinaka-saffron" />
+                      Collaborate on SkillSphere
+                      <ArrowUpRight className="h-3 w-3" />
+                    </Button>
+                  </a>
+                )}
+
+                {/* 3. Inspect Codebase */}
                 {repoUrl && (
                   <a
                     href={repoUrl}
@@ -182,7 +212,7 @@ export default function ProjectLedgerRow({ project, index }) {
                     rel="noopener noreferrer"
                     className="w-full block"
                   >
-                    <Button variant="outline" size="sm" className="w-full">
+                    <Button variant="ghost" size="sm" className="w-full text-xs text-pinaka-slate hover:text-pinaka-stone border border-pinaka-hairline">
                       Inspect Codebase
                     </Button>
                   </a>
@@ -229,15 +259,15 @@ export default function ProjectLedgerRow({ project, index }) {
             </p>
 
             <div className="flex items-center justify-end gap-3 pt-3 border-t border-pinaka-hairline">
-              {repoUrl ? (
+              {collaborationUrl ? (
                 <a
-                  href={repoUrl}
+                  href={collaborationUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setShowNoDeployModal(false)}
                 >
                   <Button variant="outline" size="sm">
-                    Inspect Codebase
+                    Collaborate on SkillSphere
                   </Button>
                 </a>
               ) : null}
