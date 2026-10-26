@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import PinakaBow from '@/components/ui/PinakaBow';
 import Button from '@/components/ui/Button';
 import Spinner from '@/components/ui/Spinner';
@@ -13,6 +14,7 @@ import {
   ArrowLeft,
   Users,
   ArrowRight,
+  ArrowDown,
   Compass,
   AlertCircle,
 } from 'lucide-react';
@@ -65,6 +67,7 @@ const MANIFEST_TEMPLATE = `{
 }`;
 
 export default function OnboardPage() {
+  const router = useRouter();
   const [copiedBrief, setCopiedBrief] = useState(false);
   const [copiedManifest, setCopiedManifest] = useState(false);
 
@@ -146,39 +149,64 @@ export default function OnboardPage() {
       <div className="mx-auto max-w-[1200px] px-4 sm:px-8 lg:px-12">
         
         {/* Navigation Breadcrumb */}
-        <div className="mb-6 sm:mb-8">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-pinaka-slate hover:text-pinaka-saffron transition-colors"
+        <div className="mb-4 sm:mb-8">
+          <button
+            type="button"
+            onClick={() => {
+              if (typeof window !== 'undefined') {
+                router.push('/');
+              }
+            }}
+            className="inline-flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 text-xs font-mono uppercase tracking-wider text-pinaka-stone bg-white/95 border border-pinaka-hairline hover:border-pinaka-saffron hover:text-pinaka-saffron active:bg-pinaka-ice active:scale-[0.98] transition-all rounded-sm shadow-xs touch-manipulation cursor-pointer min-h-[44px]"
+            aria-label="Return to Pinaka Home"
           >
-            <ArrowLeft className="h-3.5 w-3.5 shrink-0" />
-            <span>Return to Pinaka Home</span>
-          </Link>
+            <ArrowLeft className="h-4 w-4 text-pinaka-saffron shrink-0" />
+            <span className="font-semibold">Return to Pinaka Home</span>
+          </button>
         </div>
 
-        {/* Hero Banner */}
-        <div className="border border-pinaka-hairline bg-white/95 backdrop-blur-sm p-5 sm:p-10 lg:p-12 mb-8 sm:mb-12 shadow-editorial rounded-sm">
-          <div className="flex items-center gap-2 mb-3">
-            <PinakaBow className="h-4.5 sm:h-5 w-auto text-pinaka-saffron shrink-0" />
-            <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-widest text-pinaka-saffron">
+        {/* Hero Banner / First Section */}
+        <div className="border border-pinaka-hairline bg-white/95 backdrop-blur-sm p-4 sm:p-8 lg:p-12 mb-6 sm:mb-12 shadow-editorial rounded-sm">
+          <div className="flex items-center gap-2 mb-2.5 sm:mb-3">
+            <PinakaBow className="h-4 sm:h-5 w-auto text-pinaka-saffron shrink-0" />
+            <span className="font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wider sm:tracking-widest text-pinaka-saffron">
               Creator Application & Curation Guide
             </span>
           </div>
 
-          <h1 className="font-serif text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-pinaka-charcoal mb-3 sm:mb-4">
+          <h1 className="font-serif text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-pinaka-charcoal leading-tight mb-3 sm:mb-4">
             Showcase Your Work on Pinaka
           </h1>
 
-          <p className="text-xs sm:text-sm lg:text-base text-pinaka-slate leading-relaxed max-w-3xl font-sans mb-6 sm:mb-8">
+          <p className="text-xs sm:text-sm lg:text-base text-pinaka-slate leading-relaxed max-w-3xl font-sans mb-5 sm:mb-8">
             Pinaka is a manually curated ecosystem for ambitious ideas, promising projects, research, and emerging ventures. 
             Anyone may apply to showcase their work. We discover and present promising projects, help them find an audience, 
             and connect them with squad formation through <strong className="text-pinaka-stone font-semibold">SkillSphere</strong>.
           </p>
 
-          {/* Clean Guarantees Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 pt-5 sm:pt-6 border-t border-pinaka-hairline">
-            <div className="flex items-start gap-3">
-              <ShieldCheck className="h-5 w-5 text-pinaka-saffron shrink-0 mt-0.5" />
+          {/* Quick Jump Buttons for Mobile */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 mb-6 sm:mb-8">
+            <a
+              href="#submit-form"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-pinaka-saffron hover:bg-pinaka-saffron-deep active:scale-[0.98] text-white text-xs font-mono uppercase tracking-wider rounded-sm shadow-saffron-sm transition-all"
+            >
+              <span>Jump to Application Form</span>
+              <ArrowDown className="h-3.5 w-3.5" />
+            </a>
+            <a
+              href="#steps-guide"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-pinaka-hairline hover:border-pinaka-ash active:bg-pinaka-ice text-pinaka-slate hover:text-pinaka-stone text-xs font-mono uppercase tracking-wider rounded-sm transition-all"
+            >
+              <span>View Guide & Templates</span>
+            </a>
+          </div>
+
+          {/* Clean Guarantees Grid - Mobile Optimized Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-6 pt-5 sm:pt-6 border-t border-pinaka-hairline">
+            <div className="flex items-start gap-3 p-3.5 sm:p-0 bg-pinaka-ice/40 sm:bg-transparent border border-pinaka-hairline/70 sm:border-0 rounded-sm">
+              <div className="h-8 w-8 sm:h-auto sm:w-auto flex items-center justify-center rounded-sm bg-white sm:bg-transparent border border-pinaka-hairline/60 sm:border-0 shrink-0">
+                <ShieldCheck className="h-4.5 sm:h-5 w-4.5 sm:w-5 text-pinaka-saffron shrink-0" />
+              </div>
               <div>
                 <h2 className="font-serif text-xs font-bold uppercase tracking-wider text-pinaka-charcoal">
                   100% Creator Ownership
@@ -189,8 +217,10 @@ export default function OnboardPage() {
               </div>
             </div>
 
-            <div className="flex items-start gap-3">
-              <Users className="h-5 w-5 text-pinaka-saffron shrink-0 mt-0.5" />
+            <div className="flex items-start gap-3 p-3.5 sm:p-0 bg-pinaka-ice/40 sm:bg-transparent border border-pinaka-hairline/70 sm:border-0 rounded-sm">
+              <div className="h-8 w-8 sm:h-auto sm:w-auto flex items-center justify-center rounded-sm bg-white sm:bg-transparent border border-pinaka-hairline/60 sm:border-0 shrink-0">
+                <Users className="h-4.5 sm:h-5 w-4.5 sm:w-5 text-pinaka-saffron shrink-0" />
+              </div>
               <div>
                 <h2 className="font-serif text-xs font-bold uppercase tracking-wider text-pinaka-charcoal">
                   SkillSphere Squad Pathways
@@ -201,8 +231,10 @@ export default function OnboardPage() {
               </div>
             </div>
 
-            <div className="flex items-start gap-3">
-              <Compass className="h-5 w-5 text-pinaka-saffron shrink-0 mt-0.5" />
+            <div className="flex items-start gap-3 p-3.5 sm:p-0 bg-pinaka-ice/40 sm:bg-transparent border border-pinaka-hairline/70 sm:border-0 rounded-sm">
+              <div className="h-8 w-8 sm:h-auto sm:w-auto flex items-center justify-center rounded-sm bg-white sm:bg-transparent border border-pinaka-hairline/60 sm:border-0 shrink-0">
+                <Compass className="h-4.5 sm:h-5 w-4.5 sm:w-5 text-pinaka-saffron shrink-0" />
+              </div>
               <div>
                 <h2 className="font-serif text-xs font-bold uppercase tracking-wider text-pinaka-charcoal">
                   Manual & Fair Curation
@@ -216,7 +248,7 @@ export default function OnboardPage() {
         </div>
 
         {/* Steps */}
-        <div className="space-y-6 sm:space-y-10 mb-10 sm:mb-16">
+        <div id="steps-guide" className="space-y-6 sm:space-y-10 mb-10 sm:mb-16">
           
           {/* Step 1: Problem Definition */}
           <div className="border border-pinaka-hairline bg-white/90 p-5 sm:p-8 shadow-sm rounded-sm">
@@ -418,7 +450,7 @@ export default function OnboardPage() {
                     value={formData.name}
                     onChange={handleInputChange}
                     placeholder="e.g. SkillSphere, Opendoor"
-                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron"
+                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-base sm:text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron"
                   />
                 </div>
 
@@ -434,7 +466,7 @@ export default function OnboardPage() {
                     value={formData.leadBuilder}
                     onChange={handleInputChange}
                     placeholder="e.g. Your Name, Team Name, or comma-separated members"
-                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron"
+                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-base sm:text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron"
                   />
                 </div>
               </div>
@@ -452,7 +484,7 @@ export default function OnboardPage() {
                     value={formData.contact}
                     onChange={handleInputChange}
                     placeholder="creator@domain.com or @handle"
-                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron"
+                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-base sm:text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron"
                   />
                 </div>
 
@@ -465,7 +497,7 @@ export default function OnboardPage() {
                     name="track"
                     value={formData.track}
                     onChange={handleInputChange}
-                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron cursor-pointer"
+                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-base sm:text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron cursor-pointer"
                   >
                     <option value="incubating">Ongoing Work (Active Prototype / MVP) — Squad Required</option>
                     <option value="proposals">Proposals (Suggested Idea / Problem Brief) — Squad Required</option>
@@ -500,7 +532,7 @@ export default function OnboardPage() {
                   value={formData.squadUrl}
                   onChange={handleInputChange}
                   placeholder="https://skill-sphere-v1.vercel.app/squads/your-squad-id"
-                  className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron font-mono"
+                  className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-base sm:text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron font-mono"
                 />
                 <p className="text-[11px] text-pinaka-slate font-sans mt-1.5 leading-relaxed">
                   {isSquadMandatory
@@ -559,7 +591,7 @@ export default function OnboardPage() {
                   value={formData.tagline}
                   onChange={handleInputChange}
                   placeholder="A single concise sentence describing what the project does and for whom."
-                  className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron"
+                  className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-base sm:text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron"
                 />
               </div>
 
@@ -575,7 +607,7 @@ export default function OnboardPage() {
                     value={formData.repoUrl}
                     onChange={handleInputChange}
                     placeholder="https://github.com/username/project"
-                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron"
+                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-base sm:text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron"
                   />
                 </div>
 
@@ -590,7 +622,7 @@ export default function OnboardPage() {
                     value={formData.demoUrl}
                     onChange={handleInputChange}
                     placeholder="https://my-app.vercel.app"
-                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron"
+                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-base sm:text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron"
                   />
                 </div>
               </div>
@@ -607,7 +639,7 @@ export default function OnboardPage() {
                   value={formData.techStack}
                   onChange={handleInputChange}
                   placeholder="e.g. React, Node.js, Python, PostgreSQL, PyTorch"
-                  className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron"
+                  className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-base sm:text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron"
                 />
               </div>
 
@@ -623,7 +655,7 @@ export default function OnboardPage() {
                   value={formData.description}
                   onChange={handleInputChange}
                   placeholder="Explain the specific problem, target users, proposed solution, and what evidence of progress currently exists..."
-                  className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron leading-relaxed"
+                  className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-base sm:text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron leading-relaxed"
                 />
               </div>
 
