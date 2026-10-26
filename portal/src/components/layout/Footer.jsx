@@ -2,16 +2,17 @@ import Link from 'next/link';
 import PinakaBow from '@/components/ui/PinakaBow';
 
 const VENTURE_LINKS = [
-  { href: '/#portfolio', label: 'SkillSphere &middot; Verified EdTech' },
-  { href: '/#portfolio', label: 'Opendoor &middot; Campus Infrastructure' },
-  { href: '/#portfolio', label: 'Intelli-Light &middot; Adaptive Systems' },
+  { href: '/#portfolio', label: 'SkillSphere &middot; Talent & Squad Matching' },
+  { href: '/#portfolio', label: 'Opendoor &middot; Campus Management' },
+  { href: '/#portfolio', label: 'Intelli-Light &middot; Adaptive Traffic Research' },
+  { href: '/#portfolio', label: 'Sentinel &middot; Urban ANPR Intelligence' },
 ];
 
 const GOVERNANCE_LINKS = [
-  { href: '/#codex', label: 'The Engineering Codex' },
-  { href: '/#foundry', label: 'Foundry & Incubation' },
-  { href: '/onboard', label: 'Candidate Onboarding Guide' },
-  { href: '/#charter', label: 'Contributor IP Agreement' },
+  { href: '/#principles', label: 'Brand & Operating Principles' },
+  { href: '/#foundry', label: 'How the Ecosystem Works' },
+  { href: '/onboard', label: 'Creator Application Guide' },
+  { href: '/onboard#rights', label: 'Creator Rights & IP Policy' },
 ];
 
 export default function Footer() {
@@ -32,19 +33,19 @@ export default function Footer() {
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-pinaka-slate leading-relaxed max-w-sm mb-4 font-sans">
-                An independent product studio and builder collective engineering production-grade 
-                software across enterprise infrastructure, deeptech, and applied software.
+                A curated ecosystem for ambitious ideas, promising projects, and emerging ventures.
+                Helping creators gain visibility and connecting talent to build what matters.
               </p>
             </div>
             <div className="font-mono text-[11px] sm:text-xs text-pinaka-ash">
-              Built with precision and verifiable discipline.
+              Curated review &middot; 100% creator ownership.
             </div>
           </div>
 
-          {/* Active Ventures (4 cols) */}
+          {/* Featured Works (4 cols) */}
           <div className="md:col-span-4">
             <h4 className="font-serif text-xs font-bold uppercase tracking-widest text-pinaka-charcoal mb-3 sm:mb-4">
-              Studio Ventures
+              Featured Portfolio
             </h4>
             <ul className="space-y-2.5 sm:space-y-3 font-sans text-xs">
               {VENTURE_LINKS.map(({ href, label }) => (
@@ -59,10 +60,10 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Governance & Collective (3 cols) */}
+          {/* Governance & Pathways (3 cols) */}
           <div className="md:col-span-3">
             <h4 className="font-serif text-xs font-bold uppercase tracking-widest text-pinaka-charcoal mb-3 sm:mb-4">
-              Studio Governance
+              Ecosystem & Principles
             </h4>
             <ul className="space-y-2.5 sm:space-y-3 font-sans text-xs">
               {GOVERNANCE_LINKS.map(({ href, label }) => (
@@ -83,12 +84,14 @@ export default function Footer() {
         {/* Bottom Attribution Bar */}
         <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] sm:text-xs font-mono text-pinaka-ash text-center sm:text-left">
           <div>
-            &copy; {new Date().getFullYear()} Pinaka Studios &middot; Product Studio &middot; All Rights Reserved.
+            &copy; {new Date().getFullYear()} Pinaka Ecosystem &middot; A home for ambitious ideas &middot; All Rights Reserved.
           </div>
           <div className="flex items-center gap-2 text-pinaka-slate">
-            <span>Sovereign Code</span>
+            <span>Discover ideas</span>
             <span>&middot;</span>
-            <span>Zero Compromise</span>
+            <span>Connect talent</span>
+            <span>&middot;</span>
+            <span>Build what matters</span>
           </div>
         </div>
 
