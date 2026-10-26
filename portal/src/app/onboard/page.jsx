@@ -14,6 +14,7 @@ import {
   Users,
   ArrowRight,
   Compass,
+  AlertCircle,
 } from 'lucide-react';
 
 const PROBLEM_BRIEF_TEMPLATE = `# Project Application Brief
@@ -45,8 +46,9 @@ const MANIFEST_TEMPLATE = `{
   "track": "incubating",
   "status": "prototype",
   "leadBuilder": "Creator Name or Team Name",
+  "squadUrl": "https://skill-sphere-v1.vercel.app/squads/your-squad-id",
   "skillSphereUrl": "https://skill-sphere-v1.vercel.app/profile/your-uuid",
-  "skillSphereLabel": "Your Name / Squad",
+  "skillSphereLabel": "Your Name",
   "repoUrl": "https://github.com/username/project",
   "demoUrl": "https://project.example.com",
   "description": "Summary of the problem, proposed solution, and current user impact.",
@@ -70,10 +72,11 @@ export default function OnboardPage() {
   const [formData, setFormData] = useState({
     name: '',
     leadBuilder: '',
-    skillSphereUrl: '',
-    skillSphereLabel: '',
     contact: '',
     track: 'incubating',
+    squadUrl: '',
+    skillSphereUrl: '',
+    skillSphereLabel: '',
     tagline: '',
     techStack: '',
     repoUrl: '',
@@ -84,6 +87,9 @@ export default function OnboardPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitResult, setSubmitResult] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
+
+  // Whether the squad URL is mandatory for this category
+  const isSquadMandatory = formData.track === 'proposals' || formData.track === 'incubating';
 
   function handleCopy(text, type) {
     navigator.clipboard.writeText(text);
@@ -105,6 +111,15 @@ export default function OnboardPage() {
     e.preventDefault();
     setIsSubmitting(true);
     setErrorMessage('');
+
+    // Client-side enforcement: mandatory squad link for Ongoing Work and Proposals
+    if (isSquadMandatory && !formData.squadUrl.trim()) {
+      setErrorMessage(
+        'A SkillSphere Squad link is required for Ongoing Work and Proposals so interested collaborators can apply to work with you.'
+      );
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
       const res = await fetch('/api/submissions', {
@@ -157,8 +172,7 @@ export default function OnboardPage() {
           <p className="text-xs sm:text-sm lg:text-base text-pinaka-slate leading-relaxed max-w-3xl font-sans mb-6 sm:mb-8">
             Pinaka is a manually curated ecosystem for ambitious ideas, promising projects, research, and emerging ventures. 
             Anyone may apply to showcase their work. We discover and present promising projects, help them find an audience, 
-            and where creators want execution support, provide a path toward team formation through{' '}
-            <strong className="text-pinaka-stone font-semibold">SkillSphere</strong>.
+            and connect them with squad formation through <strong className="text-pinaka-stone font-semibold">SkillSphere</strong>.
           </p>
 
           {/* Clean Guarantees Grid */}
@@ -179,10 +193,10 @@ export default function OnboardPage() {
               <Users className="h-5 w-5 text-pinaka-saffron shrink-0 mt-0.5" />
               <div>
                 <h2 className="font-serif text-xs font-bold uppercase tracking-wider text-pinaka-charcoal">
-                  SkillSphere Squad Collaboration
+                  SkillSphere Squad Pathways
                 </h2>
                 <p className="text-xs text-pinaka-slate mt-1 leading-relaxed">
-                  Link your SkillSphere profile URL so visitors can view your verified work and send squad collaboration requests.
+                  Proposals and active projects link directly to a SkillSphere Squad so visitors can request to collaborate.
                 </p>
               </div>
             </div>
@@ -258,7 +272,7 @@ export default function OnboardPage() {
 
             <p className="text-xs sm:text-sm text-pinaka-slate leading-relaxed mb-4">
               For codebases, adding a <code className="font-mono font-semibold text-pinaka-stone">pinaka.json</code> manifest allows 
-              structured indexing of your creator credit, SkillSphere link, live demo, and tech stack:
+              structured indexing of your creator credit, squad link, live demo, and tech stack:
             </p>
 
             <pre className="p-3.5 sm:p-4 bg-pinaka-charcoal text-emerald-400 font-mono text-[11px] sm:text-xs overflow-x-auto rounded-sm leading-relaxed max-h-56">
@@ -304,7 +318,7 @@ export default function OnboardPage() {
                 <CheckCircle2 className="h-4 w-4 text-pinaka-saffron shrink-0 mt-0.5" />
                 <div>
                   <strong className="text-pinaka-stone block mb-0.5">Separate Collaboration Agreements</strong>
-                  <span>If collaborators or Pinaka contribute substantial work, terms are agreed before work begins.</span>
+                  <span>If collaborators contribute substantial work, terms are agreed before work begins.</span>
                 </div>
               </div>
             </div>
@@ -362,10 +376,11 @@ export default function OnboardPage() {
                     setFormData({
                       name: '',
                       leadBuilder: '',
-                      skillSphereUrl: '',
-                      skillSphereLabel: '',
                       contact: '',
                       track: 'incubating',
+                      squadUrl: '',
+                      skillSphereUrl: '',
+                      skillSphereLabel: '',
                       tagline: '',
                       techStack: '',
                       repoUrl: '',
@@ -384,8 +399,9 @@ export default function OnboardPage() {
             <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
               
               {errorMessage && (
-                <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-sm">
-                  {errorMessage}
+                <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-sm flex items-start gap-2">
+                  <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+                  <span>{errorMessage}</span>
                 </div>
               )}
 
@@ -417,7 +433,7 @@ export default function OnboardPage() {
                     required
                     value={formData.leadBuilder}
                     onChange={handleInputChange}
-                    placeholder="e.g. Your Name, Team Name, or @handle"
+                    placeholder="e.g. Your Name, Team Name, or comma-separated members"
                     className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron"
                   />
                 </div>
@@ -451,53 +467,84 @@ export default function OnboardPage() {
                     onChange={handleInputChange}
                     className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron cursor-pointer"
                   >
+                    <option value="incubating">Ongoing Work (Active Prototype / MVP) — Squad Required</option>
+                    <option value="proposals">Proposals (Suggested Idea / Problem Brief) — Squad Required</option>
                     <option value="flagship">Featured (Deployed & Operating)</option>
-                    <option value="incubating">Ongoing Work (Active Prototype / MVP)</option>
                     <option value="breakthroughs">Breakthroughs (Advanced AI / DeepTech)</option>
-                    <option value="proposals">Proposals (Suggested Idea / Problem Brief)</option>
                   </select>
                 </div>
               </div>
 
-              {/* SkillSphere Profile Link & Custom Label (Optional) */}
+              {/* SkillSphere Squad Link Field (Mandatory for proposals & ongoing work) */}
+              <div
+                className={`p-4 border rounded-sm transition-colors ${
+                  isSquadMandatory
+                    ? 'bg-pinaka-saffron-wash/60 border-pinaka-saffron/40'
+                    : 'bg-pinaka-ice/40 border-pinaka-hairline'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-charcoal font-semibold">
+                    SkillSphere Squad Link {isSquadMandatory ? '*' : '(Optional)'}
+                  </label>
+                  {isSquadMandatory && (
+                    <span className="text-[10px] font-mono uppercase text-pinaka-saffron font-bold">
+                      Mandatory for {formData.track === 'proposals' ? 'Proposals' : 'Ongoing Work'}
+                    </span>
+                  )}
+                </div>
+                <input
+                  type="url"
+                  name="squadUrl"
+                  required={isSquadMandatory}
+                  value={formData.squadUrl}
+                  onChange={handleInputChange}
+                  placeholder="https://skill-sphere-v1.vercel.app/squads/your-squad-id"
+                  className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron font-mono"
+                />
+                <p className="text-[11px] text-pinaka-slate font-sans mt-1.5 leading-relaxed">
+                  {isSquadMandatory
+                    ? 'Proposals and Ongoing Work require an open SkillSphere Squad link so visitors on Pinaka can click "Collaborate on SkillSphere" and request to work alongside you.'
+                    : 'Link your open SkillSphere Squad if you are seeking contributors or collaborators.'}
+                </p>
+              </div>
+
+              {/* Creator Personal SkillSphere Profile (Optional) */}
               <div className="p-4 bg-pinaka-ice/40 border border-pinaka-hairline rounded-sm space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-mono uppercase tracking-wider text-pinaka-stone font-semibold">
-                    SkillSphere Profile Integration
+                    Creator Personal Profile Link
                   </span>
                   <span className="text-[10px] font-mono text-pinaka-ash lowercase">(optional)</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-[11px] font-mono text-pinaka-slate mb-1">
-                      Full SkillSphere Profile URL
+                      Creator Profile URL
                     </label>
                     <input
                       type="url"
                       name="skillSphereUrl"
                       value={formData.skillSphereUrl}
                       onChange={handleInputChange}
-                      placeholder="https://skill-sphere-v1.vercel.app/profile/your-id"
+                      placeholder="https://skill-sphere-v1.vercel.app/profile/your-uuid"
                       className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3 py-2 rounded-sm focus:outline-none focus:border-pinaka-saffron font-mono"
                     />
                   </div>
                   <div>
                     <label className="block text-[11px] font-mono text-pinaka-slate mb-1">
-                      Display Label for Link
+                      Display Label for Profile
                     </label>
                     <input
                       type="text"
                       name="skillSphereLabel"
                       value={formData.skillSphereLabel}
                       onChange={handleInputChange}
-                      placeholder="e.g. KSHITIZ or Profile"
+                      placeholder="e.g. KSHITIZ"
                       className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-xs px-3 py-2 rounded-sm focus:outline-none focus:border-pinaka-saffron font-sans"
                     />
                   </div>
                 </div>
-                <p className="text-[11px] text-pinaka-slate font-sans">
-                  Paste the full link from your browser when viewing your profile on SkillSphere. If left empty, no SkillSphere badge will appear on your card.
-                </p>
               </div>
 
               {/* Tagline */}
