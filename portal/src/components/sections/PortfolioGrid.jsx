@@ -7,22 +7,24 @@ import Spinner from '@/components/ui/Spinner';
 import { Search, X, Filter } from 'lucide-react';
 import clsx from 'clsx';
 
+// Four ecosystem portfolio categories matching Section 3.1
 const TRACK_OPTIONS = [
-  { value: '', label: 'Complete Ledger' },
-  { value: 'flagship', label: 'Primary Flagships' },
-  { value: 'incubating', label: 'Incubation Track' },
-  { value: 'research', label: 'Applied Research' },
-  { value: 'community', label: 'Community Collective' },
+  { value: '', label: 'All Portfolio Works' },
+  { value: 'flagship', label: 'Featured Initiatives' },
+  { value: 'incubating', label: 'Active Projects' },
+  { value: 'research', label: 'Concepts & Research' },
+  { value: 'community', label: 'Community Showcase' },
 ];
 
 const CATEGORY_OPTIONS = [
-  'All Categories',
+  'All Domains',
   'Campus Tech',
   'EdTech',
   'AI / ML',
   'GovTech',
   'FinTech',
   'Open Source',
+  'Defense Tech / Urban AI',
 ];
 
 const INITIAL_PAGE_SIZE = 6;
@@ -42,7 +44,7 @@ export default function PortfolioGrid() {
     setVisibleCount(INITIAL_PAGE_SIZE);
     setFilter((prev) => ({
       ...prev,
-      category: val === 'All Categories' ? undefined : val,
+      category: val === 'All Domains' ? undefined : val,
     }));
   }
 
@@ -84,18 +86,18 @@ export default function PortfolioGrid() {
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <span className="font-mono text-[11px] sm:text-xs uppercase tracking-widest text-pinaka-saffron font-semibold">
-                  Registry Index &middot; Phase 2026
+                  Curated Portfolio &middot; Initial Cohort
                 </span>
               </div>
               <h2
                 id="portfolio-heading"
                 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-pinaka-charcoal"
               >
-                The Studio Ledger of Works
+                Curated Works & Projects
               </h2>
               <p className="mt-2 text-xs sm:text-sm text-pinaka-slate max-w-2xl font-sans">
-                Production flagships, active incubation prototypes, and applied research systems 
-                curated under the Pinaka engineering baseline.
+                A manually curated directory of ambitious ideas, prototypes, research, and emerging ventures.
+                Creators retain 100% intellectual property and recognition.
               </p>
             </div>
 
@@ -103,7 +105,7 @@ export default function PortfolioGrid() {
             <div className="inline-flex self-start sm:self-auto items-center gap-2.5 font-mono text-xs text-pinaka-slate bg-white/90 border border-pinaka-hairline px-3.5 py-2 rounded-sm shadow-sm">
               <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
               <span>
-                Ledger: <strong className="text-pinaka-stone">{total}</strong> Registered
+                Curated Index: <strong className="text-pinaka-stone">{total}</strong> Selected Works
               </span>
             </div>
           </div>
@@ -112,12 +114,12 @@ export default function PortfolioGrid() {
         {/* Filter & Search Toolbar */}
         <div className="mb-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 sm:gap-4">
           
-          {/* Track Filter Tabs: Horizontally scrollable on mobile */}
+          {/* Track Filter Tabs */}
           <div className="overflow-x-auto pb-1 sm:pb-0 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
             <div
               className="inline-flex items-center gap-1.5 border border-pinaka-hairline bg-white/90 p-1.5 shadow-sm rounded-sm whitespace-nowrap min-w-full sm:min-w-0"
               role="group"
-              aria-label="Filter ledger by track"
+              aria-label="Filter portfolio by category"
             >
               {TRACK_OPTIONS.map(({ value, label }) => {
                 const isActive = (filter.track ?? '') === value;
@@ -146,9 +148,9 @@ export default function PortfolioGrid() {
             {/* Category Dropdown */}
             <div className="relative w-full sm:w-auto">
               <select
-                value={filter.category || 'All Categories'}
+                value={filter.category || 'All Domains'}
                 onChange={handleCategoryChange}
-                aria-label="Filter by industry category"
+                aria-label="Filter by domain"
                 className="w-full sm:w-auto appearance-none bg-white/90 border border-pinaka-hairline text-pinaka-stone text-xs font-sans px-3.5 py-2 pr-8 rounded-sm shadow-sm hover:border-pinaka-ash focus:outline-none focus:border-pinaka-saffron cursor-pointer"
               >
                 {CATEGORY_OPTIONS.map((cat) => (
@@ -168,7 +170,7 @@ export default function PortfolioGrid() {
                 type="text"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                placeholder="Search name, tech, stack..."
+                placeholder="Search ideas, tech, domain..."
                 className="w-full bg-white/90 border border-pinaka-hairline text-pinaka-stone placeholder-pinaka-mist text-xs font-sans pl-8 pr-8 py-2 rounded-sm shadow-sm focus:outline-none focus:border-pinaka-saffron"
               />
               <Search className="h-3.5 w-3.5 text-pinaka-ash absolute left-2.5 top-1/2 -translate-y-1/2" />
@@ -191,7 +193,7 @@ export default function PortfolioGrid() {
         <div className="mb-4 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-pinaka-ash px-1">
           <div>
             Showing <strong className="text-pinaka-stone">{displayedProjects.length}</strong> of{' '}
-            <strong className="text-pinaka-stone">{projects.length}</strong> matching ventures
+            <strong className="text-pinaka-stone">{projects.length}</strong> curated works
             {hasActiveFilters && (
               <span className="ml-1 sm:ml-2 text-pinaka-saffron font-semibold">
                 (Filtered view)
@@ -208,13 +210,13 @@ export default function PortfolioGrid() {
           )}
         </div>
 
-        {/* The Ledger Container */}
+        {/* The Portfolio Container */}
         <div className="border border-pinaka-hairline bg-white/90 backdrop-blur-sm shadow-editorial rounded-sm overflow-hidden">
-          {/* Ledger Table Sub-Header (desktop only) */}
+          {/* Table Header (desktop only) */}
           <div className="hidden lg:grid grid-cols-12 gap-8 px-8 py-3.5 border-b border-pinaka-hairline bg-pinaka-ice/80 text-[11px] font-mono uppercase tracking-widest text-pinaka-ash">
-            <div className="col-span-4">Venture Nomenclature & Index</div>
-            <div className="col-span-5 border-l border-pinaka-hairline pl-8">Core Architecture & Highlights</div>
-            <div className="col-span-3 border-l border-pinaka-hairline pl-8">Operational State & Launch</div>
+            <div className="col-span-4">Project & Creator Credit</div>
+            <div className="col-span-5 border-l border-pinaka-hairline pl-8">Evidence & Solution Scope</div>
+            <div className="col-span-3 border-l border-pinaka-hairline pl-8">Status & Collaboration</div>
           </div>
 
           {/* Content Rows */}
@@ -222,13 +224,13 @@ export default function PortfolioGrid() {
             <div className="flex flex-col items-center justify-center py-20 sm:py-24 gap-3">
               <Spinner size="lg" />
               <span className="font-mono text-xs text-pinaka-ash uppercase tracking-wider">
-                Accessing Studio Ledger...
+                Loading Curated Portfolio...
               </span>
             </div>
           ) : error ? (
             <div className="p-8 sm:p-12 text-center">
               <p className="font-serif text-base sm:text-lg text-pinaka-crimson">
-                Failed to access ledger registry.
+                Failed to access portfolio records.
               </p>
               <p className="text-xs text-pinaka-slate mt-1 font-mono">
                 Verify internal data/projects.json integrity.
@@ -237,10 +239,10 @@ export default function PortfolioGrid() {
           ) : projects.length === 0 ? (
             <div className="p-8 sm:p-16 text-center">
               <p className="font-serif text-base sm:text-lg text-pinaka-stone">
-                No active ventures found matching current criteria.
+                No projects found matching current criteria.
               </p>
               <p className="text-xs text-pinaka-slate mt-2 mb-4">
-                Try clearing search terms or selecting a different classification track.
+                Try adjusting search terms or choosing another category.
               </p>
               {hasActiveFilters && (
                 <button
@@ -270,7 +272,7 @@ export default function PortfolioGrid() {
               onClick={() => setVisibleCount((prev) => prev + INITIAL_PAGE_SIZE)}
               className="w-full sm:w-auto px-6 py-3 border border-pinaka-hairline bg-white/95 text-pinaka-stone hover:bg-pinaka-saffron hover:text-white hover:border-pinaka-saffron text-xs font-mono uppercase tracking-widest transition-all duration-200 shadow-sm cursor-pointer rounded-sm"
             >
-              Show More Ventures ({projects.length - visibleCount} Remaining)
+              Show More Works ({projects.length - visibleCount} Remaining)
             </button>
           </div>
         )}
