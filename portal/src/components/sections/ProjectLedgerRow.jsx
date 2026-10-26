@@ -3,11 +3,11 @@
 import { useState } from 'react';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
-import { ArrowUpRight, UserCheck, AlertCircle, X } from 'lucide-react';
+import { ArrowUpRight, UserCheck, AlertCircle, X, ExternalLink, Sparkles } from 'lucide-react';
 
 /**
  * Editorial Project Profile Row component.
- * Displays "Launch System" button with a friendly modal popup when no active deployment is live.
+ * Displays Creator / Team, and optionally a clickable SkillSphere profile badge if linked.
  */
 export default function ProjectLedgerRow({ project, index }) {
   const {
@@ -20,11 +20,21 @@ export default function ProjectLedgerRow({ project, index }) {
     demoUrl,
     repoUrl,
     leadBuilder,
+    skillSphereHandle,
     description,
   } = project;
 
   const [showNoDeployModal, setShowNoDeployModal] = useState(false);
   const displayIndex = index < 9 ? `0${index + 1}` : `${index + 1}`;
+
+  // Clean the handle if formatted with @ or URL
+  const cleanHandle = skillSphereHandle
+    ? skillSphereHandle.replace(/^@/, '').replace(/^https?:\/\/.*\/profile\//, '').trim()
+    : null;
+
+  const skillSphereUrl = cleanHandle
+    ? `https://skill-sphere-v1.vercel.app/profile/${cleanHandle}`
+    : null;
 
   function handleLaunchClick(e) {
     if (!demoUrl) {
@@ -68,12 +78,33 @@ export default function ProjectLedgerRow({ project, index }) {
                 </p>
               </div>
 
-              {/* Creator Credit */}
-              <div className="pt-3 border-t border-pinaka-hairline flex items-center justify-between">
-                <span className="text-[10px] sm:text-[11px] font-mono text-pinaka-ash flex items-center gap-1.5">
-                  <UserCheck className="h-3 w-3 text-pinaka-saffron" />
-                  Creator / Team: <strong className="text-pinaka-stone font-semibold">{leadBuilder || 'Independent Builder'}</strong>
-                </span>
+              {/* Creator Credit & SkillSphere Profile Badge */}
+              <div className="pt-3 border-t border-pinaka-hairline space-y-1.5">
+                <div className="text-[10px] sm:text-[11px] font-mono text-pinaka-ash flex items-center gap-1.5">
+                  <UserCheck className="h-3 w-3 text-pinaka-saffron shrink-0" />
+                  <span>Creator / Team:</span>
+                  <strong className="text-pinaka-stone font-semibold">
+                    {leadBuilder || 'Independent Builder'}
+                  </strong>
+                </div>
+
+                {/* SkillSphere Linked Handle (only rendered if handle exists) */}
+                {cleanHandle && (
+                  <div className="pl-4">
+                    <a
+                      href={skillSphereUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm bg-pinaka-saffron-wash border border-pinaka-saffron/30 text-[10px] font-mono text-pinaka-saffron-deep hover:bg-pinaka-saffron hover:text-white transition-all shadow-2xs group/ss"
+                      title={`Visit ${cleanHandle}'s SkillSphere Profile`}
+                    >
+                      <Sparkles className="h-2.5 w-2.5 text-pinaka-saffron group-hover/ss:text-white" />
+                      <span>SkillSphere:</span>
+                      <strong className="font-semibold">@{cleanHandle}</strong>
+                      <ExternalLink className="h-2.5 w-2.5 opacity-70 group-hover/ss:opacity-100" />
+                    </a>
+                  </div>
+                )}
               </div>
             </div>
 
