@@ -11,12 +11,9 @@ import {
   Copy,
   Check,
   ArrowLeft,
-  Terminal,
-  FileCode,
   Layers,
   Sparkles,
   ArrowRight,
-  ExternalLink,
 } from 'lucide-react';
 
 const PROBLEM_BRIEF_TEMPLATE = `# Problem Brief (Gate 1 Deliverable)
@@ -129,34 +126,34 @@ export default function OnboardPage() {
   }
 
   return (
-    <div className="min-h-screen py-10 sm:py-16">
-      <div className="mx-auto max-w-[1200px] px-6 sm:px-10 lg:px-12">
+    <div className="min-h-screen py-8 sm:py-16">
+      <div className="mx-auto max-w-[1200px] px-4 sm:px-8 lg:px-12">
         
         {/* Navigation Breadcrumb */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <Link
             href="/"
             className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-pinaka-slate hover:text-pinaka-saffron transition-colors"
           >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            Return to Studio Home & Ledger
+            <ArrowLeft className="h-3.5 w-3.5 shrink-0" />
+            <span>Return to Studio Home & Ledger</span>
           </Link>
         </div>
 
         {/* Hero Banner */}
-        <div className="border border-pinaka-hairline bg-white/95 backdrop-blur-sm p-8 sm:p-12 mb-12 shadow-editorial">
+        <div className="border border-pinaka-hairline bg-white/95 backdrop-blur-sm p-5 sm:p-10 lg:p-12 mb-8 sm:mb-12 shadow-editorial rounded-sm">
           <div className="flex items-center gap-2 mb-3">
-            <PinakaBow className="h-5 w-auto text-pinaka-saffron" />
-            <span className="font-mono text-xs font-bold uppercase tracking-widest text-pinaka-saffron">
+            <PinakaBow className="h-4.5 sm:h-5 w-auto text-pinaka-saffron shrink-0" />
+            <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-widest text-pinaka-saffron">
               The Pinaka Foundry &middot; Project Onboarding Guide
             </span>
           </div>
 
-          <h1 className="font-serif text-3xl sm:text-5xl font-bold tracking-tight text-pinaka-charcoal mb-4">
+          <h1 className="font-serif text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-pinaka-charcoal mb-3 sm:mb-4">
             How to Get Backed Under Pinaka
           </h1>
 
-          <p className="text-sm sm:text-base text-pinaka-slate leading-relaxed max-w-3xl font-sans mb-8">
+          <p className="text-xs sm:text-sm lg:text-base text-pinaka-slate leading-relaxed max-w-3xl font-sans mb-6 sm:mb-8">
             Early-stage software initiatives often struggle for traction and institutional credibility. 
             Pinaka operates as an engineering backbone and supportive studio umbrella. We provide engineering 
             baselines, architectural hardening, and shared distribution while guaranteeing that{' '}
@@ -164,7 +161,7 @@ export default function OnboardPage() {
           </p>
 
           {/* Core Guarantees Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-pinaka-hairline">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 pt-5 sm:pt-6 border-t border-pinaka-hairline">
             <div className="flex items-start gap-3">
               <ShieldCheck className="h-5 w-5 text-pinaka-saffron shrink-0 mt-0.5" />
               <div>
@@ -204,23 +201,23 @@ export default function OnboardPage() {
         </div>
 
         {/* 3 Step Onboarding Steps */}
-        <div className="space-y-10 mb-16">
+        <div className="space-y-6 sm:space-y-10 mb-10 sm:mb-16">
           
           {/* Step 1: Problem Validation */}
-          <div className="border border-pinaka-hairline bg-white/90 p-8 shadow-sm">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 pb-4 border-b border-pinaka-hairline">
+          <div className="border border-pinaka-hairline bg-white/90 p-5 sm:p-8 shadow-sm rounded-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 pb-4 border-b border-pinaka-hairline">
               <div>
-                <span className="font-mono text-xs font-bold text-pinaka-saffron uppercase tracking-widest">
+                <span className="font-mono text-[11px] sm:text-xs font-bold text-pinaka-saffron uppercase tracking-widest">
                   Step 01 &middot; Gate 1 Requirement
                 </span>
-                <h2 className="font-serif text-xl sm:text-2xl font-bold text-pinaka-charcoal mt-1">
+                <h2 className="font-serif text-lg sm:text-2xl font-bold text-pinaka-charcoal mt-1">
                   Define the Problem Brief
                 </h2>
               </div>
               <button
                 type="button"
                 onClick={() => handleCopy(PROBLEM_BRIEF_TEMPLATE, 'brief')}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono uppercase tracking-wider bg-pinaka-ice border border-pinaka-hairline text-pinaka-stone hover:bg-pinaka-saffron hover:text-white transition-colors rounded-sm cursor-pointer shrink-0"
+                className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-mono uppercase tracking-wider bg-pinaka-ice border border-pinaka-hairline text-pinaka-stone hover:bg-pinaka-saffron hover:text-white transition-colors rounded-sm cursor-pointer shrink-0 w-full sm:w-auto"
               >
                 {copiedBrief ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
                 {copiedBrief ? 'Copied Template' : 'Copy Problem Brief Template'}
@@ -232,26 +229,26 @@ export default function OnboardPage() {
               solve verifiable user friction. Copy the structured Problem Brief below and keep it in your docs:
             </p>
 
-            <pre className="p-4 bg-pinaka-charcoal text-white font-mono text-xs overflow-x-auto rounded-sm leading-relaxed max-h-56">
+            <pre className="p-3.5 sm:p-4 bg-pinaka-charcoal text-white font-mono text-[11px] sm:text-xs overflow-x-auto rounded-sm leading-relaxed max-h-56">
               {PROBLEM_BRIEF_TEMPLATE}
             </pre>
           </div>
 
           {/* Step 2: Add pinaka.json Manifest */}
-          <div className="border border-pinaka-hairline bg-white/90 p-8 shadow-sm">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 pb-4 border-b border-pinaka-hairline">
+          <div className="border border-pinaka-hairline bg-white/90 p-5 sm:p-8 shadow-sm rounded-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 pb-4 border-b border-pinaka-hairline">
               <div>
-                <span className="font-mono text-xs font-bold text-pinaka-saffron uppercase tracking-widest">
+                <span className="font-mono text-[11px] sm:text-xs font-bold text-pinaka-saffron uppercase tracking-widest">
                   Step 02 &middot; Machine-Readable Ingestion
                 </span>
-                <h2 className="font-serif text-xl sm:text-2xl font-bold text-pinaka-charcoal mt-1">
-                  Add <code className="font-mono text-pinaka-saffron bg-pinaka-ice px-2 py-0.5 rounded-sm">pinaka.json</code> to Your Repo Root
+                <h2 className="font-serif text-lg sm:text-2xl font-bold text-pinaka-charcoal mt-1">
+                  Add <code className="font-mono text-pinaka-saffron bg-pinaka-ice px-1.5 sm:px-2 py-0.5 rounded-sm text-xs sm:text-lg">pinaka.json</code> to Your Repo Root
                 </h2>
               </div>
               <button
                 type="button"
                 onClick={() => handleCopy(MANIFEST_TEMPLATE, 'manifest')}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono uppercase tracking-wider bg-pinaka-ice border border-pinaka-hairline text-pinaka-stone hover:bg-pinaka-saffron hover:text-white transition-colors rounded-sm cursor-pointer shrink-0"
+                className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-mono uppercase tracking-wider bg-pinaka-ice border border-pinaka-hairline text-pinaka-stone hover:bg-pinaka-saffron hover:text-white transition-colors rounded-sm cursor-pointer shrink-0 w-full sm:w-auto"
               >
                 {copiedManifest ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
                 {copiedManifest ? 'Copied JSON' : 'Copy pinaka.json Template'}
@@ -263,22 +260,22 @@ export default function OnboardPage() {
               at the root of your project repository. This declares your tech stack, architectural highlights, and live URLs:
             </p>
 
-            <pre className="p-4 bg-pinaka-charcoal text-emerald-400 font-mono text-xs overflow-x-auto rounded-sm leading-relaxed max-h-56">
+            <pre className="p-3.5 sm:p-4 bg-pinaka-charcoal text-emerald-400 font-mono text-[11px] sm:text-xs overflow-x-auto rounded-sm leading-relaxed max-h-56">
               {MANIFEST_TEMPLATE}
             </pre>
           </div>
 
           {/* Step 3: Engineering Standards Checklist */}
-          <div className="border border-pinaka-hairline bg-white/90 p-8 shadow-sm">
-            <span className="font-mono text-xs font-bold text-pinaka-saffron uppercase tracking-widest">
+          <div className="border border-pinaka-hairline bg-white/90 p-5 sm:p-8 shadow-sm rounded-sm">
+            <span className="font-mono text-[11px] sm:text-xs font-bold text-pinaka-saffron uppercase tracking-widest">
               Step 03 &middot; Engineering Standards
             </span>
-            <h2 className="font-serif text-xl sm:text-2xl font-bold text-pinaka-charcoal mt-1 mb-4">
+            <h2 className="font-serif text-lg sm:text-2xl font-bold text-pinaka-charcoal mt-1 mb-4">
               Quality & Verification Baseline
             </h2>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-              <div className="border border-pinaka-hairline bg-pinaka-ice/50 p-4 rounded-sm flex items-start gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs">
+              <div className="border border-pinaka-hairline bg-pinaka-ice/50 p-3.5 sm:p-4 rounded-sm flex items-start gap-2.5">
                 <CheckCircle2 className="h-4 w-4 text-pinaka-saffron shrink-0 mt-0.5" />
                 <div>
                   <strong className="text-pinaka-stone block mb-0.5">Automated Test Suites</strong>
@@ -286,7 +283,7 @@ export default function OnboardPage() {
                 </div>
               </div>
 
-              <div className="border border-pinaka-hairline bg-pinaka-ice/50 p-4 rounded-sm flex items-start gap-2.5">
+              <div className="border border-pinaka-hairline bg-pinaka-ice/50 p-3.5 sm:p-4 rounded-sm flex items-start gap-2.5">
                 <CheckCircle2 className="h-4 w-4 text-pinaka-saffron shrink-0 mt-0.5" />
                 <div>
                   <strong className="text-pinaka-stone block mb-0.5">Clean Git Commit Pattern</strong>
@@ -294,7 +291,7 @@ export default function OnboardPage() {
                 </div>
               </div>
 
-              <div className="border border-pinaka-hairline bg-pinaka-ice/50 p-4 rounded-sm flex items-start gap-2.5">
+              <div className="border border-pinaka-hairline bg-pinaka-ice/50 p-3.5 sm:p-4 rounded-sm flex items-start gap-2.5">
                 <CheckCircle2 className="h-4 w-4 text-pinaka-saffron shrink-0 mt-0.5" />
                 <div>
                   <strong className="text-pinaka-stone block mb-0.5">Zero Plaintext Secrets</strong>
@@ -302,7 +299,7 @@ export default function OnboardPage() {
                 </div>
               </div>
 
-              <div className="border border-pinaka-hairline bg-pinaka-ice/50 p-4 rounded-sm flex items-start gap-2.5">
+              <div className="border border-pinaka-hairline bg-pinaka-ice/50 p-3.5 sm:p-4 rounded-sm flex items-start gap-2.5">
                 <CheckCircle2 className="h-4 w-4 text-pinaka-saffron shrink-0 mt-0.5" />
                 <div>
                   <strong className="text-pinaka-stone block mb-0.5">Modular Architecture</strong>
@@ -315,12 +312,12 @@ export default function OnboardPage() {
         </div>
 
         {/* Step 4: Submission Form */}
-        <div id="submit-form" className="border border-pinaka-hairline bg-white/95 backdrop-blur-sm p-8 sm:p-12 shadow-editorial mb-16">
-          <div className="mb-8">
-            <span className="font-mono text-xs font-bold uppercase tracking-widest text-pinaka-saffron">
+        <div id="submit-form" className="border border-pinaka-hairline bg-white/95 backdrop-blur-sm p-5 sm:p-10 lg:p-12 shadow-editorial mb-12 sm:mb-16 rounded-sm">
+          <div className="mb-6 sm:mb-8">
+            <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-widest text-pinaka-saffron">
               Step 04 &middot; On-Platform Application
             </span>
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-pinaka-charcoal mt-1">
+            <h2 className="font-serif text-xl sm:text-3xl font-bold text-pinaka-charcoal mt-1">
               Submit Candidate Project to Pinaka Foundry
             </h2>
             <p className="text-xs sm:text-sm text-pinaka-slate mt-2 leading-relaxed max-w-2xl">
@@ -331,16 +328,16 @@ export default function OnboardPage() {
 
           {submitResult ? (
             /* Success Receipt Display */
-            <div className="border border-emerald-300 bg-emerald-50/80 p-8 rounded-sm">
+            <div className="border border-emerald-300 bg-emerald-50/80 p-5 sm:p-8 rounded-sm">
               <div className="flex items-center gap-3 mb-4">
-                <div className="h-8 w-8 rounded-full bg-emerald-500 text-white flex items-center justify-center">
+                <div className="h-8 w-8 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0">
                   <Check className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="font-serif text-lg font-bold text-emerald-900">
+                  <h3 className="font-serif text-base sm:text-lg font-bold text-emerald-900">
                     Application Successfully Recorded
                   </h3>
-                  <span className="font-mono text-xs text-emerald-700">
+                  <span className="font-mono text-[11px] sm:text-xs text-emerald-700">
                     Reference ID: <strong>{submitResult.submissionId}</strong>
                   </span>
                 </div>
@@ -352,9 +349,9 @@ export default function OnboardPage() {
                 Gate 1 evaluation.
               </p>
 
-              <div className="border-t border-emerald-200 pt-4 flex flex-wrap items-center gap-4">
-                <Link href="/">
-                  <Button variant="primary" size="sm">
+              <div className="border-t border-emerald-200 pt-4 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+                <Link href="/" className="w-full sm:w-auto">
+                  <Button variant="primary" size="sm" className="w-full sm:w-auto">
                     Return to Studio Ledger
                   </Button>
                 </Link>
@@ -375,7 +372,7 @@ export default function OnboardPage() {
                       description: '',
                     });
                   }}
-                  className="text-xs font-mono uppercase tracking-wider text-emerald-800 hover:underline cursor-pointer"
+                  className="text-xs font-mono uppercase tracking-wider text-emerald-800 hover:underline cursor-pointer py-1"
                 >
                   Submit Another Project
                 </button>
@@ -383,7 +380,7 @@ export default function OnboardPage() {
             </div>
           ) : (
             /* Interactive Intake Form */
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
               
               {errorMessage && (
                 <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-sm">
@@ -391,7 +388,7 @@ export default function OnboardPage() {
                 </div>
               )}
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 {/* Project Name */}
                 <div>
                   <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5">
@@ -425,11 +422,11 @@ export default function OnboardPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
                 {/* Contact Email or Handle */}
                 <div>
                   <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5">
-                    Contact Email / Discord / Telegram *
+                    Contact Email / Handle *
                   </label>
                   <input
                     type="text"
@@ -498,11 +495,11 @@ export default function OnboardPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 {/* GitHub Repository URL */}
                 <div>
                   <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5">
-                    GitHub Repository Link (Public or Private)
+                    GitHub Repository Link
                   </label>
                   <input
                     type="url"
@@ -554,7 +551,7 @@ export default function OnboardPage() {
                 <textarea
                   name="description"
                   required
-                  rows={5}
+                  rows={4}
                   value={formData.description}
                   onChange={handleInputChange}
                   placeholder="Explain the specific user pain point, the architectural solution, and current stage of the codebase..."
@@ -563,11 +560,11 @@ export default function OnboardPage() {
               </div>
 
               {/* Submit Button */}
-              <div className="pt-2 flex items-center justify-between">
-                <span className="text-[11px] font-mono text-pinaka-ash">
+              <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+                <span className="text-[11px] font-mono text-pinaka-ash text-center sm:text-left">
                   100% Sovereign IP Protected &middot; Gate 1 Evaluation
                 </span>
-                <Button variant="primary" size="lg" disabled={isSubmitting}>
+                <Button variant="primary" size="lg" disabled={isSubmitting} className="w-full sm:w-auto">
                   {isSubmitting ? (
                     <>
                       <Spinner size="sm" />
