@@ -11,6 +11,7 @@ export async function POST(request) {
     const {
       name,
       leadBuilder,
+      skillSphereHandle,
       contact,
       category,
       track,
@@ -45,6 +46,7 @@ export async function POST(request) {
       name: name.trim(),
       leadBuilder: leadBuilder.trim(),
       contact: contact.trim(),
+      skillSphereHandle: skillSphereHandle?.trim() || null,
       category: category || 'Campus Tech',
       track: track || 'incubating',
       tagline: tagline.trim(),

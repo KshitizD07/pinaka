@@ -168,6 +168,7 @@ function AdminControlRoom() {
         status: approvalData.status,
         techStack: selectedSubmission.techStack,
         leadBuilder: selectedSubmission.leadBuilder,
+        skillSphereHandle: selectedSubmission.skillSphereHandle,
         repoUrl: selectedSubmission.repoUrl,
         demoUrl: selectedSubmission.demoUrl,
         description: selectedSubmission.description,
