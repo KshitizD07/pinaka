@@ -49,5 +49,9 @@ next-env.d.ts
 .Trashes
 ehthumbs.db
 
+# Documentation / Internal Issues tracker
+issues/
+
+
 # Logs
 *.log
