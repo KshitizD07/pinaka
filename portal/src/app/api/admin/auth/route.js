@@ -1,9 +1,12 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import {
+  ADMIN_COOKIE_NAME,
+  createAdminSessionToken,
+  checkAdminAuth,
+} from '@/lib/adminAuth';
 
 export const dynamic = 'force-dynamic';
-
-const ADMIN_COOKIE_NAME = 'pinaka_admin_session';
 
 export async function POST(request) {
   try {
@@ -25,18 +28,20 @@ export async function POST(request) {
       );
     }
 
+    const { token, maxAgeSeconds, payload } = createAdminSessionToken('KSHITIZ');
+
     const cookieStore = cookies();
-    cookieStore.set(ADMIN_COOKIE_NAME, 'authorized-kshitiz-lead', {
+    cookieStore.set(ADMIN_COOKIE_NAME, token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
-      maxAge: 7 * 24 * 60 * 60, // 7 days
+      maxAge: maxAgeSeconds,
     });
 
     return NextResponse.json({
       success: true,
-      lead: 'KSHITIZ',
+      lead: payload.sub,
       message: 'Authenticated as Studio Lead',
     });
   } catch (err) {
@@ -47,13 +52,12 @@ export async function POST(request) {
 
 export async function GET() {
   try {
-    const cookieStore = cookies();
-    const token = cookieStore.get(ADMIN_COOKIE_NAME);
-    const isAuthenticated = token?.value === 'authorized-kshitiz-lead';
+    const session = checkAdminAuth();
+    const isAuthenticated = !!session;
 
     return NextResponse.json({
       authenticated: isAuthenticated,
-      lead: isAuthenticated ? 'KSHITIZ' : null,
+      lead: isAuthenticated ? session.sub : null,
     });
   } catch (err) {
     return NextResponse.json({ authenticated: false }, { status: 500 });

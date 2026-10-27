@@ -1,18 +1,13 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
+import { checkAdminAuth } from '@/lib/adminAuth';
 
 export const dynamic = 'force-dynamic';
 
-function checkAuth() {
-  const cookieStore = cookies();
-  const token = cookieStore.get('pinaka_admin_session');
-  return token?.value === 'authorized-kshitiz-lead';
-}
-
 export async function POST(request) {
-  if (!checkAuth()) {
+  const session = checkAdminAuth();
+  if (!session) {
     return NextResponse.json({ error: 'Unauthorized. Studio Lead session required.' }, { status: 401 });
   }
 
