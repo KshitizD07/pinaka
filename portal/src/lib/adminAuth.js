@@ -74,6 +74,44 @@ export function verifyAdminSession(token) {
 }
 
 /**
+ * Validates request Origin/Host to prevent Cross-Site Request Forgery (CSRF)
+ * on mutating state actions.
+ */
+export function verifyCsrfOrigin(request) {
+  const origin = request.headers.get('origin');
+  const host = request.headers.get('host');
+
+  // If origin header is present, ensure host matches
+  if (origin && host) {
+    try {
+      const originUrl = new URL(origin);
+      if (originUrl.host !== host) {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+  }
+
+  // Fallback to checking referer header if origin is missing
+  if (!origin) {
+    const referer = request.headers.get('referer');
+    if (referer && host) {
+      try {
+        const refUrl = new URL(referer);
+        if (refUrl.host !== host) {
+          return false;
+        }
+      } catch {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
+/**
  * Convenience helper to verify session from incoming request cookies.
  */
 export function checkAdminAuth() {

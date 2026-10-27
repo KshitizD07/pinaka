@@ -1,11 +1,15 @@
 import { NextResponse } from 'next/server';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
-import { checkAdminAuth } from '@/lib/adminAuth';
+import { checkAdminAuth, verifyCsrfOrigin } from '@/lib/adminAuth';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(request) {
+  if (!verifyCsrfOrigin(request)) {
+    return NextResponse.json({ error: 'Forbidden: Invalid request origin.' }, { status: 403 });
+  }
+
   const session = checkAdminAuth();
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized. Studio Lead session required.' }, { status: 401 });

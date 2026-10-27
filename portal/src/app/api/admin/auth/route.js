@@ -4,6 +4,7 @@ import {
   ADMIN_COOKIE_NAME,
   createAdminSessionToken,
   checkAdminAuth,
+  verifyCsrfOrigin,
 } from '@/lib/adminAuth';
 import { adminAuthLimiter, getClientIp } from '@/lib/rateLimit';
 
@@ -11,6 +12,13 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request) {
   try {
+    if (!verifyCsrfOrigin(request)) {
+      return NextResponse.json(
+        { success: false, error: 'Forbidden: Invalid request origin.' },
+        { status: 403 }
+      );
+    }
+
     const clientIp = getClientIp(request);
     const limitResult = adminAuthLimiter.check(clientIp, 5, 15 * 60 * 1000);
 
@@ -85,8 +93,15 @@ export async function GET() {
   }
 }
 
-export async function DELETE() {
+export async function DELETE(request) {
   try {
+    if (!verifyCsrfOrigin(request)) {
+      return NextResponse.json(
+        { success: false, error: 'Forbidden: Invalid request origin.' },
+        { status: 403 }
+      );
+    }
+
     const cookieStore = cookies();
     cookieStore.delete(ADMIN_COOKIE_NAME);
     return NextResponse.json({ success: true, message: 'Logged out successfully' });
