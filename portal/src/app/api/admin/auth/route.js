@@ -8,7 +8,15 @@ const ADMIN_COOKIE_NAME = 'pinaka_admin_session';
 export async function POST(request) {
   try {
     const { key } = await request.json();
-    const expectedKey = process.env.PINAKA_ADMIN_KEY || 'pinaka2026';
+    const expectedKey = process.env.PINAKA_ADMIN_KEY;
+
+    if (!expectedKey) {
+      console.error('[API /admin/auth POST] PINAKA_ADMIN_KEY environment variable is not configured.');
+      return NextResponse.json(
+        { success: false, error: 'Admin authentication is misconfigured on the server.' },
+        { status: 500 }
+      );
+    }
 
     if (!key || key.trim() !== expectedKey.trim()) {
       return NextResponse.json(
