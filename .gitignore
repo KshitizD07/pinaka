@@ -55,3 +55,7 @@ issues/
 
 # Logs
 *.log
+
+# Sensitive User Data / Submissions
+data/submissions.json
+

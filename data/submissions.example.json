@@ -1,0 +1,24 @@
+[
+  {
+    "id": "PINAKA-EXAMPLE-001",
+    "name": "Sample Innovation Project",
+    "leadBuilder": "Lead Builder Handle",
+    "contact": "builder@example.com",
+    "category": "Infrastructure",
+    "track": "incubating",
+    "tagline": "Sample project tagline showcasing architectural ambition.",
+    "description": "Sample problem brief explaining friction and proposed technical solution.",
+    "techStack": [
+      "TypeScript",
+      "Next.js",
+      "PostgreSQL"
+    ],
+    "squadUrl": "https://skill-sphere-v1.vercel.app/",
+    "skillSphereUrl": "https://skill-sphere-v1.vercel.app/",
+    "skillSphereLabel": "BUILDER",
+    "repoUrl": "https://github.com/example/sample-repo",
+    "demoUrl": "https://example.com",
+    "submittedAt": "2026-01-01T00:00:00.000Z",
+    "status": "UNDER_REVIEW"
+  }
+]
