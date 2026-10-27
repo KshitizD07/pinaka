@@ -47,24 +47,18 @@ function AdminControlRoom() {
     checkAuthStatus();
   }, []);
 
-  // Parse candidate payload from URL query (?sub=...) if opened via email link
+  // Auto-select submission from URL query (?subId=...) once submissions are loaded
   useEffect(() => {
-    const subParam = searchParams.get('sub');
-    if (subParam) {
-      try {
-        const decoded = Buffer.from(decodeURIComponent(subParam), 'base64').toString('utf-8');
-        const parsed = JSON.parse(decoded);
-        setSelectedSubmission(parsed);
-        setApprovalData({
-          track: parsed.track || 'incubating',
-          status: 'prototype',
-          highlights: `${parsed.category} platform solving verified builder friction.\nEngineered with modular ${Array.isArray(parsed.techStack) ? parsed.techStack.slice(0, 3).join(', ') : 'modern'} architecture.`,
-        });
-      } catch (e) {
-        console.warn('Failed to parse candidate payload from query param:', e);
+    const subIdParam = searchParams.get('subId') || searchParams.get('sub');
+    if (subIdParam && submissions.length > 0) {
+      const match = submissions.find(
+        (s) => s.id === subIdParam || s.id?.toLowerCase() === subIdParam.toLowerCase()
+      );
+      if (match) {
+        handleSelectForApproval(match);
       }
     }
-  }, [searchParams]);
+  }, [searchParams, submissions]);
 
   async function checkAuthStatus() {
     setCheckingAuth(true);

@@ -49,9 +49,8 @@ export async function sendCandidateNotificationEmail(submission) {
     const recipient = process.env.ADMIN_EMAIL || process.env.SMTP_USER || 'kshitizd171@gmail.com';
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://pinaka-v1.vercel.app';
     
-    // Encode full submission payload into review URL so review is 100% reliable across serverless instances
-    const encodedSub = Buffer.from(JSON.stringify(submission)).toString('base64');
-    const reviewUrl = `${siteUrl}/admin?sub=${encodeURIComponent(encodedSub)}`;
+    // Pass opaque submission ID instead of full submission payload to protect submitter PII
+    const reviewUrl = `${siteUrl}/admin?subId=${encodeURIComponent(submission.id)}`;
 
     const stackList = Array.isArray(submission.techStack)
       ? submission.techStack.join(', ')
