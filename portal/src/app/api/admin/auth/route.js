@@ -5,11 +5,31 @@ import {
   createAdminSessionToken,
   checkAdminAuth,
 } from '@/lib/adminAuth';
+import { adminAuthLimiter, getClientIp } from '@/lib/rateLimit';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(request) {
   try {
+    const clientIp = getClientIp(request);
+    const limitResult = adminAuthLimiter.check(clientIp, 5, 15 * 60 * 1000);
+
+    if (!limitResult.allowed) {
+      console.warn(`[API /admin/auth POST] Rate limit exceeded for IP: ${clientIp}`);
+      return NextResponse.json(
+        {
+          success: false,
+          error: `Too many login attempts. Please try again in ${limitResult.retryAfterSeconds} seconds.`,
+        },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': String(limitResult.retryAfterSeconds),
+          },
+        }
+      );
+    }
+
     const { key } = await request.json();
     const expectedKey = process.env.PINAKA_ADMIN_KEY;
 
@@ -29,6 +49,7 @@ export async function POST(request) {
     }
 
     const { token, maxAgeSeconds, payload } = createAdminSessionToken('KSHITIZ');
+    adminAuthLimiter.reset(clientIp);
 
     const cookieStore = cookies();
     cookieStore.set(ADMIN_COOKIE_NAME, token, {
