@@ -134,14 +134,16 @@ export async function POST(request) {
 
     // 3. Await SMTP notification
     const emailResult = await sendCandidateNotificationEmail(submission);
+    if (!emailResult?.success) {
+      console.warn('[Submissions] Notification email not dispatched:', emailResult?.error || emailResult?.reason);
+    }
 
     return NextResponse.json({
       success: true,
       submissionId,
       message: 'Project candidate successfully submitted for Pinaka Foundry evaluation.',
       submission,
-      emailNotified: emailResult?.success ?? false,
-      emailDebug: emailResult?.success ? undefined : (emailResult?.error || emailResult?.reason || 'SMTP transmission pending'),
+      emailNotified: Boolean(emailResult?.success),
     });
   } catch (err) {
     console.error('[API /submissions] Error:', err);
