@@ -38,7 +38,8 @@ export async function POST(request) {
       );
     }
 
-    const { key } = await request.json();
+    const body = await request.json();
+    const key = body?.passphrase || body?.key;
     const expectedKey = process.env.PINAKA_ADMIN_KEY;
 
     if (!expectedKey) {
