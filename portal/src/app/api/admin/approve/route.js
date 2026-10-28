@@ -80,6 +80,7 @@ export async function POST(request) {
       demoUrl,
       description,
       highlights,
+      allowOverwrite = false,
     } = body;
 
     if (!name || !tagline) {
@@ -138,12 +139,25 @@ export async function POST(request) {
       const fileData = await getRes.json();
       const currentContent = JSON.parse(Buffer.from(fileData.content, 'base64').toString('utf-8'));
 
-      const projectId = resolveUniqueSlug(baseSlug, currentContent, id);
+      const existingIdx = id ? currentContent.findIndex((p) => p.id === id) : -1;
+      if (existingIdx >= 0 && !allowOverwrite) {
+        return NextResponse.json(
+          {
+            error: `Project with ID '${id}' already exists in ledger. Set allowOverwrite to true to overwrite.`,
+            existingProjectId: id,
+          },
+          { status: 409 }
+        );
+      }
+
+      const projectId = (existingIdx >= 0 && allowOverwrite)
+        ? id
+        : resolveUniqueSlug(baseSlug, currentContent, id);
       finalProject = { id: projectId, ...projectPayload };
 
-      const existingIdx = currentContent.findIndex((p) => p.id === projectId);
-      if (existingIdx >= 0) {
-        currentContent[existingIdx] = finalProject;
+      const targetIdx = currentContent.findIndex((p) => p.id === projectId);
+      if (targetIdx >= 0) {
+        currentContent[targetIdx] = finalProject;
       } else {
         currentContent.push(finalProject);
       }
@@ -184,12 +198,25 @@ export async function POST(request) {
           projects = JSON.parse(raw);
         }
 
-        const projectId = resolveUniqueSlug(baseSlug, projects, id);
+        const existingIdx = id ? projects.findIndex((p) => p.id === id) : -1;
+        if (existingIdx >= 0 && !allowOverwrite) {
+          return NextResponse.json(
+            {
+              error: `Project with ID '${id}' already exists in ledger. Set allowOverwrite to true to overwrite.`,
+              existingProjectId: id,
+            },
+            { status: 409 }
+          );
+        }
+
+        const projectId = (existingIdx >= 0 && allowOverwrite)
+          ? id
+          : resolveUniqueSlug(baseSlug, projects, id);
         finalProject = { id: projectId, ...projectPayload };
 
-        const existingIdx = projects.findIndex((p) => p.id === projectId);
-        if (existingIdx >= 0) {
-          projects[existingIdx] = finalProject;
+        const targetIdx = projects.findIndex((p) => p.id === projectId);
+        if (targetIdx >= 0) {
+          projects[targetIdx] = finalProject;
         } else {
           projects.push(finalProject);
         }
