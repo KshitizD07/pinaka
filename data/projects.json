@@ -6,7 +6,16 @@
     "category": "EdTech",
     "track": "flagship",
     "status": "live",
-    "techStack": ["React 19", "Vite", "Node.js", "Express", "Prisma", "PostgreSQL", "Google Gemini AI", "Socket.io"],
+    "techStack": [
+      "React 19",
+      "Vite",
+      "Node.js",
+      "Express",
+      "Prisma",
+      "PostgreSQL",
+      "Google Gemini AI",
+      "Socket.io"
+    ],
     "leadBuilder": "KSHITIZ",
     "skillSphereUrl": "https://skill-sphere-v1.vercel.app/profile/867968a4-119a-44a9-8eae-df7faa0cdc60",
     "skillSphereLabel": "KSHITIZ",
@@ -27,7 +36,12 @@
     "category": "Campus Tech",
     "track": "incubating",
     "status": "prototype",
-    "techStack": ["Node.js", "PostgreSQL", "Next.js", "Socket.io"],
+    "techStack": [
+      "Node.js",
+      "PostgreSQL",
+      "Next.js",
+      "Socket.io"
+    ],
     "leadBuilder": "KSHITIZ, HARSHIT SINGH, HARSH KASAUNDHAN, ARYAN GUPTA",
     "skillSphereUrl": "https://skill-sphere-v1.vercel.app/profile/867968a4-119a-44a9-8eae-df7faa0cdc60",
     "skillSphereLabel": "KSHITIZ",
@@ -48,7 +62,16 @@
     "category": "AI / ML",
     "track": "breakthroughs",
     "status": "prototype",
-    "techStack": ["PyTorch", "Stable-Baselines3", "SUMO", "TraCI", "Graph Attention Networks", "FastAPI", "WebSockets", "Three.js"],
+    "techStack": [
+      "PyTorch",
+      "Stable-Baselines3",
+      "SUMO",
+      "TraCI",
+      "Graph Attention Networks",
+      "FastAPI",
+      "WebSockets",
+      "Three.js"
+    ],
     "leadBuilder": "N.O.V.A",
     "skillSphereUrl": null,
     "skillSphereLabel": null,
@@ -69,7 +92,18 @@
     "category": "Defense Tech / Urban AI",
     "track": "breakthroughs",
     "status": "prototype",
-    "techStack": ["Python", "FastAPI", "WebSockets", "Leaflet", "SUMO", "TraCI", "RapidFuzz", "SQLite", "YOLOv8", "PaddleOCR"],
+    "techStack": [
+      "Python",
+      "FastAPI",
+      "WebSockets",
+      "Leaflet",
+      "SUMO",
+      "TraCI",
+      "RapidFuzz",
+      "SQLite",
+      "YOLOv8",
+      "PaddleOCR"
+    ],
     "leadBuilder": "N.O.V.A",
     "skillSphereUrl": null,
     "skillSphereLabel": null,
@@ -82,6 +116,28 @@
       "Kinematic plausibility watchdog (v <= 30 m/s) with real road network polyline snapping (RoadSnapper)",
       "GNN congestion-aware anomaly scorer that cross-references route deviation with real-time queue lengths",
       "Tactical red-wall intercept orchestrator with emergency vehicle preemption (EVP) and SHA-256 hash-chained audit logging"
+    ]
+  },
+  {
+    "id": "anonymous",
+    "name": "Anonymous",
+    "tagline": "just a demo",
+    "category": "Campus Tech",
+    "track": "breakthroughs",
+    "status": "prototype",
+    "techStack": [
+      "na"
+    ],
+    "leadBuilder": "ANONYMOUS",
+    "squadUrl": null,
+    "skillSphereUrl": null,
+    "skillSphereLabel": null,
+    "repoUrl": null,
+    "demoUrl": null,
+    "description": "na",
+    "highlights": [
+      "Campus Tech platform engineered under Pinaka standards.",
+      "Built with modular na architecture."
     ]
   }
 ]
