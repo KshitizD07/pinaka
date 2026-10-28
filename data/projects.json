@@ -117,27 +117,5 @@
       "GNN congestion-aware anomaly scorer that cross-references route deviation with real-time queue lengths",
       "Tactical red-wall intercept orchestrator with emergency vehicle preemption (EVP) and SHA-256 hash-chained audit logging"
     ]
-  },
-  {
-    "id": "anonymous",
-    "name": "Anonymous",
-    "tagline": "just a demo",
-    "category": "Campus Tech",
-    "track": "breakthroughs",
-    "status": "prototype",
-    "techStack": [
-      "na"
-    ],
-    "leadBuilder": "ANONYMOUS",
-    "squadUrl": null,
-    "skillSphereUrl": null,
-    "skillSphereLabel": null,
-    "repoUrl": null,
-    "demoUrl": null,
-    "description": "na",
-    "highlights": [
-      "Campus Tech platform engineered under Pinaka standards.",
-      "Built with modular na architecture."
-    ]
   }
 ]

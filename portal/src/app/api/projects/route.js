@@ -1,9 +1,16 @@
 import { NextResponse } from 'next/server';
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 // This route reads query params at request time — must be dynamic
 export const dynamic = 'force-dynamic';
+
+function getProjectsPath() {
+  const rootData = join(process.cwd(), 'data', 'projects.json');
+  const parentData = join(process.cwd(), '..', 'data', 'projects.json');
+  return existsSync(rootData) ? rootData : parentData;
+}
 
 /**
  * GET /api/projects
@@ -18,20 +25,62 @@ export async function GET(request) {
     const category = searchParams.get('category');
     const search = searchParams.get('search');
 
-    // Read from monorepo root — portal/ is one level deep
-    const filePath = join(process.cwd(), '..', 'data', 'projects.json');
-    const raw = readFileSync(filePath, 'utf-8');
-    let projects = JSON.parse(raw);
+    let projects = [];
 
-    if (track) {
-      projects = projects.filter((p) => p.track === track);
+    // 1. Try Supabase first if configured
+    if (isSupabaseConfigured() && supabase) {
+      try {
+        let query = supabase.from('projects').select('*').order('created_at', { ascending: false });
+
+        if (track) query = query.eq('track', track);
+        if (status) query = query.eq('status', status);
+        if (category) query = query.eq('category', category);
+
+        const { data, error } = await query;
+        if (!error && Array.isArray(data) && data.length > 0) {
+          projects = data.map((row) => ({
+            id: row.id,
+            name: row.name,
+            tagline: row.tagline,
+            description: row.description,
+            category: row.category,
+            track: row.track,
+            status: row.status,
+            leadBuilder: row.lead,
+            contact: row.contact,
+            repoUrl: row.repo_url,
+            demoUrl: row.demo_url,
+            highlights: typeof row.highlights === 'string' ? row.highlights.split('\n').filter(Boolean) : row.highlights,
+            techStack: row.tech_stack || [],
+            squadUrl: row.squad_url,
+            skillSphereUrl: row.skill_sphere_url,
+          }));
+        }
+      } catch (sbErr) {
+        console.warn('[API /projects] Supabase fetch error, fallback to local:', sbErr.message);
+      }
     }
-    if (status) {
-      projects = projects.filter((p) => p.status === status);
+
+    // 2. If Supabase returned no projects or not configured, load from local projects.json
+    if (projects.length === 0) {
+      const filePath = getProjectsPath();
+      if (existsSync(filePath)) {
+        const raw = readFileSync(filePath, 'utf-8');
+        projects = JSON.parse(raw);
+
+        if (track) {
+          projects = projects.filter((p) => p.track === track);
+        }
+        if (status) {
+          projects = projects.filter((p) => p.status === status);
+        }
+        if (category) {
+          projects = projects.filter((p) => p.category === category);
+        }
+      }
     }
-    if (category) {
-      projects = projects.filter((p) => p.category === category);
-    }
+
+    // 3. In-memory fuzzy filter for search
     if (search && search.trim()) {
       const q = search.toLowerCase().trim();
       projects = projects.filter((p) => {
@@ -49,9 +98,6 @@ export async function GET(request) {
     return NextResponse.json({ projects, total: projects.length });
   } catch (err) {
     console.error('[API /projects] Error:', err);
-    return NextResponse.json(
-      { error: 'Failed to load projects', projects: [], total: 0 },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to load projects' }, { status: 500 });
   }
 }

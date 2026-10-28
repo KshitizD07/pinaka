@@ -3,6 +3,7 @@ import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import crypto from 'crypto';
 import { checkAdminAuth, verifyCsrfOrigin } from '@/lib/adminAuth';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,11 +19,18 @@ const ALLOWED_CATEGORIES = new Set([
   'Defense Tech / Urban AI',
 ]);
 
-/**
- * Validates whether a given URL is a valid http or https link.
- * @param {string} urlString 
- * @returns {boolean}
- */
+function getProjectsPath() {
+  const rootData = join(process.cwd(), 'data', 'projects.json');
+  const parentData = join(process.cwd(), '..', 'data', 'projects.json');
+  return existsSync(rootData) ? rootData : parentData;
+}
+
+function getSubmissionsPath() {
+  const rootData = join(process.cwd(), 'data', 'submissions.json');
+  const parentData = join(process.cwd(), '..', 'data', 'submissions.json');
+  return existsSync(rootData) ? rootData : parentData;
+}
+
 function isValidHttpUrl(urlString) {
   if (!urlString || typeof urlString !== 'string') return false;
   try {
@@ -33,12 +41,6 @@ function isValidHttpUrl(urlString) {
   }
 }
 
-/**
- * Generates a clean, URL-safe, non-empty slug from a name or proposed ID.
- * @param {string} proposedId 
- * @param {string} name 
- * @returns {string}
- */
 function generateProjectSlug(proposedId, name) {
   const source = (proposedId || name || '').trim().toLowerCase();
   let slug = source
@@ -53,13 +55,6 @@ function generateProjectSlug(proposedId, name) {
   return slug;
 }
 
-/**
- * Ensures slug is unique among existing projects by appending a short suffix if collided.
- * @param {string} baseSlug 
- * @param {Array<{ id: string }>} existingProjects 
- * @param {string|null} currentId 
- * @returns {string}
- */
 function resolveUniqueSlug(baseSlug, existingProjects, currentId) {
   let uniqueSlug = baseSlug;
   let counter = 1;
@@ -100,6 +95,7 @@ export async function POST(request) {
       status,
       techStack,
       leadBuilder,
+      contact,
       squadUrl,
       skillSphereUrl,
       skillSphereLabel,
@@ -154,26 +150,6 @@ export async function POST(request) {
       }
     }
 
-    // Verify submission existence and status if submissionId is provided
-    if (submissionId) {
-      const submissionsPath = join(process.cwd(), '..', 'data', 'submissions.json');
-      if (existsSync(submissionsPath)) {
-        try {
-          const raw = readFileSync(submissionsPath, 'utf-8');
-          const subs = JSON.parse(raw);
-          const targetSub = subs.find((s) => s.id === submissionId);
-          if (targetSub && targetSub.status === 'APPROVED' && !allowOverwrite) {
-            return NextResponse.json(
-              { error: `Submission '${submissionId}' has already been approved.` },
-              { status: 409 }
-            );
-          }
-        } catch (subErr) {
-          console.warn('[Approve] Could not verify existing submission status:', subErr.message);
-        }
-      }
-    }
-
     const baseSlug = generateProjectSlug(id, name);
 
     const projectPayload = {
@@ -188,6 +164,7 @@ export async function POST(request) {
         ? techStack.split(',').map((s) => s.trim()).filter(Boolean)
         : [],
       leadBuilder: (leadBuilder || 'KSHITIZ').toUpperCase(),
+      contact: contact?.trim() || null,
       squadUrl: squadUrl?.trim() || null,
       skillSphereUrl: skillSphereUrl?.trim() || null,
       skillSphereLabel: skillSphereLabel?.trim() || null,
@@ -197,147 +174,120 @@ export async function POST(request) {
       highlights: Array.isArray(highlights) && highlights.length > 0
         ? highlights
         : [
-            `${category} system engineered under Pinaka baseline standards.`,
+            `${assignedCategory} system engineered under Pinaka baseline standards.`,
             `Built with modern ${Array.isArray(techStack) ? techStack.slice(0, 3).join(', ') : 'modular'} architecture.`,
           ],
     };
 
-    const githubToken = process.env.GITHUB_TOKEN;
-    const githubRepo = process.env.GITHUB_REPOSITORY || 'KshitizD07/pinaka';
-
-    let commitResult = null;
     let persisted = false;
     let finalProject = null;
 
-    // Option A: If GITHUB_TOKEN is available, commit via GitHub API
-    if (githubToken) {
-      console.log(`[Approve] Committing to GitHub repository ${githubRepo} via GitHub API...`);
-      const getRes = await fetch(`https://api.github.com/repos/${githubRepo}/contents/data/projects.json`, {
-        headers: {
-          Authorization: `Bearer ${githubToken}`,
-          Accept: 'application/vnd.github.v3+json',
-        },
-      });
-
-      if (!getRes.ok) {
-        throw new Error(`GitHub API error fetching projects.json: ${getRes.statusText}`);
-      }
-
-      const fileData = await getRes.json();
-      const currentContent = JSON.parse(Buffer.from(fileData.content, 'base64').toString('utf-8'));
-
-      const existingIdx = id ? currentContent.findIndex((p) => p.id === id) : -1;
-      if (existingIdx >= 0 && !allowOverwrite) {
-        return NextResponse.json(
-          {
-            error: `Project with ID '${id}' already exists in ledger. Set allowOverwrite to true to overwrite.`,
-            existingProjectId: id,
-          },
-          { status: 409 }
-        );
-      }
-
-      const projectId = (existingIdx >= 0 && allowOverwrite)
-        ? id
-        : resolveUniqueSlug(baseSlug, currentContent, id);
-      finalProject = { id: projectId, ...projectPayload };
-
-      const targetIdx = currentContent.findIndex((p) => p.id === projectId);
-      if (targetIdx >= 0) {
-        currentContent[targetIdx] = finalProject;
-      } else {
-        currentContent.push(finalProject);
-      }
-
-      const updatedBase64 = Buffer.from(JSON.stringify(currentContent, null, 2) + '\n').toString('base64');
-
-      const putRes = await fetch(`https://api.github.com/repos/${githubRepo}/contents/data/projects.json`, {
-        method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${githubToken}`,
-          Accept: 'application/vnd.github.v3+json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message: `add: ${finalProject.name} to studio portfolio ledger`,
-          content: updatedBase64,
-          sha: fileData.sha,
-          branch: 'main',
-        }),
-      });
-
-      if (!putRes.ok) {
-        const errBody = await putRes.text();
-        throw new Error(`GitHub API commit failed: ${errBody}`);
-      }
-
-      commitResult = await putRes.json();
-      persisted = true;
-      console.log('[Approve] GitHub commit successful:', commitResult.commit?.sha);
-    } else {
-      // Local fallback: update file locally
-      console.log('[Approve] No GITHUB_TOKEN set; writing to local data/projects.json...');
-      const localPath = join(process.cwd(), '..', 'data', 'projects.json');
+    // Load existing projects from local file (or Supabase) to resolve unique slugs
+    const localProjectsPath = getProjectsPath();
+    let currentProjects = [];
+    if (existsSync(localProjectsPath)) {
       try {
-        let projects = [];
-        if (existsSync(localPath)) {
-          const raw = readFileSync(localPath, 'utf-8');
-          projects = JSON.parse(raw);
-        }
+        currentProjects = JSON.parse(readFileSync(localProjectsPath, 'utf-8'));
+      } catch {}
+    }
 
-        const existingIdx = id ? projects.findIndex((p) => p.id === id) : -1;
-        if (existingIdx >= 0 && !allowOverwrite) {
-          return NextResponse.json(
-            {
-              error: `Project with ID '${id}' already exists in ledger. Set allowOverwrite to true to overwrite.`,
-              existingProjectId: id,
-            },
-            { status: 409 }
-          );
-        }
+    const existingIdx = id ? currentProjects.findIndex((p) => p.id === id) : -1;
+    if (existingIdx >= 0 && !allowOverwrite) {
+      return NextResponse.json(
+        {
+          error: `Project with ID '${id}' already exists in ledger. Set allowOverwrite to true to overwrite.`,
+          existingProjectId: id,
+        },
+        { status: 409 }
+      );
+    }
 
-        const projectId = (existingIdx >= 0 && allowOverwrite)
-          ? id
-          : resolveUniqueSlug(baseSlug, projects, id);
-        finalProject = { id: projectId, ...projectPayload };
+    const projectId = (existingIdx >= 0 && allowOverwrite)
+      ? id
+      : resolveUniqueSlug(baseSlug, currentProjects, id);
 
-        const targetIdx = projects.findIndex((p) => p.id === projectId);
-        if (targetIdx >= 0) {
-          projects[targetIdx] = finalProject;
+    finalProject = { id: projectId, ...projectPayload };
+
+    // 1. Persist to Supabase if available
+    if (isSupabaseConfigured() && supabase) {
+      try {
+        const { error: sbErr } = await supabase.from('projects').upsert({
+          id: finalProject.id,
+          name: finalProject.name,
+          tagline: finalProject.tagline,
+          description: finalProject.description,
+          category: finalProject.category,
+          track: finalProject.track,
+          status: finalProject.status,
+          lead: finalProject.leadBuilder,
+          contact: finalProject.contact,
+          repo_url: finalProject.repoUrl,
+          demo_url: finalProject.demoUrl,
+          highlights: Array.isArray(finalProject.highlights) ? finalProject.highlights.join('\n') : finalProject.highlights,
+          tech_stack: finalProject.techStack,
+          squad_url: finalProject.squadUrl,
+          skill_sphere_url: finalProject.skillSphereUrl,
+          updated_at: new Date().toISOString(),
+        });
+
+        if (!sbErr) {
+          persisted = true;
+          console.log(`[Approve] Persisted project ${finalProject.id} to Supabase.`);
         } else {
-          projects.push(finalProject);
+          console.warn('[Approve] Supabase project upsert error:', sbErr.message);
         }
-        writeFileSync(localPath, JSON.stringify(projects, null, 2) + '\n', 'utf-8');
-        persisted = true;
-      } catch (fsErr) {
-        throw new Error(`Failed to persist project to local storage: ${fsErr.message}`);
+
+        // Update submission status in Supabase
+        if (submissionId) {
+          await supabase
+            .from('submissions')
+            .update({ status: 'APPROVED' })
+            .eq('id', submissionId);
+        }
+      } catch (err) {
+        console.warn('[Approve] Supabase exception:', err.message);
       }
+    }
+
+    // 2. Persist to local projects.json (so frontend without DB works seamlessly)
+    try {
+      const targetIdx = currentProjects.findIndex((p) => p.id === projectId);
+      if (targetIdx >= 0) {
+        currentProjects[targetIdx] = finalProject;
+      } else {
+        currentProjects.push(finalProject);
+      }
+      writeFileSync(localProjectsPath, JSON.stringify(currentProjects, null, 2) + '\n', 'utf-8');
+      persisted = true;
+    } catch (fsErr) {
+      console.warn('[Approve] Could not write to local projects.json:', fsErr.message);
+    }
+
+    // 3. Update local submissions.json if present
+    if (submissionId) {
+      try {
+        const submissionsPath = getSubmissionsPath();
+        if (existsSync(submissionsPath)) {
+          const raw = readFileSync(submissionsPath, 'utf-8');
+          const subs = JSON.parse(raw);
+          const target = subs.find((s) => s.id === submissionId);
+          if (target) {
+            target.status = 'APPROVED';
+            target.approvedAt = new Date().toISOString();
+            writeFileSync(submissionsPath, JSON.stringify(subs, null, 2), 'utf-8');
+          }
+        }
+      } catch {}
     }
 
     if (!persisted || !finalProject) {
       throw new Error('Project approval failed: storage medium unavailable.');
     }
 
-    // Mark submission as APPROVED in submissions store
-    try {
-      const submissionsPath = join(process.cwd(), '..', 'data', 'submissions.json');
-      if (existsSync(submissionsPath)) {
-        const raw = readFileSync(submissionsPath, 'utf-8');
-        const subs = JSON.parse(raw);
-        const target = subs.find((s) => s.id === submissionId);
-        if (target) {
-          target.status = 'APPROVED';
-          target.approvedAt = new Date().toISOString();
-          writeFileSync(submissionsPath, JSON.stringify(subs, null, 2), 'utf-8');
-        }
-      }
-    } catch {}
-
     return NextResponse.json({
       success: true,
       message: `Project "${finalProject.name}" successfully approved and ingested into Pinaka ledger!`,
       project: finalProject,
-      githubCommitSha: commitResult?.commit?.sha || null,
     });
   } catch (err) {
     console.error('[API /admin/approve] Error:', err);

@@ -2,8 +2,15 @@ import { NextResponse } from 'next/server';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { sendCandidateNotificationEmail } from '@/lib/mailer';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 export const dynamic = 'force-dynamic';
+
+function getSubmissionsPath() {
+  const rootData = join(process.cwd(), 'data', 'submissions.json');
+  const parentData = join(process.cwd(), '..', 'data', 'submissions.json');
+  return existsSync(rootData) ? rootData : parentData;
+}
 
 export async function POST(request) {
   try {
@@ -46,6 +53,12 @@ export async function POST(request) {
 
     const submissionId = `PINAKA-${Date.now().toString().slice(-6)}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
 
+    const normalizedTechStack = Array.isArray(techStack)
+      ? techStack
+      : typeof techStack === 'string'
+      ? techStack.split(',').map((s) => s.trim()).filter(Boolean)
+      : [];
+
     const submission = {
       id: submissionId,
       name: name.trim(),
@@ -58,11 +71,7 @@ export async function POST(request) {
       track: track || 'incubating',
       tagline: tagline.trim(),
       description: description.trim(),
-      techStack: Array.isArray(techStack)
-        ? techStack
-        : typeof techStack === 'string'
-        ? techStack.split(',').map((s) => s.trim()).filter(Boolean)
-        : [],
+      techStack: normalizedTechStack,
       repoUrl: repoUrl?.trim() || null,
       demoUrl: demoUrl?.trim() || null,
       submittedAt: new Date().toISOString(),
@@ -72,9 +81,46 @@ export async function POST(request) {
     let persisted = false;
     let persistenceErrors = [];
 
-    // 1. Local / Serverless filesystem logging
+    // 1. Supabase Persistence (Primary)
+    if (isSupabaseConfigured() && supabase) {
+      try {
+        const { error: dbErr } = await supabase.from('submissions').insert([
+          {
+            id: submission.id,
+            name: submission.name,
+            lead_builder: submission.leadBuilder,
+            contact: submission.contact,
+            squad_url: submission.squadUrl,
+            skill_sphere_url: submission.skillSphereUrl,
+            skill_sphere_label: submission.skillSphereLabel,
+            category: submission.category,
+            track: submission.track,
+            tagline: submission.tagline,
+            description: submission.description,
+            tech_stack: submission.techStack,
+            repo_url: submission.repoUrl,
+            demo_url: submission.demoUrl,
+            submitted_at: submission.submittedAt,
+            status: submission.status,
+          },
+        ]);
+
+        if (dbErr) {
+          persistenceErrors.push(`Supabase: ${dbErr.message}`);
+          console.error('[Submissions] Supabase insert error:', dbErr);
+        } else {
+          persisted = true;
+          console.log(`[Submissions] Successfully saved ${submission.id} to Supabase.`);
+        }
+      } catch (err) {
+        persistenceErrors.push(`Supabase exception: ${err.message}`);
+        console.error('[Submissions] Supabase exception:', err);
+      }
+    }
+
+    // 2. Local / Serverless filesystem logging (Fallback / Local dev mirror)
     try {
-      const submissionsPath = join(process.cwd(), '..', 'data', 'submissions.json');
+      const submissionsPath = getSubmissionsPath();
       let submissions = [];
       if (existsSync(submissionsPath)) {
         try {
@@ -88,7 +134,7 @@ export async function POST(request) {
       writeFileSync(submissionsPath, JSON.stringify(submissions, null, 2), 'utf-8');
       persisted = true;
     } catch (fsErr) {
-      persistenceErrors.push(`Primary filesystem: ${fsErr.message}`);
+      persistenceErrors.push(`Local filesystem: ${fsErr.message}`);
       try {
         const tmpPath = join('/tmp', 'pinaka_submissions.json');
         let tmpSubs = [];
@@ -103,53 +149,6 @@ export async function POST(request) {
       }
     }
 
-    // 2. Git-Backed logging via GitHub API (if GITHUB_TOKEN configured)
-    if (process.env.GITHUB_TOKEN) {
-      try {
-        const githubRepo = process.env.GITHUB_REPOSITORY || 'KshitizD07/pinaka';
-        const getRes = await fetch(`https://api.github.com/repos/${githubRepo}/contents/data/submissions.json`, {
-          headers: {
-            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
-            Accept: 'application/vnd.github.v3+json',
-          },
-        });
-
-        if (getRes.ok) {
-          const fileData = await getRes.json();
-          const currentContent = JSON.parse(Buffer.from(fileData.content, 'base64').toString('utf-8'));
-          currentContent.unshift(submission);
-          const updatedBase64 = Buffer.from(JSON.stringify(currentContent, null, 2) + '\n').toString('base64');
-
-          const putRes = await fetch(`https://api.github.com/repos/${githubRepo}/contents/data/submissions.json`, {
-            method: 'PUT',
-            headers: {
-              Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
-              Accept: 'application/vnd.github.v3+json',
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              message: `intake: log candidate submission ${submission.name} (${submission.id})`,
-              content: updatedBase64,
-              sha: fileData.sha,
-              branch: 'main',
-            }),
-          });
-
-          if (putRes.ok) {
-            persisted = true;
-          } else {
-            const errBody = await putRes.text();
-            persistenceErrors.push(`GitHub API PUT: ${putRes.status} ${errBody}`);
-          }
-        } else {
-          persistenceErrors.push(`GitHub API GET: ${getRes.status}`);
-        }
-      } catch (ghErr) {
-        persistenceErrors.push(`GitHub API exception: ${ghErr.message}`);
-        console.warn('[Submissions] GitHub API logging notice:', ghErr.message);
-      }
-    }
-
     // Ensure submission was persisted in at least one durable target
     if (!persisted) {
       console.error('[Submissions] All persistence strategies failed:', persistenceErrors.join(' | '));
@@ -159,7 +158,7 @@ export async function POST(request) {
       );
     }
 
-    // 3. Await SMTP notification
+    // 3. Dispatch notification email
     const emailResult = await sendCandidateNotificationEmail(submission);
     if (!emailResult?.success) {
       console.warn('[Submissions] Notification email not dispatched:', emailResult?.error || emailResult?.reason);
