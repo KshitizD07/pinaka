@@ -31,6 +31,40 @@ function getTransporter() {
 }
 
 /**
+ * Safely escapes HTML special characters to prevent HTML/email injection.
+ * @param {*} str 
+ * @returns {string}
+ */
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/**
+ * Sanitizes URLs to permit only safe http and https protocols.
+ * @param {*} urlString 
+ * @returns {string|null}
+ */
+function sanitizeUrl(urlString) {
+  if (!urlString || typeof urlString !== 'string') return null;
+  const trimmed = urlString.trim();
+  try {
+    const parsed = new URL(trimmed);
+    if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+      return escapeHtml(parsed.href);
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Sends an email notification to the studio lead when a candidate project is submitted.
  * @param {Object} submission
  */
@@ -50,11 +84,39 @@ export async function sendCandidateNotificationEmail(submission) {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://pinaka-v1.vercel.app';
     
     // Pass opaque submission ID instead of full submission payload to protect submitter PII
-    const reviewUrl = `${siteUrl}/admin?subId=${encodeURIComponent(submission.id)}`;
+    const safeSubId = encodeURIComponent(String(submission.id || ''));
+    const reviewUrl = `${siteUrl}/admin?subId=${safeSubId}`;
 
-    const stackList = Array.isArray(submission.techStack)
+    const rawStack = Array.isArray(submission.techStack)
       ? submission.techStack.join(', ')
       : submission.techStack || 'Not specified';
+
+    // Sanitize and escape all user-submitted fields before HTML interpolation
+    const safeId = escapeHtml(submission.id);
+    const safeName = escapeHtml(submission.name);
+    const safeCategory = escapeHtml(submission.category);
+    const safeTrack = escapeHtml(submission.track);
+    const safeLeadBuilder = escapeHtml(submission.leadBuilder);
+    const safeContact = escapeHtml(submission.contact);
+    const safeTagline = escapeHtml(submission.tagline);
+    const safeStackList = escapeHtml(rawStack);
+    const safeDescription = escapeHtml(submission.description);
+
+    const safeRepoUrl = sanitizeUrl(submission.repoUrl);
+    const safeDemoUrl = sanitizeUrl(submission.demoUrl);
+    const safeSquadUrl = sanitizeUrl(submission.squadUrl);
+
+    const repoLinkHtml = safeRepoUrl
+      ? `<a href="${safeRepoUrl}" target="_blank" rel="noopener noreferrer" style="color: #d85a20; font-weight: 600;">GitHub Repository</a>`
+      : 'No repo link provided';
+
+    const demoLinkHtml = safeDemoUrl
+      ? ` &bull; <a href="${safeDemoUrl}" target="_blank" rel="noopener noreferrer" style="color: #0f766e; font-weight: 600;">Live Prototype Demo</a>`
+      : '';
+
+    const squadLinkHtml = safeSquadUrl
+      ? ` &bull; <a href="${safeSquadUrl}" target="_blank" rel="noopener noreferrer" style="color: #2563eb; font-weight: 600;">SkillSphere Squad</a>`
+      : '';
 
     const htmlContent = `
       <!DOCTYPE html>
@@ -81,45 +143,46 @@ export async function sendCandidateNotificationEmail(submission) {
           <div class="container">
             <div class="header">
               <h1>Pinaka Foundry &middot; New Candidate Proposal</h1>
-              <p>Reference ID: ${submission.id}</p>
+              <p>Reference ID: ${safeId}</p>
             </div>
             <div class="content">
-              <span class="badge">${submission.category} &middot; ${submission.track}</span>
+              <span class="badge">${safeCategory} &middot; ${safeTrack}</span>
               
               <div class="field-group">
                 <div class="field-label">Project Name</div>
-                <div class="field-value" style="font-size: 18px; font-weight: 700;">${submission.name}</div>
+                <div class="field-value" style="font-size: 18px; font-weight: 700;">${safeName}</div>
               </div>
 
               <div class="field-group">
                 <div class="field-label">Lead Builder & Contact</div>
-                <div class="field-value"><strong>${submission.leadBuilder}</strong> (${submission.contact})</div>
+                <div class="field-value"><strong>${safeLeadBuilder}</strong> (${safeContact})</div>
               </div>
 
               <div class="field-group">
                 <div class="field-label">Tagline</div>
-                <div class="field-value">${submission.tagline}</div>
+                <div class="field-value">${safeTagline}</div>
               </div>
 
               <div class="field-group">
                 <div class="field-label">Verified Tech Stack</div>
-                <div class="field-value">${stackList}</div>
+                <div class="field-value">${safeStackList}</div>
               </div>
 
               <div class="field-group">
                 <div class="field-label">Repository & Demo Links</div>
                 <div class="field-value">
-                  ${submission.repoUrl ? `<a href="${submission.repoUrl}" target="_blank" style="color: #d85a20; font-weight: 600;">GitHub Repository</a>` : 'No repo link provided'}
-                  ${submission.demoUrl ? ` &bull; <a href="${submission.demoUrl}" target="_blank" style="color: #0f766e; font-weight: 600;">Live Prototype Demo</a>` : ''}
+                  ${repoLinkHtml}
+                  ${demoLinkHtml}
+                  ${squadLinkHtml}
                 </div>
               </div>
 
               <div class="field-group">
                 <div class="field-label">Problem Brief & Architectural Thesis</div>
-                <div class="code-block">${submission.description}</div>
+                <div class="code-block">${safeDescription}</div>
               </div>
 
-              <a href="${reviewUrl}" class="btn" target="_blank">
+              <a href="${reviewUrl}" class="btn" target="_blank" rel="noopener noreferrer">
                 Review & Ingest on Pinaka Control Room &rarr;
               </a>
             </div>
@@ -134,7 +197,7 @@ export async function sendCandidateNotificationEmail(submission) {
     const info = await transport.sendMail({
       from: `"Pinaka Foundry" <${process.env.SMTP_USER || 'kshitizd171@gmail.com'}>`,
       to: recipient,
-      subject: `[Pinaka Foundry] New Candidate Proposal: ${submission.name} (${submission.category})`,
+      subject: `[Pinaka Foundry] New Candidate Proposal: ${safeName} (${safeCategory})`,
       html: htmlContent,
     });
 
