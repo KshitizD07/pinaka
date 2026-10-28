@@ -73,6 +73,7 @@ export async function POST(request) {
     const githubRepo = process.env.GITHUB_REPOSITORY || 'KshitizD07/pinaka';
 
     let commitResult = null;
+    let persisted = false;
 
     // Option A: If GITHUB_TOKEN is available, commit via GitHub API
     if (githubToken) {
@@ -122,14 +123,18 @@ export async function POST(request) {
       }
 
       commitResult = await putRes.json();
+      persisted = true;
       console.log('[Approve] GitHub commit successful:', commitResult.commit?.sha);
     } else {
       // Local fallback: update file locally
       console.log('[Approve] No GITHUB_TOKEN set; writing to local data/projects.json...');
       const localPath = join(process.cwd(), '..', 'data', 'projects.json');
-      if (existsSync(localPath)) {
-        const raw = readFileSync(localPath, 'utf-8');
-        const projects = JSON.parse(raw);
+      try {
+        let projects = [];
+        if (existsSync(localPath)) {
+          const raw = readFileSync(localPath, 'utf-8');
+          projects = JSON.parse(raw);
+        }
         const existingIdx = projects.findIndex((p) => p.id === projectId);
         if (existingIdx >= 0) {
           projects[existingIdx] = newProject;
@@ -137,7 +142,14 @@ export async function POST(request) {
           projects.push(newProject);
         }
         writeFileSync(localPath, JSON.stringify(projects, null, 2) + '\n', 'utf-8');
+        persisted = true;
+      } catch (fsErr) {
+        throw new Error(`Failed to persist project to local storage: ${fsErr.message}`);
       }
+    }
+
+    if (!persisted) {
+      throw new Error('Project approval failed: storage medium unavailable.');
     }
 
     // Mark submission as APPROVED in submissions store
