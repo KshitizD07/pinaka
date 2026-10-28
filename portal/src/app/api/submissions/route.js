@@ -69,6 +69,9 @@ export async function POST(request) {
       status: 'UNDER_REVIEW',
     };
 
+    let persisted = false;
+    let persistenceErrors = [];
+
     // 1. Local / Serverless filesystem logging
     try {
       const submissionsPath = join(process.cwd(), '..', 'data', 'submissions.json');
@@ -83,7 +86,9 @@ export async function POST(request) {
       }
       submissions.unshift(submission);
       writeFileSync(submissionsPath, JSON.stringify(submissions, null, 2), 'utf-8');
+      persisted = true;
     } catch (fsErr) {
+      persistenceErrors.push(`Primary filesystem: ${fsErr.message}`);
       try {
         const tmpPath = join('/tmp', 'pinaka_submissions.json');
         let tmpSubs = [];
@@ -92,7 +97,10 @@ export async function POST(request) {
         }
         tmpSubs.unshift(submission);
         writeFileSync(tmpPath, JSON.stringify(tmpSubs, null, 2), 'utf-8');
-      } catch {}
+        persisted = true;
+      } catch (tmpErr) {
+        persistenceErrors.push(`Tmp filesystem: ${tmpErr.message}`);
+      }
     }
 
     // 2. Git-Backed logging via GitHub API (if GITHUB_TOKEN configured)
@@ -112,7 +120,7 @@ export async function POST(request) {
           currentContent.unshift(submission);
           const updatedBase64 = Buffer.from(JSON.stringify(currentContent, null, 2) + '\n').toString('base64');
 
-          await fetch(`https://api.github.com/repos/${githubRepo}/contents/data/submissions.json`, {
+          const putRes = await fetch(`https://api.github.com/repos/${githubRepo}/contents/data/submissions.json`, {
             method: 'PUT',
             headers: {
               Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
@@ -126,10 +134,29 @@ export async function POST(request) {
               branch: 'main',
             }),
           });
+
+          if (putRes.ok) {
+            persisted = true;
+          } else {
+            const errBody = await putRes.text();
+            persistenceErrors.push(`GitHub API PUT: ${putRes.status} ${errBody}`);
+          }
+        } else {
+          persistenceErrors.push(`GitHub API GET: ${getRes.status}`);
         }
       } catch (ghErr) {
+        persistenceErrors.push(`GitHub API exception: ${ghErr.message}`);
         console.warn('[Submissions] GitHub API logging notice:', ghErr.message);
       }
+    }
+
+    // Ensure submission was persisted in at least one durable target
+    if (!persisted) {
+      console.error('[Submissions] All persistence strategies failed:', persistenceErrors.join(' | '));
+      return NextResponse.json(
+        { error: 'Failed to record submission. Please retry later or contact the studio lead directly.' },
+        { status: 500 }
+      );
     }
 
     // 3. Await SMTP notification
