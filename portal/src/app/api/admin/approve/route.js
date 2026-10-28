@@ -6,6 +6,33 @@ import { checkAdminAuth, verifyCsrfOrigin } from '@/lib/adminAuth';
 
 export const dynamic = 'force-dynamic';
 
+const ALLOWED_TRACKS = new Set(['flagship', 'incubating', 'breakthroughs']);
+const ALLOWED_STATUSES = new Set(['live', 'prototype', 'concept']);
+const ALLOWED_CATEGORIES = new Set([
+  'Campus Tech',
+  'EdTech',
+  'AI / ML',
+  'Civic Tech',
+  'Dev Tools',
+  'HealthTech',
+  'Defense Tech / Urban AI',
+]);
+
+/**
+ * Validates whether a given URL is a valid http or https link.
+ * @param {string} urlString 
+ * @returns {boolean}
+ */
+function isValidHttpUrl(urlString) {
+  if (!urlString || typeof urlString !== 'string') return false;
+  try {
+    const parsed = new URL(urlString.trim());
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Generates a clean, URL-safe, non-empty slug from a name or proposed ID.
  * @param {string} proposedId 
@@ -87,14 +114,74 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Name and tagline are required.' }, { status: 400 });
     }
 
+    const assignedTrack = track || 'incubating';
+    if (!ALLOWED_TRACKS.has(assignedTrack)) {
+      return NextResponse.json(
+        { error: `Invalid track '${assignedTrack}'. Allowed tracks: ${[...ALLOWED_TRACKS].join(', ')}` },
+        { status: 400 }
+      );
+    }
+
+    const assignedStatus = status || 'prototype';
+    if (!ALLOWED_STATUSES.has(assignedStatus)) {
+      return NextResponse.json(
+        { error: `Invalid status '${assignedStatus}'. Allowed statuses: ${[...ALLOWED_STATUSES].join(', ')}` },
+        { status: 400 }
+      );
+    }
+
+    const assignedCategory = category || 'Campus Tech';
+    if (!ALLOWED_CATEGORIES.has(assignedCategory)) {
+      return NextResponse.json(
+        { error: `Invalid category '${assignedCategory}'. Allowed categories: ${[...ALLOWED_CATEGORIES].join(', ')}` },
+        { status: 400 }
+      );
+    }
+
+    const urlFields = [
+      { key: 'repoUrl', val: repoUrl },
+      { key: 'demoUrl', val: demoUrl },
+      { key: 'squadUrl', val: squadUrl },
+      { key: 'skillSphereUrl', val: skillSphereUrl },
+    ];
+
+    for (const { key, val } of urlFields) {
+      if (val && !isValidHttpUrl(val)) {
+        return NextResponse.json(
+          { error: `Invalid URL format for ${key}. Must use http or https scheme.` },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Verify submission existence and status if submissionId is provided
+    if (submissionId) {
+      const submissionsPath = join(process.cwd(), '..', 'data', 'submissions.json');
+      if (existsSync(submissionsPath)) {
+        try {
+          const raw = readFileSync(submissionsPath, 'utf-8');
+          const subs = JSON.parse(raw);
+          const targetSub = subs.find((s) => s.id === submissionId);
+          if (targetSub && targetSub.status === 'APPROVED' && !allowOverwrite) {
+            return NextResponse.json(
+              { error: `Submission '${submissionId}' has already been approved.` },
+              { status: 409 }
+            );
+          }
+        } catch (subErr) {
+          console.warn('[Approve] Could not verify existing submission status:', subErr.message);
+        }
+      }
+    }
+
     const baseSlug = generateProjectSlug(id, name);
 
     const projectPayload = {
       name: name.trim(),
       tagline: tagline.trim(),
-      category: category || 'Campus Tech',
-      track: track || 'incubating',
-      status: status || 'prototype',
+      category: assignedCategory,
+      track: assignedTrack,
+      status: assignedStatus,
       techStack: Array.isArray(techStack)
         ? techStack
         : typeof techStack === 'string'
