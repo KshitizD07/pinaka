@@ -1,9 +1,55 @@
 import { NextResponse } from 'next/server';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
+import crypto from 'crypto';
 import { checkAdminAuth, verifyCsrfOrigin } from '@/lib/adminAuth';
 
 export const dynamic = 'force-dynamic';
+
+/**
+ * Generates a clean, URL-safe, non-empty slug from a name or proposed ID.
+ * @param {string} proposedId 
+ * @param {string} name 
+ * @returns {string}
+ */
+function generateProjectSlug(proposedId, name) {
+  const source = (proposedId || name || '').trim().toLowerCase();
+  let slug = source
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+
+  if (!slug || slug.length < 3) {
+    const randomSuffix = crypto.randomBytes(3).toString('hex');
+    slug = slug ? `${slug}-${randomSuffix}` : `pinaka-project-${randomSuffix}`;
+  }
+
+  return slug;
+}
+
+/**
+ * Ensures slug is unique among existing projects by appending a short suffix if collided.
+ * @param {string} baseSlug 
+ * @param {Array<{ id: string }>} existingProjects 
+ * @param {string|null} currentId 
+ * @returns {string}
+ */
+function resolveUniqueSlug(baseSlug, existingProjects, currentId) {
+  let uniqueSlug = baseSlug;
+  let counter = 1;
+
+  while (
+    existingProjects.some(
+      (p) => p.id === uniqueSlug && p.id !== currentId
+    )
+  ) {
+    const suffix = crypto.randomBytes(2).toString('hex');
+    uniqueSlug = `${baseSlug}-${suffix}`;
+    counter++;
+    if (counter > 10) break;
+  }
+
+  return uniqueSlug;
+}
 
 export async function POST(request) {
   if (!verifyCsrfOrigin(request)) {
@@ -40,10 +86,9 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Name and tagline are required.' }, { status: 400 });
     }
 
-    const projectId = id || name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    const baseSlug = generateProjectSlug(id, name);
 
-    const newProject = {
-      id: projectId,
+    const projectPayload = {
       name: name.trim(),
       tagline: tagline.trim(),
       category: category || 'Campus Tech',
@@ -74,6 +119,7 @@ export async function POST(request) {
 
     let commitResult = null;
     let persisted = false;
+    let finalProject = null;
 
     // Option A: If GITHUB_TOKEN is available, commit via GitHub API
     if (githubToken) {
@@ -92,12 +138,14 @@ export async function POST(request) {
       const fileData = await getRes.json();
       const currentContent = JSON.parse(Buffer.from(fileData.content, 'base64').toString('utf-8'));
 
-      // Check if project already exists, replace or append
+      const projectId = resolveUniqueSlug(baseSlug, currentContent, id);
+      finalProject = { id: projectId, ...projectPayload };
+
       const existingIdx = currentContent.findIndex((p) => p.id === projectId);
       if (existingIdx >= 0) {
-        currentContent[existingIdx] = newProject;
+        currentContent[existingIdx] = finalProject;
       } else {
-        currentContent.push(newProject);
+        currentContent.push(finalProject);
       }
 
       const updatedBase64 = Buffer.from(JSON.stringify(currentContent, null, 2) + '\n').toString('base64');
@@ -110,7 +158,7 @@ export async function POST(request) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: `add: ${newProject.name} to studio portfolio ledger`,
+          message: `add: ${finalProject.name} to studio portfolio ledger`,
           content: updatedBase64,
           sha: fileData.sha,
           branch: 'main',
@@ -135,11 +183,15 @@ export async function POST(request) {
           const raw = readFileSync(localPath, 'utf-8');
           projects = JSON.parse(raw);
         }
+
+        const projectId = resolveUniqueSlug(baseSlug, projects, id);
+        finalProject = { id: projectId, ...projectPayload };
+
         const existingIdx = projects.findIndex((p) => p.id === projectId);
         if (existingIdx >= 0) {
-          projects[existingIdx] = newProject;
+          projects[existingIdx] = finalProject;
         } else {
-          projects.push(newProject);
+          projects.push(finalProject);
         }
         writeFileSync(localPath, JSON.stringify(projects, null, 2) + '\n', 'utf-8');
         persisted = true;
@@ -148,7 +200,7 @@ export async function POST(request) {
       }
     }
 
-    if (!persisted) {
+    if (!persisted || !finalProject) {
       throw new Error('Project approval failed: storage medium unavailable.');
     }
 
@@ -169,8 +221,8 @@ export async function POST(request) {
 
     return NextResponse.json({
       success: true,
-      message: `Project "${newProject.name}" successfully approved and ingested into Pinaka ledger!`,
-      project: newProject,
+      message: `Project "${finalProject.name}" successfully approved and ingested into Pinaka ledger!`,
+      project: finalProject,
       githubCommitSha: commitResult?.commit?.sha || null,
     });
   } catch (err) {
