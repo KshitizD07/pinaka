@@ -117,5 +117,38 @@
       "GNN congestion-aware anomaly scorer that cross-references route deviation with real-time queue lengths",
       "Tactical red-wall intercept orchestrator with emergency vehicle preemption (EVP) and SHA-256 hash-chained audit logging"
     ]
+  },
+  {
+    "id": "reporevive",
+    "name": "RepoRevive",
+    "tagline": "RepoRevive helps developers evaluate the health, maintenance status, and long-term viability of GitHub repositories using AI-powered analysis and actionable insights.",
+    "category": "Campus Tech",
+    "track": "incubating",
+    "status": "prototype",
+    "techStack": [
+      "React.js",
+      "Next.js",
+      "JavaScript",
+      "TypeScript",
+      "Tailwind CSS",
+      "Node.js",
+      "GitHub REST API",
+      "AI/LLM Integration",
+      "Vercel",
+      "Git",
+      "GitHub"
+    ],
+    "leadBuilder": "MIHIR PRATAP SINGH",
+    "contact": null,
+    "squadUrl": "https://skill-sphere-v1.vercel.app/squad/52f47290-4025-4f84-84e1-24512e90c081",
+    "skillSphereUrl": "https://skill-sphere-v1.vercel.app/profile/1a4222a1-5fa8-421e-a6a1-5ec6fb80fffc",
+    "skillSphereLabel": "Mihir Pratap Singh",
+    "repoUrl": "https://github.com/mihirsingh01/Repo_Reaper",
+    "demoUrl": null,
+    "description": "Developers frequently struggle to identify whether open-source GitHub repositories are actively maintained, outdated, or potentially abandoned before using them in their projects. Existing GitHub information is available but requires manual analysis of commits, issues, pull requests, releases, and contributor activity. RepoRevive addresses this problem through an AI-powered repository analysis platform that collects and evaluates repository activity, generates a repository health and viability score, and presents understandable insights through a user-friendly dashboard. The target users include software developers, students, open-source contributors, and development teams. Current project evidence includes the developed web application, repository codebase, and implemented or planned repository analysis features. The project aims to make open-source project evaluation faster, easier, and more informed.",
+    "highlights": [
+      "Campus Tech platform engineered under Pinaka standards.",
+      "Built with modular React.js, Next.js, JavaScript architecture."
+    ]
   }
 ]
