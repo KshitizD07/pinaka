@@ -5,6 +5,8 @@ import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 // This route reads query params at request time — must be dynamic
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
 
 function getProjectsPath() {
   const rootData = join(process.cwd(), 'data', 'projects.json');
@@ -95,7 +97,13 @@ export async function GET(request) {
       });
     }
 
-    return NextResponse.json({ projects, total: projects.length });
+    return NextResponse.json({ projects, total: projects.length }, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+        'CDN-Cache-Control': 'no-store',
+        'Vercel-CDN-Cache-Control': 'no-store',
+      },
+    });
   } catch (err) {
     console.error('[API /projects] Error:', err);
     return NextResponse.json({ error: 'Failed to load projects' }, { status: 500 });
