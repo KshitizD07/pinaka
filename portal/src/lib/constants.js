@@ -42,6 +42,22 @@ export const STATUS_LABELS = {
   archived: 'Archived',
 };
 
+/** Curated domain categories */
+export const POPULAR_CATEGORIES = [
+  'Campus Tech',
+  'EdTech',
+  'AI / ML',
+  'Infrastructure',
+  'Dev Tools',
+  'Civic Tech',
+  'HealthTech',
+  'FinTech',
+  'Defense Tech / Urban AI',
+  'Cybersecurity',
+  'Web3 / Open Data',
+  'Other',
+];
+
 /**
  * Editorial status styles with refined saffron, jade, stone, and gold tokens.
  */

@@ -7,17 +7,14 @@ import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 export const dynamic = 'force-dynamic';
 
-const ALLOWED_TRACKS = new Set(['flagship', 'incubating', 'breakthroughs']);
-const ALLOWED_STATUSES = new Set(['live', 'prototype', 'concept']);
-const ALLOWED_CATEGORIES = new Set([
-  'Campus Tech',
-  'EdTech',
-  'AI / ML',
-  'Civic Tech',
-  'Dev Tools',
-  'HealthTech',
-  'Defense Tech / Urban AI',
-]);
+const ALLOWED_TRACKS = new Set(['flagship', 'incubating', 'breakthroughs', 'proposals', 'community']);
+const ALLOWED_STATUSES = new Set(['live', 'prototype', 'concept', 'mvp', 'pilot', 'paused', 'archived']);
+
+function sanitizeCategory(input) {
+  if (!input || typeof input !== 'string') return 'Campus Tech';
+  const trimmed = input.trim();
+  return trimmed.slice(0, 50) || 'Campus Tech';
+}
 
 function getProjectsPath() {
   const rootData = join(process.cwd(), 'data', 'projects.json');
@@ -126,13 +123,7 @@ export async function POST(request) {
       );
     }
 
-    const assignedCategory = category || 'Campus Tech';
-    if (!ALLOWED_CATEGORIES.has(assignedCategory)) {
-      return NextResponse.json(
-        { error: `Invalid category '${assignedCategory}'. Allowed categories: ${[...ALLOWED_CATEGORIES].join(', ')}` },
-        { status: 400 }
-      );
-    }
+    const assignedCategory = sanitizeCategory(category);
 
     const urlFields = [
       { key: 'repoUrl', val: repoUrl },

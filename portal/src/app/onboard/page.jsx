@@ -18,6 +18,7 @@ import {
   Compass,
   AlertCircle,
 } from 'lucide-react';
+import { POPULAR_CATEGORIES } from '@/lib/constants';
 
 const PROBLEM_BRIEF_TEMPLATE = `# Project Application Brief
 
@@ -76,6 +77,8 @@ export default function OnboardPage() {
     name: '',
     leadBuilder: '',
     contact: '',
+    category: 'Campus Tech',
+    customCategory: '',
     track: 'incubating',
     squadUrl: '',
     skillSphereUrl: '',
@@ -125,10 +128,20 @@ export default function OnboardPage() {
     }
 
     try {
+      const finalCategory =
+        formData.category === 'Other' && formData.customCategory.trim()
+          ? formData.customCategory.trim()
+          : formData.category || 'Campus Tech';
+
+      const payload = {
+        ...formData,
+        category: finalCategory,
+      };
+
       const res = await fetch('/api/submissions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -488,10 +501,10 @@ export default function OnboardPage() {
                   />
                 </div>
 
-                {/* Portfolio Category */}
+                {/* Portfolio Track */}
                 <div>
                   <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5">
-                    Portfolio Category *
+                    Portfolio Track *
                   </label>
                   <select
                     name="track"
@@ -504,6 +517,36 @@ export default function OnboardPage() {
                     <option value="flagship">Featured (Deployed & Operating)</option>
                     <option value="breakthroughs">Breakthroughs (Advanced AI / DeepTech)</option>
                   </select>
+                </div>
+
+                {/* Domain Category */}
+                <div>
+                  <label className="block text-xs font-mono uppercase tracking-wider text-pinaka-stone mb-1.5">
+                    Domain Category *
+                  </label>
+                  <select
+                    name="category"
+                    value={formData.category}
+                    onChange={handleInputChange}
+                    className="w-full bg-white border border-pinaka-hairline text-pinaka-stone text-base sm:text-xs px-3.5 py-2.5 rounded-sm focus:outline-none focus:border-pinaka-saffron cursor-pointer"
+                  >
+                    {POPULAR_CATEGORIES.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
+                  </select>
+                  {formData.category === 'Other' && (
+                    <input
+                      type="text"
+                      name="customCategory"
+                      value={formData.customCategory}
+                      onChange={handleInputChange}
+                      placeholder="Specify your domain category..."
+                      className="w-full mt-2 bg-white border border-pinaka-hairline text-pinaka-stone text-base sm:text-xs px-3.5 py-2 rounded-sm focus:outline-none focus:border-pinaka-saffron font-sans"
+                      required
+                    />
+                  )}
                 </div>
               </div>
 

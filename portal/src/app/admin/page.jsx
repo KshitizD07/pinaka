@@ -18,6 +18,7 @@ import {
   RefreshCw,
   Users,
 } from 'lucide-react';
+import { POPULAR_CATEGORIES } from '@/lib/constants';
 
 function AdminControlRoom() {
   const searchParams = useSearchParams();
@@ -37,6 +38,7 @@ function AdminControlRoom() {
 
   // Editable approval form fields
   const [approvalData, setApprovalData] = useState({
+    category: 'Campus Tech',
     track: 'incubating',
     status: 'prototype',
     highlights: '',
@@ -128,10 +130,12 @@ function AdminControlRoom() {
 
   function handleSelectForApproval(submission) {
     setSelectedSubmission(submission);
+    const assignedCategory = submission.category || 'Campus Tech';
     setApprovalData({
+      category: assignedCategory,
       track: submission.track || 'incubating',
       status: 'prototype',
-      highlights: `${submission.category} platform engineered under Pinaka standards.\nBuilt with modular ${Array.isArray(submission.techStack) ? submission.techStack.slice(0, 3).join(', ') : 'modern'} architecture.`,
+      highlights: `${assignedCategory} platform engineered under Pinaka standards.\nBuilt with modular ${Array.isArray(submission.techStack) ? submission.techStack.slice(0, 3).join(', ') : 'modern'} architecture.`,
     });
     // Smooth scroll to approval card on mobile
     if (window.innerWidth < 1024) {
@@ -158,7 +162,7 @@ function AdminControlRoom() {
         submissionId: selectedSubmission.id,
         name: selectedSubmission.name,
         tagline: selectedSubmission.tagline,
-        category: selectedSubmission.category,
+        category: approvalData.category || selectedSubmission.category || 'Campus Tech',
         track: approvalData.track,
         status: approvalData.status,
         techStack: selectedSubmission.techStack,
@@ -591,6 +595,39 @@ function AdminControlRoom() {
                     <option value="proposals">Proposals (Proposed Ideas & Briefs)</option>
                     <option value="community">Community Collective</option>
                   </select>
+                </div>
+
+                <div>
+                  <label className="block font-mono text-[10px] uppercase text-pinaka-stone mb-1">
+                    Domain Category *
+                  </label>
+                  <div className="space-y-1.5">
+                    <select
+                      value={POPULAR_CATEGORIES.includes(approvalData.category) ? approvalData.category : 'Custom'}
+                      onChange={(e) => {
+                        if (e.target.value !== 'Custom') {
+                          setApprovalData((prev) => ({ ...prev, category: e.target.value }));
+                        }
+                      }}
+                      className="w-full bg-white border border-pinaka-hairline text-pinaka-stone p-2 rounded-sm font-sans cursor-pointer text-xs"
+                    >
+                      {POPULAR_CATEGORIES.map((cat) => (
+                        <option key={cat} value={cat}>
+                          {cat}
+                        </option>
+                      ))}
+                      {!POPULAR_CATEGORIES.includes(approvalData.category) && (
+                        <option value="Custom">Custom: {approvalData.category}</option>
+                      )}
+                    </select>
+                    <input
+                      type="text"
+                      value={approvalData.category}
+                      onChange={(e) => setApprovalData((prev) => ({ ...prev, category: e.target.value }))}
+                      placeholder="Or enter custom category..."
+                      className="w-full bg-white border border-pinaka-hairline text-pinaka-stone p-2 rounded-sm font-sans text-xs focus:outline-none focus:border-pinaka-saffron"
+                    />
+                  </div>
                 </div>
 
                 <div>
