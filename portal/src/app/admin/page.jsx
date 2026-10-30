@@ -17,6 +17,8 @@ import {
   Layers,
   RefreshCw,
   Users,
+  Trash2,
+  Archive,
 } from 'lucide-react';
 import { POPULAR_CATEGORIES } from '@/lib/constants';
 
@@ -198,6 +200,40 @@ function AdminControlRoom() {
       setActionMessage({ type: 'error', text: err.message });
     } finally {
       setIsApproving(false);
+    }
+  }
+
+  async function handleRejectSubmission(subId, action = 'reject') {
+    const confirmText =
+      action === 'delete'
+        ? 'Are you sure you want to permanently delete this submission?'
+        : 'Are you sure you want to decline/archive this submission?';
+
+    if (!window.confirm(confirmText)) return;
+
+    try {
+      const res = await fetch('/api/admin/submissions', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ submissionId: subId, action }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to update submission');
+      }
+
+      setActionMessage({
+        type: 'info',
+        text: data.message || 'Submission status updated.',
+      });
+
+      if (selectedSubmission?.id === subId) {
+        setSelectedSubmission(null);
+      }
+      loadSubmissions();
+    } catch (err) {
+      setActionMessage({ type: 'error', text: err.message });
     }
   }
 
@@ -534,16 +570,44 @@ function AdminControlRoom() {
                       </div>
 
                       {!isApproved ? (
-                        <button
-                          onClick={() => handleSelectForApproval(sub)}
-                          className="w-full sm:w-auto px-3.5 py-1.5 text-xs font-mono uppercase tracking-wider bg-pinaka-saffron text-white hover:bg-pinaka-saffron-deep transition-colors rounded-sm cursor-pointer shadow-saffron-sm text-center"
-                        >
-                          Review & Ingest &rarr;
-                        </button>
+                        <div className="flex items-center gap-2 w-full sm:w-auto">
+                          <button
+                            type="button"
+                            onClick={() => handleRejectSubmission(sub.id, 'reject')}
+                            title="Decline / Archive submission"
+                            className="p-1.5 text-pinaka-ash hover:text-rose-600 hover:bg-rose-50 border border-pinaka-hairline hover:border-rose-200 transition-colors rounded-sm cursor-pointer"
+                          >
+                            <Archive className="h-3.5 w-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleRejectSubmission(sub.id, 'delete')}
+                            title="Permanently delete submission"
+                            className="p-1.5 text-pinaka-ash hover:text-rose-700 hover:bg-rose-50 border border-pinaka-hairline hover:border-rose-300 transition-colors rounded-sm cursor-pointer"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                          <button
+                            onClick={() => handleSelectForApproval(sub)}
+                            className="w-full sm:w-auto px-3.5 py-1.5 text-xs font-mono uppercase tracking-wider bg-pinaka-saffron text-white hover:bg-pinaka-saffron-deep transition-colors rounded-sm cursor-pointer shadow-saffron-sm text-center"
+                          >
+                            Review & Ingest &rarr;
+                          </button>
+                        </div>
                       ) : (
-                        <span className="text-xs font-mono text-emerald-700 flex items-center gap-1">
-                          <CheckCircle2 className="h-3.5 w-3.5" /> Published on Ledger
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-mono text-emerald-700 flex items-center gap-1">
+                            <CheckCircle2 className="h-3.5 w-3.5" /> Published on Ledger
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleRejectSubmission(sub.id, 'delete')}
+                            title="Delete submission record"
+                            className="p-1 text-pinaka-ash hover:text-rose-600 rounded-sm"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </button>
+                        </div>
                       )}
                     </div>
                   </div>

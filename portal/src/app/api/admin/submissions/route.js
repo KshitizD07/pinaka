@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
-import { checkAdminAuth } from '@/lib/adminAuth';
+import { checkAdminAuth, verifyCsrfOrigin } from '@/lib/adminAuth';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { writeFileSync } from 'fs';
 
 export const dynamic = 'force-dynamic';
 
@@ -83,4 +84,73 @@ export async function GET() {
     total: submissions.length,
     source: 'local',
   });
+}
+
+/**
+ * DELETE /api/admin/submissions
+ * Body: { submissionId, action: 'reject' | 'delete' }
+ */
+export async function DELETE(request) {
+  if (!verifyCsrfOrigin(request)) {
+    return NextResponse.json({ error: 'Forbidden: Invalid request origin.' }, { status: 403 });
+  }
+
+  const session = checkAdminAuth();
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized. Studio Lead session required.' }, { status: 401 });
+  }
+
+  try {
+    const { submissionId, action = 'reject' } = await request.json();
+    if (!submissionId) {
+      return NextResponse.json({ error: 'Submission ID is required.' }, { status: 400 });
+    }
+
+    let deletedOrUpdated = false;
+
+    // 1. Supabase update / deletion
+    if (isSupabaseConfigured() && supabase) {
+      try {
+        if (action === 'delete') {
+          const { error } = await supabase.from('submissions').delete().eq('id', submissionId);
+          if (!error) deletedOrUpdated = true;
+        } else {
+          // Reject/Archive
+          const { error } = await supabase
+            .from('submissions')
+            .update({ status: 'REJECTED' })
+            .eq('id', submissionId);
+          if (!error) deletedOrUpdated = true;
+        }
+      } catch (err) {
+        console.warn('[Admin Submissions DELETE] Supabase error:', err.message);
+      }
+    }
+
+    // 2. Local fallback update / deletion
+    const localPath = getSubmissionsPath();
+    if (existsSync(localPath)) {
+      try {
+        const raw = readFileSync(localPath, 'utf-8');
+        let subs = JSON.parse(raw);
+        if (action === 'delete') {
+          subs = subs.filter((s) => s.id !== submissionId);
+        } else {
+          const target = subs.find((s) => s.id === submissionId);
+          if (target) target.status = 'REJECTED';
+        }
+        writeFileSync(localPath, JSON.stringify(subs, null, 2) + '\n', 'utf-8');
+        deletedOrUpdated = true;
+      } catch {}
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: action === 'delete' ? 'Submission permanently deleted.' : 'Submission archived/rejected.',
+      submissionId,
+    });
+  } catch (err) {
+    console.error('[Admin Submissions DELETE] Error:', err);
+    return NextResponse.json({ error: 'Failed to process submission action.' }, { status: 500 });
+  }
 }

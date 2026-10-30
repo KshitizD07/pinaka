@@ -240,7 +240,66 @@ export async function POST(request) {
       }
     }
 
-    // 2. Persist to local projects.json (so frontend without DB works seamlessly)
+    // 2. Persist to GitHub repository if GITHUB_TOKEN is available
+    const githubToken = process.env.GITHUB_TOKEN;
+    const githubRepo = process.env.GITHUB_REPOSITORY || 'KshitizD07/pinaka';
+    let githubCommitSha = null;
+
+    if (githubToken) {
+      try {
+        console.log(`[Approve] Syncing approved project to GitHub repo ${githubRepo} via GitHub API...`);
+        const getRes = await fetch(`https://api.github.com/repos/${githubRepo}/contents/data/projects.json`, {
+          headers: {
+            Authorization: `Bearer ${githubToken}`,
+            Accept: 'application/vnd.github.v3+json',
+            'User-Agent': 'Pinaka-Foundry-Approve',
+          },
+        });
+
+        if (getRes.ok) {
+          const fileData = await getRes.json();
+          const remoteProjects = JSON.parse(Buffer.from(fileData.content, 'base64').toString('utf-8'));
+          const existingIdx = remoteProjects.findIndex((p) => p.id === projectId);
+          if (existingIdx >= 0) {
+            remoteProjects[existingIdx] = finalProject;
+          } else {
+            remoteProjects.push(finalProject);
+          }
+
+          const updatedBase64 = Buffer.from(JSON.stringify(remoteProjects, null, 2) + '\n').toString('base64');
+          const putRes = await fetch(`https://api.github.com/repos/${githubRepo}/contents/data/projects.json`, {
+            method: 'PUT',
+            headers: {
+              Authorization: `Bearer ${githubToken}`,
+              Accept: 'application/vnd.github.v3+json',
+              'Content-Type': 'application/json',
+              'User-Agent': 'Pinaka-Foundry-Approve',
+            },
+            body: JSON.stringify({
+              message: `add: ${finalProject.name} to studio portfolio ledger [skip ci]`,
+              content: updatedBase64,
+              sha: fileData.sha,
+              branch: 'main',
+            }),
+          });
+
+          if (putRes.ok) {
+            const commitData = await putRes.json();
+            githubCommitSha = commitData.commit?.sha || null;
+            console.log('[Approve] GitHub commit successful:', githubCommitSha);
+          } else {
+            const errText = await putRes.text();
+            console.warn('[Approve] GitHub API commit failed:', errText);
+          }
+        } else {
+          console.warn('[Approve] Could not fetch projects.json from GitHub:', getRes.statusText);
+        }
+      } catch (ghErr) {
+        console.warn('[Approve] GitHub sync exception:', ghErr.message);
+      }
+    }
+
+    // 3. Persist to local projects.json (for local dev environments)
     try {
       const targetIdx = currentProjects.findIndex((p) => p.id === projectId);
       if (targetIdx >= 0) {
@@ -279,6 +338,7 @@ export async function POST(request) {
       success: true,
       message: `Project "${finalProject.name}" successfully approved and ingested into Pinaka ledger!`,
       project: finalProject,
+      githubCommitSha,
     });
   } catch (err) {
     console.error('[API /admin/approve] Error:', err);
